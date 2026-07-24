@@ -1,0 +1,275 @@
+openapi: 3.0.3
+
+# This file contains standard error (400) responses for all
+
+responses:
+  BadRequest:
+    description: This error is a result of missing or malformed required part of the request body or query.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 400
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Bad Request
+            request_id:
+              $ref: './schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: Human readable error message
+              example: The request is missing required information
+
+  Unauthorized:
+    description: Access denied. This is due to missing or malformed JWT.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 401
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Unauthorized
+            request_id:
+              $ref: './schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: Human readable error message
+              example: Missing or bad JWT
+
+  PaymentRequired:
+    description: This error is a result of a missing license to access this endpoint. This can also happen when downloading more bytes than allowed by your license.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 402
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Payment Required
+            request_id:
+              $ref: '../common/schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: Human readable error message
+              example: Please contact your Theta Lake account manager for license information
+
+  Forbidden:
+    description: This error indicates that access has been denied to the requested resource. This is due to incorrect scopes on the API key.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 403
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Forbidden
+            request_id:
+              $ref: './schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: Human readable error message
+              example: Access to this resource is forbidden, missing scope
+
+  NotFound:
+    description: The specified resource was not found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 404
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Not Found
+            request_id:
+              $ref: './schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: Human readable error message
+              example: Unable to find the requested resource
+
+  Conflict:
+    description: The specific resource has a conflict (e.g. already exists)
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 409
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Conflict
+            request_id:
+              $ref: './schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: Human readable error message
+              example: The specified resource already exists
+
+  UnsupportedMediaType:
+    description: The uploaded file's content type is not supported
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 415
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Unsupported Media Type
+            request_id:
+              $ref: './schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: Human readable error message
+              example: Executable files are not supported
+
+  UnprocessableEntity:
+    description: This error indicates that the API was unable to process the uploaded file.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 422
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Unprocessable Content
+            request_id:
+              $ref: './schemas.yml#/schemas/RequestId'
+            upload_response:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: Upload response message
+                  example: Group upload was unsuccessful - Invalid byte sequence
+                success:
+                  type: boolean
+                  description: Indicates the upload was unsuccessful
+                  example: false
+
+  Locked:
+    description: This error indicates that the API refused to process the request because the resource is currently locked.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 423
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Locked
+            request_id:
+              $ref: './schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: Error message
+              example: A message indicating why the resource is locked
+
+  TooManyRequests:
+    description: This error indicates that your organizations rate limit has been met.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 429
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Too Many Requests
+            request_id:
+              $ref: './schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: Human readable error message
+              example: Too many requests for the route
+
+  InternalServerError:
+    description: In the event of an internal server error, the response will ask the user to submit a support ticket with the request ID.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 500
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Internal Server Error
+            request_id:
+              $ref: './schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: Human readable error message
+              example: An internal server error has occurred, please submit a support ticket with the request ID
+
+  ServiceUnavailable:
+    description: This error is returned when the internal Theta Lake service is unavailable.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 503
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Service Unavailable
+            request_id:
+              $ref: './schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: Human readable error message
+              example: An error has occurred and the route is currently unavailable

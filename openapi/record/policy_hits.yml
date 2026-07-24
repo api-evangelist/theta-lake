@@ -1,0 +1,250 @@
+paths:
+  records/{id}/policy_hits:
+    get:
+      tags:
+        - Records
+      summary: Get policy hits
+      description: |
+        **REQUIRED PERMISSION:** `records:read`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE** This endpoint is tied to a license within Theta Lake. If you would like access  
+        to this endpoint, please reach out to your Theta Lake account manager for license information.  
+        This endpoint will increase the quota by **1000 bytes** per API call.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID or UUID of the record
+          schema:
+            type: string
+          examples:
+            example1:
+              value: '501263'
+            example2:
+              value: ca116f96-bbd5-11ef-9468-53af98260bba
+      responses:
+        '200':
+          description: Returns the policy hits for the record
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/policy_hits_response'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '402':
+          $ref: '../common/errors.yml#/responses/PaymentRequired'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  policy_detections_response_codes:
+    '200':
+      description: Returns the policy hits for the record
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status_code:
+                $ref: '../common/schemas.yml#/schemas/StatusCode200'
+              status_string:
+                $ref: '../common/schemas.yml#/schemas/StatusString200'
+              request_id:
+                $ref: '../common/schemas.yml#/schemas/RequestId'
+              policy_detections:
+                type: array
+                description: An array of policy detections for the record
+                items:
+                  $ref: '#/schemas/policy_detection'
+    '401':
+      $ref: '../common/errors.yml#/responses/Unauthorized'
+    '402':
+      $ref: '../common/errors.yml#/responses/PaymentRequired'
+    '403':
+      $ref: '../common/errors.yml#/responses/Forbidden'
+    '429':
+      $ref: '../common/errors.yml#/responses/TooManyRequests'
+    '500':
+      $ref: '../common/errors.yml#/responses/InternalServerError'
+    '503':
+      $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  policy_hits_response:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      policy_hits:
+        type: array
+        description: An array of policy hits for the record
+        items:
+          $ref: '#/schemas/policy_hit'
+
+  policy_detection:
+    type: object
+    properties:
+      annotations:
+        type: array
+        description: The annotations from the detection_rule
+        items:
+          type: string
+      confidence:
+        type: number
+        format: float
+        nullable: true
+        example: 0.95
+        description: The confidence score of the detection. Will only be set if the detection is from a classifier which provides a confidence score.
+      detection_rule:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+            description: The ID of the detection rule
+          name:
+            type: string
+            example: Cryptocurrency Discussions
+            description: The name of the detection rule
+      offsets:
+        type: array
+        description: The offsets on a per source basis. Refer to [these examples](/documentation/records#policy-detection-offsets)
+        items:
+          $ref: '#/schemas/PolicyHitOffset'
+      policy:
+        type: object
+        nullable: true
+        properties:
+          id:
+            type: integer
+            example: 126
+            description: The ID of the policy
+          name:
+            type: string
+            description: The name of the policy
+            example: All detections active
+      source:
+        type: string
+        example: email
+        description: The source of the record content
+
+  policy_hit:
+    type: object
+    properties:
+      annotations:
+        type: array
+        description: The annotations from the detection_rule
+        items:
+          type: string
+      attachment:
+        type: object
+        nullable: true
+        description: The attachment associated with the policy hit
+        properties:
+          name:
+            type: string
+            description: The name of the attachment
+            example: attachment.pdf
+          uuid:
+            type: string
+            example: ca116f96-bbd5-11ef-9468-53af98260bba
+            description: The record UUID of the attachment
+      classification_id:
+        type: integer
+        example: 699590
+        description: The classification ID
+      confidence:
+        type: number
+        format: float
+        nullable: true
+        example: 0.881
+        description: The confidence score of the detection. Will only be set if the detection is from a classifier which provides a confidence score.
+      confirmed:
+        type: boolean
+        description: Indicates if the policy hit was confirmed by the Alert Confirmation Analysis.
+        example: true
+      detection_rule:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 640
+            description: The detection rule ID
+          name:
+            type: string
+            example: Risky URLs
+            description: The name of the detection rule
+      offsets:
+        type: array
+        nullable: true
+        description: The offsets based upon the record's media type. Refer to [these examples](/documentation/records#policy-detection-offsets)
+        items:
+          $ref: '#/schemas/PolicyHitOffset'
+      policy:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 320
+            description: The ID of the policy
+          name:
+            type: string
+            description: The name of the policy
+            example: My first custom policy
+      risk_type:
+        type: string
+        example: risk
+        description: The type of risk associated with this policy hit
+      rule:
+        type: string
+        nullable: true
+        description: The rule that was applied to the detection. This is populated for detection_rules that have a rule associated with them
+
+  PolicyHitOffset:
+    type: object
+    properties:
+      char_offset_end:
+        type: integer
+        nullable: true
+        description: The ending character offset relative to the analyzed content.
+        example: 22
+      char_offset_start:
+        type: integer
+        nullable: true
+        description: The starting character offset relative to the analyzed content.
+        example: 3
+      message_id_end:
+        type: string
+        description: The ending message identifier for chat-style offsets.
+        example: '1709231266'
+      message_id_start:
+        type: string
+        description: The starting message identifier for chat-style offsets.
+        example: '1709231201'
+      message_time_end:
+        type: string
+        description: The ending message timestamp for chat-style offsets.
+        example: '1709231266'
+      message_time_start:
+        type: string
+        description: The starting message timestamp for chat-style offsets.
+        example: '1709231201'
+      offset_finish:
+        type: string
+        description: The end offset for media types that use non-character offsets.
+        example: '00:00:12.300'
+      offset_start:
+        type: string
+        description: The start offset for media types that use non-character offsets.
+        example: '00:00:10.100'

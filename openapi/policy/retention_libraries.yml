@@ -1,0 +1,392 @@
+paths:
+  retention_libraries:
+    get:
+      tags:
+        - Retention Libraries
+      summary: List all retention libraries
+      description: |
+        **REQUIRED PERMISSION:** `retention_libraries:read`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** Get a list of all the organizations retention libraries
+      responses:
+        '200':
+          description: Returns a list of retention libraries
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetRetentionLibraryResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    post:
+      tags:
+        - Retention Libraries
+      summary: Create a new retention library
+      description: |
+        **REQUIRED PERMISSION:** `retention_libraries:create`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** Creates retention libraries and sets initial retention policies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostRetentionLibraryRequest'
+      responses:
+        '201':
+          description: Retention library successfully created, returns the new retention library
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostRetentionLibraryResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  retention_libraries/{id}:
+    get:
+      tags:
+        - Retention Libraries
+      summary: Get retention library by ID
+      description: |
+        **REQUIRED PERMISSION:** `retention_libraries:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the retention library to retrieve
+          required: true
+          schema:
+            type: integer
+            example: 421
+      responses:
+        '200':
+          description: The retrieved retention library
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetRetentionLibraryByIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    put:
+      tags:
+        - Retention Libraries
+      summary: Update retention library
+      description: |
+        **REQUIRED PERMISSION:** `retention_libraries:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the retention library to update
+          required: true
+          schema:
+            type: integer
+            example: 425
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PutRetentionLibraryRequest'
+      responses:
+        '200':
+          description: The updated retention library
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutRetentionLibraryResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    delete:
+      tags:
+        - Retention Libraries
+      summary: Delete an retention library
+      description: |
+        **REQUIRED PERMISSION:** `retention_libraries:delete`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the retention library to delete
+          required: true
+          schema:
+            type: integer
+            example: 421
+      responses:
+        '200':
+          description: Status message of the delete operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/DeleteRetentionLibraryResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetRetentionLibraryResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      retention_libraries:
+        type: array
+        description: An array of retention library
+        items:
+          $ref: '#/schemas/RetentionLibrary'
+
+  PostRetentionLibraryRequest:
+    type: object
+    properties:
+      storage_account_id:
+        $ref: '#/schemas/storage_account_id'
+      name:
+        $ref: '#/schemas/name'
+      description:
+        $ref: '#/schemas/description'
+      external_id:
+        $ref: '#/schemas/external_id'
+      sec_compliant_storage_enabled:
+        $ref: '#/schemas/sec_compliant_storage_enabled'
+      retention_period_enabled:
+        $ref: '#/schemas/retention_period_enabled'
+      retention_period_days:
+        $ref: '#/schemas/retention_period_days'
+      retain_in_review:
+        $ref: '#/schemas/retain_in_review'
+    required:
+      - name
+      - storage_account_id
+
+  PostRetentionLibraryResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode201'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString201'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      retention_library:
+        $ref: '#/schemas/RetentionLibrary'
+
+  GetRetentionLibraryByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      retention_library:
+        $ref: '#/schemas/RetentionLibrary'
+
+  RetentionLibrary:
+    type: object
+    properties:
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      datum_count:
+        type: integer
+        description: The number of datums stored in the retention library
+        example: 72
+      datum_size:
+        type: integer
+        description: The total size of all the datums in the retention library
+        example: 4532
+      delete_on_expiration: 
+        type: boolean
+        description: Denotes if this retention library should delete records associated with this space when they expire
+        example: false
+      description:
+        type: string
+        nullable: true
+        description: A description of the bucket
+        example: Used to store data for the testing environment
+      display_name:
+        type: string
+        description: The retention library display name including the region
+        example: Test Bucket - US West (Oregon)
+      external_id:
+        nullable: true
+        allOf:
+          - $ref: '#/schemas/external_id'
+      id:
+        type: integer
+        description: Retention library ID
+        example: 477
+      legal_hold_count:
+        type: integer
+        description: The number of datums in legal hold in this retention library
+        example: 0
+      name:
+        type: string
+        description: The name of the bucket
+        example: Test Bucket
+      retention_period_days:
+        type: integer
+        nullable: true
+        description: Retention period in days
+        example: 90
+      retention_period_enabled:
+        $ref: '#/schemas/retention_period_enabled'
+      retention_summary_text:
+        type: string
+        description: Summary description of the retention policy
+        example: Keep for 90 days
+      sec_compliant_storage_confirmed:
+        type: boolean
+        description: Indicates if the SEC Rule 17a-4 compliance has been confirmed
+        example: true
+      sec_compliant_storage_enabled:
+        $ref: '#/schemas/sec_compliant_storage_enabled'
+      storage_account_id:
+        $ref: '#/schemas/storage_account_id'
+      swrv_rule_count:
+        type: integer
+        description: Smart workflow review (SWRV) rules currently applied to this retention library
+        example: 27
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  DeleteRetentionLibraryResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: The delete response status message
+        example: Retention library successfully deleted
+
+  PutRetentionLibraryRequest:
+    type: object
+    properties:
+      storage_account_id:
+        $ref: '#/schemas/storage_account_id'
+      name:
+        $ref: '#/schemas/name'
+      description:
+        $ref: '#/schemas/description'
+      external_id:
+        $ref: '#/schemas/external_id'
+      sec_compliant_storage_enabled:
+        $ref: '#/schemas/sec_compliant_storage_enabled'
+      retention_period_enabled:
+        $ref: '#/schemas/retention_period_enabled'
+      retention_period_days:
+        $ref: '#/schemas/retention_period_days'
+      retain_in_review:
+        $ref: '#/schemas/retain_in_review'
+
+  PutRetentionLibraryResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      retention_library:
+        $ref: '#/schemas/RetentionLibrary'
+
+  storage_account_id:
+    type: integer
+    description: Storage account ID
+    example: 1
+
+  name:
+    type: string
+    description: The name of the bucket
+    example: Test Bucket
+
+  description:
+    type: string
+    nullable: true
+    description: A description of the bucket
+    example: Used to store data for the testing environment
+
+  sec_compliant_storage_enabled:
+    type: boolean
+    description: Indicates if the storage has SEC Rule 17a-4 compliance enabled
+    example: false
+
+  retention_period_enabled:
+    type: boolean
+    description: Indicates if a retention period policy is currently enabled
+    example: false
+
+  retention_period_days:
+    type: integer
+    nullable: true
+    description: Retention period in days
+    example: 90
+
+  retain_in_review:
+    type: boolean
+    description: Indicates if the retention library should be retained while review is open
+    example: true
+
+  external_id:
+        type: string
+        description: An external ID for the retention library
+        example: 123456-ABC

@@ -1,0 +1,88 @@
+openapi: 3.0.3
+
+schemas:
+  StatusCode200:
+    type: integer
+    description: HTTP response status code
+    example: 200
+
+  StatusString200:
+    type: string
+    description: Text description of the HTTP response status code
+    example: OK
+
+  StatusCode201:
+    type: integer
+    description: HTTP response status code
+    example: 201
+
+  StatusString201:
+    type: string
+    description: Text description of the HTTP response status code
+    example: Created
+
+  StatusCode202:
+    type: integer
+    description: HTTP response status code
+    example: 202
+
+  StatusString202:
+    type: string
+    description: Text description of the HTTP response status code
+    example: Accepted
+
+  StatusCode409:
+    type: integer
+    description: HTTP response status code
+    example: 409
+
+  StatusString409:
+    type: string
+    description: Text description of the HTTP response status code
+    example: Conflict
+
+  RequestId:
+    type: string
+    description: Unique identifier (UUID) for the request
+    example: ca116f96-bbd5-11ef-9468-53af98260bba
+
+  Pagination:
+    type: object
+    description: Pagination information
+    properties:
+      prev_page_token:
+        type: string
+        description: The previous page token, if there is no previous page, it will be null
+        example: null
+        nullable: true
+      next_page_token:
+        type: string
+        description: The next page token, if there is no next page, it will be null
+        example: eyJjdXJyZW50X3BhZ2UiOjEsIml0ZW1zX3Blcl9wYWdlIjoyNSwiZXhwaXJlcyI6IjIwMjMtMDItMDJUMTk6NTE6NTcuODk0ODI4NTU2WiJ9
+        nullable: true
+
+  created_at:
+    type: string
+    format: date-time
+    description: The created timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2021-06-16T01:37:04.262Z'
+
+  updated_at:
+    type: string
+    format: date-time
+    description: The updated timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2022-10-12T02:29:49.146Z'
+
+  StandardResponseCodes:
+    '400':
+      $ref: './errors.yml#/responses/BadRequest'
+    '401':
+      $ref: './errors.yml#/responses/Unauthorized'
+    '403':
+      $ref: './errors.yml#/responses/Forbidden'
+    '429':
+      $ref: './errors.yml#/responses/TooManyRequests'
+    '500':
+      $ref: './errors.yml#/responses/InternalServerError'
+    '503':
+      $ref: './errors.yml#/responses/ServiceUnavailable'

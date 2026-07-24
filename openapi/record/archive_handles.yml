@@ -1,0 +1,87 @@
+paths:
+  records/{id}/archive_handles:
+    get:
+      tags:
+        - Records
+      summary: Get archive handles
+      description: |
+        **REQUIRED PERMISSION:** `records:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID or UUID of the record related to the archive handles
+          schema:
+            type: string
+          examples:
+            example1:
+              value: '501263'
+            example2:
+              value: ca116f96-bbd5-11ef-9468-53af98260bba
+
+      responses:
+        '200':
+          description: Returns a list of archive handles
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/ArchiveHandles'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  ArchiveHandles:
+    type: object
+    properties:
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      archive_handles:
+        type: array
+        description: An array of archive handles
+        items:
+          $ref: '#/schemas/archive_handle'
+        example:
+          - destination: 'bob@thetalake.com'
+            handle: '95292686-CBBB-B8C0-0351-25DAB7C2154D95292686-CBBB-B8C0-0351-25DAB7C2154D'
+            id: 599
+            sent_at: '2021-06-16T01:37:04.262Z'
+          - destination: 'sftp.thetalake.com/uploads'
+            handle: 'ZOOMCHAT_20223420610.000000_2024061123150.2123315959_2052352240611.180001'
+            id: 600
+            sent_at: '2021-06-16T01:37:04.262Z'
+
+  archive_handle:
+    type: object
+    properties:
+      handle:
+        type: string
+        description: The handle of the archived file. If the destination is an email, the handle is an email message id, otherwise, the handle is a filename
+        example: 2025-01-01/data/95292686-cbbb-b8c0-0351-25dab7c2154d
+      destination:
+        type: string
+        description: A comma separated list of destinations where the record was sent to
+        example: 'bob@thetalake.com, jill@thetalake.com'
+      id:
+        type: integer
+        description: The id of the archive handle
+        example: 599
+      sent_at:
+        type: string
+        description: The archive operation timestamp in the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        format: date-time
+        example: '2021-06-16T01:37:04.262Z'

@@ -1,0 +1,143 @@
+paths:
+  token:
+    post:
+      tags:
+        - Token
+      summary: Generate a new token with oauth credentials
+      description: |
+        **REQUIRED PERMISSION:** `none`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** This is an alias for the /token endpoint
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/schemas/PostTokenRequestBody'
+      responses:
+        '200':
+          description: The access token as described in [RFC6749 Section 5.1](https://www.rfc-editor.org/rfc/rfc6749#section-5.1)
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetTokenResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  token/context:
+    get:
+      tags:
+        - Token
+      summary: Get information about an access token
+      description: |
+        **REQUIRED PERMISSION:** `none`  
+        **RATE LIMIT:** `light`
+      responses:
+        '200':
+          description: Returns the context for an the access token given
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetContextResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  PostTokenRequestBody:
+    type: object
+    properties:
+      client_id:
+        type: string
+        description: The client_id given when building and API key as described in [RFC6749 Section 2.2](https://www.rfc-editor.org/rfc/rfc6749#section-2.2)
+        example: BmRuwBk9yXNd7-R8vaNWKxiuLij-abKX
+      client_secret:
+        type: string
+        description: The client_secret given when building an API key as described in [RFC6749 Section 2.3.1](https://www.rfc-editor.org/rfc/rfc6749#section-2.3.1)
+        example: dMffp-IOpihgJSRR17H-93hTJOnct-tzrMlXZx6ci6QUil0rtACoAMs8kG4v6S9cw9pCP2hXvfnS7evQtQIEQGmrGxzcMVDVKfnIupomYds-zzsACLXzh3qT2hDECHxJ
+      grant_type:
+        type: string
+        description: The grant code for the credentials being checked as described in [RFC6749 Section 4.4.2](https://www.rfc-editor.org/rfc/rfc6749#section-4.4.2)
+        example: client_credentials # TODO: for third party oauth, this can be refresh_token and authorization_code
+
+  GetTokenResponse:
+    type: object
+    properties:
+      access_token:
+        type: string
+        description: The access token to be used for all api calls.
+        example: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwcm94eSIsImF1ZCI6WyIxIl0sImV4cCI6MTcyNDc4MDI0MiwibmJmIjoxNzI0Nzc2NjQyLCJpYXQiOjE3MjQ3NzY2NDIsImp0aSI6IjgifQ.0SWUzeK3dh2SZihFk1yASm4JLfCqTBSSuyXW8Z5m_3uoRyO7FgU2EMPHSMJBVu84PQp7IvPejHM3hoa74_yejA
+      type:
+        type: string
+        description: The type of the token issued according to [RFC6749 Section 7.1](https://www.rfc-editor.org/rfc/rfc6749#section-7.1)
+        example: bearer
+      expires_in:
+        type: number
+        description: The lifetime in seconds of the access token
+        example: 3600
+
+  GetContextResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      context:
+        type: object
+        description: The token context
+        properties:
+          created_at:
+            $ref: '../common/schemas.yml#/schemas/created_at'
+          data_center:
+            type: string
+            description: The data center that this key is valid for
+            example: US East
+          expires_at:
+            $ref: '#/schemas/expires_at'
+          integration_id:
+            type: number
+            description: The ID of the integration this token is associated with, used by third party integrations. Only present when 'type' is 'third_party'
+            example: 98
+          name:
+            type: string
+            description: The name of the key
+            example: My API key
+          type:
+            type: string
+            description: The type of access token that was used
+            example: jwt
+            enum: [jwt, oauth, third_party]
+          workspaces_id:
+            type: number
+            description: The workspace this token is scoped to
+            example: 1
+          permissions:
+            type: array
+            items:
+              type: string
+              example: audit_logs:read
+
+  expires_at:
+    type: string
+    format: date-time
+    description: The expires at timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Only applicable for access tokens with `jwt` type
+    example: '2021-06-16T01:37:04.262Z'
+    nullable: true

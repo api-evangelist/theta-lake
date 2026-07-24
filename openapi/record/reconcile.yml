@@ -1,0 +1,421 @@
+paths:
+  reconciliation:
+    post:
+      tags:
+        - Reconciliation
+      summary: Reconcile records
+      description: |
+        **REQUIRED PERMISSION:** `reconciliation:read`  
+        **RATE LIMIT:** `medium`  
+        **NOTE:** The [documentation](/documentation/reconciliation) covers the supported platforms and attributes that can be reconciled against.  
+        The date range field is defaulted to the last 7 days if not specified. The range is inclusive and can span a maximum of 7 days.
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/RequestBodyV2'
+      responses:
+        '200':
+          description: Returns a list of matching records
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetReconciliationResultsV2'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+
+  reconciliation/count:
+    post:
+      tags:
+        - Reconciliation
+      summary: Get record count by platform
+      description: |
+        **REQUIRED PERMISSION:** `reconciliation:read`  
+        **RATE LIMIT:** `medium`  
+        **NOTE:**
+        The [documentation](/documentation/reconciliation) covers the supported platforms and attributes that can be queried.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/CountRequest'
+      responses:
+        '200':
+          description: Returns a count of matching records
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetReconciliationCount'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetReconciliationCount:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      result:
+        $ref: '#/schemas/CountResponse'
+
+  QueryRequest:
+    type: object
+    properties:
+      platform:
+        type: string
+        description: Third party platform to search. Supported platforms are documented [here](/documentation/reconciliation)
+        example: microsoft_teams
+      attributes:
+        type: array
+        description: A list of attributes for the platform to query on
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              description: The name of the platform attribute
+              example: channel_conversation_id
+            value:
+              type: string
+              description: the value of the platform attribute
+              example: DEBA5748-A73A-47BB-A2B9-5F05DC24E76F
+      includes_timestamp:
+        type: string
+        format: date-time
+        nullable: true
+        description: >
+          Records that contain the provided timestamp in the list of records in the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). **This applies to select attributes, 
+          for more information see** [this documentation](/documentation/reconciliation#includes_timestamp).
+        example: '2021-06-16T01:37:04.262Z'
+      media_type:
+        type: string
+        nullable: true
+        description: Filter the records by the media_type
+        example: chat
+        enum: [audio, chat, document, email, other, video]
+
+  CountRequest:
+    type: object
+    properties:
+      end:
+        type: string
+        format: date-time
+        nullable: true
+        description: '**Exclusive** end of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6), defaults to the current date'
+        example: '2022-06-16T01:37:04.262Z'
+      integration_id:
+        type: integer
+        description: The integration id to search for.
+        example: 1579
+        nullable: true
+      platform:
+        type: string
+        description: Integration platform to search for. Supported platforms are documented [here](/documentation/reconciliation).
+        example: microsoft_teams
+        nullable: true
+      start:
+        type: string
+        format: date-time
+        description: '**Inclusive** start of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)'
+        example: '2021-06-14T01:37:04.262Z'
+        nullable: true
+      type:
+        type: string
+        enum: [create_date, upload_date]
+        description: The type date range, default is *upload_date*
+        example: upload_date
+
+  CountResponse:
+    type: object
+    properties:
+      end:
+        type: string
+        format: date-time
+        nullable: true
+        description: '**Exclusive** end of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6), defaults to the current '
+        example: '2022-06-16T01:37:04.262Z'
+      integration_id:
+        type: integer
+        description: The integration id to search on. Can only be used if the platform is not provided
+        example: 1
+        nullable: true
+      platform:
+        type: string
+        description: Third party platform to search. Supported platforms are documented [here](/documentation/reconciliation). Can only be used if the integration_id is not provided
+        example: microsoft_teams
+        nullable: true
+      start:
+        type: string
+        format: date-time
+        description: '**Inclusive** start of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)'
+        example: '2021-06-14T01:37:04.262Z'
+        nullable: true
+      type:
+        type: string
+        enum: [create_date, upload_date]
+        description: The type date range, default is *upload_date*
+        example: upload_date
+      count:
+        type: number
+        description: The matching number of records for the platform and date range
+        example: 3153
+
+  RecordMatch:
+    type: object
+    properties:
+      archive_handles:
+        type: array
+        description: List of archive handles for the record
+        nullable: true
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: The id of the archive handle
+              example: 599
+            destination:
+              type: string
+              description: A comma separated list of destinations where the record was sent to
+              example: 'bob@thetalake.com, jill@thetalake.com'
+            handle:
+              type: string
+              description: The handle of the archived file. If the destination is an email, the handle is an email message id, otherwise, the handle is a filename
+              example: 2025-01-01/data/95292686-cbbb-b8c0-0351-25dab7c2154d
+            sent_at:
+              type: string
+              description: The archive operation timestamp in the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+              format: date-time
+              example: '2021-06-16T01:37:04.262Z'
+        example:
+          - destination: 'bob@thetalake.com'
+            handle: '95292686-CBBB-B8C0-0351-25DAB7C2154D95292686-CBBB-B8C0-0351-25DAB7C2154D'
+            id: 599
+            sent_at: '2021-06-16T01:37:04.262Z'
+          - destination: 'sftp.thetalake.com/uploads'
+            handle: 'ZOOMCHAT_20223420610.000000_2024061123150.2123315959_2052352240611.180001'
+            id: 600
+            sent_at: '2021-06-16T01:37:04.262Z'
+      data_path:
+        type: string
+        description: The path to the record in the the cloud storage. Only populated if the storage is BYOS
+        example: 2025-01-01/data/95292686-cbbb-b8c0-0351-25dab7c2154d
+      error:
+        type: string
+        description: A user friendly message for a bad request query
+        example: one or more attributes supplied cannot use includes_timestamp constraint
+        nullable: true
+      media_type:
+        type: string
+        description: The media type for the record. Will be `null` if the record is still processing
+        enum: [audio, chat, document, email, other, video]
+        example: chat
+        nullable: true
+      processed:
+        type: boolean
+        description: Whether the record has completed Theta Lake's processing pipeline, which includes enrichment and classification. Records that are still processing have been ingested but have not yet completed the pipeline.
+        example: true
+      record_id:
+        type: integer
+        description: The record id. This id matches the portal record-id. Will be `null` if the record is still processing
+        example: 12
+        nullable: true
+      upload_date:
+        type: string
+        format: date-time
+        description: Record upload timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2022-10-12T02:29:49.146Z'
+      uuid:
+        type: string
+        description: The uuid for the record. This id matches the portal record id
+        example: 95292686-cbbb-b8c0-0351-25dab7c2154d
+
+  GetReconciliationResultsV2:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      results:
+        type: object
+        properties:
+          include_records_still_processing:
+            type: boolean
+            description: >
+              Whether the response includes records that are still processing through the pipeline. This reflects the
+              `include_records_still_processing` request flag, which only applies to queries using `includes_timestamp`.
+              If `true`, some records may have `record_id`, `media_type`, and `archive_handles` as `null` since those
+              fields are only populated once processing completes.
+            example: true
+          total_hits:
+            type: integer
+            description: The total number of unique records that match across all queries
+            example: 100
+          range:
+            $ref: '#/schemas/DateRange'
+          results:
+            type: array
+            description: An array of matching results
+            items:
+              $ref: '#/schemas/ResultV2'
+
+  ResultV2:
+    type: object
+    properties:
+      error:
+        type: string
+        description: A user friendly message for a bad request query
+        example: Attribute is a required is a required attribute and was not set
+        nullable: true
+      status_code:
+        type: integer
+        description: HTTP status code of the query. When set to 400, `error` will be populated
+        example: 200
+      query:
+        $ref: '#/schemas/QueryRequestV2'
+      records:
+        type: array
+        description: List of records that match the reconciliation query
+        items:
+          $ref: '#/schemas/RecordMatch'
+
+  RequestBodyV2:
+    type: object
+    properties:
+      include_records_still_processing:
+        type: boolean
+        description: >
+          Whether to include records that are still being processed through the pipeline in the response. Defaults to `false`.
+          **This flag only applies to queries that use `includes_timestamp`.** Attributes that do not support `includes_timestamp`
+          (e.g. email, audio, video) have all metadata available at ingestion time and will always return `processed: true`
+          regardless of this flag. When `true` for timestamp queries, records still processing will not have `record_id`,
+          `media_type`, or `archive_handles` populated since those fields are only available after processing completes.
+        example: true
+      range:
+        $ref: '#/schemas/DateRange'
+      queries:
+        type: array
+        description: Array of reconciliation queries
+        maxItems: 500
+        items:
+          $ref: '#/schemas/QueryRequestV2'
+
+  DateRange:
+    type: object
+    description: Specifies the date range for the reconciliation window. **The maximum allowed range is 7 days**. If no range is provided, the system defaults to the last 7 days from the current date, based on the upload_date.
+    nullable: true
+    properties:
+      type:
+        type: string
+        enum: [create_date, upload_date]
+        description: The range type, default is *upload_date*
+        example: upload_date
+      start:
+        type: string
+        format: date-time
+        example: '2025-02-11T01:37:04.262Z'
+        description: '**Inclusive** start of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Defaults to 7 days from the current date if not specified'
+      end:
+        type: string
+        format: date-time
+        example: '2025-02-16T01:37:04.262Z'
+        description: '**Exclusive** end of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Defaults to current date if not specified'
+
+  QueryRequestV2:
+    type: object
+    required:
+      - platform
+      - attribute
+    properties:
+      attribute:
+        type: object
+        properties:
+          name:
+            type: string
+            description: The name of the platform attribute
+            example: channel_conversation_id
+          value:
+            type: string
+            description: The value of the platform attribute
+            example: DEBA5748-A73A-47BB-A2B9-5F05DC24E76F
+      includes_timestamp:
+        type: string
+        format: date-time
+        nullable: true
+        description: >
+          Records that contain the provided timestamp in the list of records in the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). This applies to select attributes, 
+          for more information for more information see [the documentation on includes_timestamp](/documentation/reconciliation#includes_timestamp).
+        example: '2025-02-15T01:37:04.262Z'
+      integration_id:
+        type: integer
+        description: Filter records to those ingested by the integration identified with this ID. Must be used in conjunction with the platform field.
+        example: 1579
+        nullable: true
+      media_types:
+        type: array
+        nullable: true
+        description: Filter the records by the media_type. If multiple values are provided, the results will be filtered by the OR operator
+        items:
+          type: string
+          description: Filter the records by the media_type
+          enum: [audio, chat, document, email, other, video]
+        example: [audio, chat]
+      platform:
+        type: string
+        description: Third party platform to reconcile. [Supported platforms are documented here](/documentation/reconciliation)
+        example: microsoft_teams
+
+  ReconciliationDescriptionV2: |
+    **REQUIRED PERMISSION:** `reconciliation:read`  
+    **RATE LIMIT:** `medium`  
+    **NOTE:** The [documentation](/documentation/reconciliation) covers the supported platforms and attributes that can be reconciled against.  
+    The date range field is defaulted to the last 7 days if not specified. The range can span a maximum of 7 days.
+
+  ReconciliationResponsesV2:
+    '200':
+      description: Returns a list of matching records
+      content:
+        application/json:
+          schema:
+            $ref: '#/schemas/GetReconciliationResultsV2'
+    '401':
+      $ref: '../common/errors.yml#/responses/Unauthorized'
+    '403':
+      $ref: '../common/errors.yml#/responses/Forbidden'
+    '429':
+      $ref: '../common/errors.yml#/responses/TooManyRequests'
+    '500':
+      $ref: '../common/errors.yml#/responses/InternalServerError'
+    '503':
+      $ref: '../common/errors.yml#/responses/ServiceUnavailable'

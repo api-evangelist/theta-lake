@@ -1,0 +1,462 @@
+paths:
+  identities/{id}/extra_attributes:
+    post:
+      tags:
+        - Identities
+      summary: Create a new extra_attribute on an identity
+      description: |
+        **REQUIRED PERMISSION:** `identities:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the identity to add the extra attribute's on
+          schema:
+            type: integer
+            example: 1996
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                extra_attributes:
+                  description: The extra_attributes to add to the identity. **Limit of 50 per request**
+                  type: array
+                  items:
+                    $ref: '#/schemas/ExtraAttributeBody'
+      responses:
+        '201':
+          description: The identity with the new extra_attribute
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostExtraAttributeResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    put:
+      tags:
+        - Identities
+      summary: Update extra_attributes on an identity
+      description: |
+        **REQUIRED PERMISSION:** `identities:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the identity to update the extra attributes on
+          schema:
+            type: integer
+            example: 1996
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                extra_attributes:
+                  description: The extra_attributes to update on the identity. **Limit of 50 per request**
+                  type: array
+                  items:
+                    $ref: '#/schemas/UpdateExtraAttributeBody'
+      responses:
+        '200':
+          description: The identity with updated extra attributes
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostExtraAttributeResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  identities/extra_attributes/{id}:
+    get:
+      tags:
+        - Identities
+      summary: Get extra_attribute by ID
+      description: |
+        **REQUIRED PERMISSION:** `identities:read`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: id
+          in: path
+          description: The extra_attribute ID to get
+          required: true
+          schema:
+            type: integer
+            example: 758170
+      responses:
+        '200':
+          description: The identity that owns the updated extra_attribute
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetExtraAttributeResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    put:
+      tags:
+        - Identities
+      summary: Update an identity extra_attribute
+      description: |
+        **REQUIRED PERMISSION:** `identities:update`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: id
+          in: path
+          description: The extra_attribute ID to update
+          required: true
+          schema:
+            type: integer
+            example: 758170
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/DeprecatedExtraAttributeBody'
+      responses:
+        '200':
+          description: The identity that owns the updated extra_attribute
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutExtraAttributeResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Identities
+      summary: Delete an identity extra_attribute
+      description: |
+        **REQUIRED PERMISSION:** `identities:update`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: id
+          in: path
+          description: The extra_attribute ID to delete
+          required: true
+          schema:
+            type: integer
+            example: 1052382
+      responses:
+        '200':
+          description: Status message indicating successful deletion
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/DeleteExtraAttributeResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  identities/extra_attributes/{id}/make_primary:
+    put:
+      tags:
+        - Identities
+      summary: Make an extra_attribute the primary
+      description: |
+        **REQUIRED PERMISSION:** `identities:update`  
+        **RATE LIMIT:** `light`  
+        **NOTE:**
+        Makes the extra_attribute the primary attribute on the identity by swapping the values. <br />
+        Example: Given the following identity:<br />
+        ``` json
+        {
+            "identity": {
+              "created_at": "2021-06-16T01:37:04.262Z",
+              "email": "john.smith@gmail.com", <-- Notice the email before API call
+              "external_id": "it-236",
+              "extra_attributes": [
+                {
+                  "field": "email",
+                  "id": 42035,
+                  "value": "john@smith.com" <-- Notice the email before API call
+                }
+              ],
+              "globally_risky": false,
+              "id": 88484,
+              "is_submitter": true,
+              "name": "John Smith",
+              "participant": false,
+              "phone_number": "555-867-5309",
+              "risky": false,
+              "updated_at": "2022-10-12T02:29:49.146Z"
+          }
+        }
+        ```
+        A call to `/identities/extra_attributes/42035/make_primary` would result in the following:
+        ``` json
+        {
+          "identity": {
+            "created_at": "2021-06-16T01:37:04.262Z",
+            "email": "john@smith.com", <-- Notice the swapped email after API call
+            "external_id": "it-236",
+            "extra_attributes": [
+              {
+                "field": "email",
+                "id": 42035,
+                "value": "john.smith@gmail.com" <-- Notice the swapped email after API call
+              }
+            ],
+            "globally_risky": false,
+            "id": 88484,
+            "is_submitter": true,
+            "name": "John Smith",
+            "participant": false,
+            "phone_number": "555-867-5309",
+            "risky": false,
+            "updated_at": "2022-10-12T02:29:49.146Z"
+          }
+        }
+        ```
+
+      parameters:
+        - name: id
+          in: path
+          description: The extra_attribute ID to make primary
+          required: true
+          schema:
+            type: integer
+            example: 1052382
+      responses:
+        '200':
+          description: The identity that owns the promoted extra_attribute
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutExtraAttributePrimaryResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  PutExtraAttributeResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      identity:
+        $ref: './identities.yml#/schemas/Identity'
+
+  PostExtraAttributeResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      identity:
+        $ref: './identities.yml#/schemas/Identity'
+
+  DeleteExtraAttributeResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: Status message indicating successful deletion
+        example: Request successfully completed
+
+  PutExtraAttributePrimaryResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      identity:
+        $ref: './identities.yml#/schemas/Identity'
+
+  GetExtraAttributeResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      extra_attribute:
+        type: object
+        properties:
+          end_date:
+            $ref: '#/schemas/end_date'
+          field:
+            $ref: '#/schemas/field'
+          id:
+            $ref: '#/schemas/id'
+          start_date:
+            $ref: '#/schemas/start_date'
+          source:
+            $ref: '#/schemas/source'
+          value:
+            $ref: '#/schemas/value'
+
+  DeprecatedExtraAttributeBody:
+    type: object
+    properties:
+      end_date:
+        $ref: '#/schemas/end_date'
+      field:
+        $ref: '#/schemas/field'
+      value:
+        $ref: '#/schemas/value'
+      start_date:
+        $ref: '#/schemas/start_date'
+
+  ExtraAttributeBody:
+    type: object
+    properties:
+      end_date:
+        $ref: '#/schemas/end_date'
+      field:
+        $ref: '#/schemas/field'
+      source:
+        $ref: '#/schemas/source'
+      value:
+        $ref: '#/schemas/value'
+      start_date:
+        $ref: '#/schemas/start_date'
+
+  UpdateExtraAttributeBody:
+    type: object
+    required:
+      - id
+    properties:
+      end_date:
+        $ref: '#/schemas/end_date'
+      field:
+        $ref: '#/schemas/field'
+      id:
+        type: integer
+        description: Extra attribute field identifier
+        example: 42035
+      source:
+        $ref: '#/schemas/source'
+      start_date:
+        $ref: '#/schemas/start_date'
+      value:
+        $ref: '#/schemas/value'
+
+  field:
+    type: string
+    description: Extra attribute name (field)
+    example: external_id
+
+  start_date:
+    type: string
+    format: date-time
+    description: Start date timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: null
+    nullable: true
+
+  source:
+    type: string
+    description: Extra attribute source
+    example: Theta Lake API
+    nullable: true
+
+  end_date:
+    type: string
+    format: date-time
+    description: End date timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: null
+    nullable: true
+
+  value:
+    type: string
+    description: Extra attribute value
+    example: U03658D1RDG
+
+  id:
+    type: integer
+    description: Extra attribute field identifier
+    example: 42035

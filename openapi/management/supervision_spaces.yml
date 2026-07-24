@@ -1,0 +1,1239 @@
+paths:
+  supervision_spaces:
+    get:
+      tags:
+        - Supervision Spaces
+      summary: List all supervision spaces
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page
+          required: false
+          schema:
+            type: integer
+            example: 25
+            minimum: 1
+            maximum: 500
+            default: 25
+      responses:
+        '200':
+          description: A paged list of supervision spaces
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpacesResponseNew'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    post:
+      tags:
+        - Supervision Spaces
+      summary: Create a new supervision space
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:create`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:**
+        One input field is `media_type_ids` for the supervision space to handle. The input for this field is an array of integers for the media types. Use the following table to lookup the IDs for each media type.
+        | Type           | ID |
+        |----------------|----|
+        | Video          | 1  |
+        | Audio          | 2  |
+        | Chat           | 3  |
+        | Attachment     | 4  |
+        | Email          | 5  |
+        | Image          | 6  |
+        | AI Interaction | 7  |
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostPutSupervisionSpacesRequest'
+      responses:
+        '200':
+          description: The new supervision space
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostSupervisionSpacesResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  supervision_spaces/{id}:
+    get:
+      tags:
+        - Supervision Spaces
+      summary: Get supervision space by ID
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the supervision space to retrieve
+          schema:
+            type: integer
+            example: 8
+      responses:
+        '200':
+          description: The retrieved supervision space
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpaceByIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    put:
+      tags:
+        - Supervision Spaces
+      summary: Update supervision space
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:update`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:**
+        One input field is `media_type_ids` for the supervision space to handle. The input for this field is an array of integers for the media types. Use the following table to lookup the IDs for each media type.
+        | Type           | ID |
+        |----------------|----|
+        | Video          | 1  |
+        | Audio          | 2  |
+        | Chat           | 3  |
+        | Attachment     | 4  |
+        | Email          | 5  |
+        | Image          | 6  |
+        | AI Interaction | 7  |
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the supervision space to update
+          schema:
+            type: integer
+            example: 8
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostPutSupervisionSpacesRequest'
+      responses:
+        '200':
+          description: The updated supervision space
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpaceByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Supervision Spaces
+      summary: Delete supervision space
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:delete`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the supervision space to delete
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: The deleted supervision space
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpaceByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  supervision_spaces/{id}/users:
+    post:
+      tags:
+        - Supervision Spaces
+      summary: Add users to supervision space
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The supervision space ID
+          schema:
+            type: integer
+            example: 120
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              description: An array of user IDs to add to the supervision space
+              items:
+                type: integer
+              example:
+                - 24
+                - 422
+                - 404
+      responses:
+        '200':
+          description: The supervision space with the added users
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpaceByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Supervision Spaces
+      summary: Remove users from supervision space
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The supervision space ID
+          schema:
+            type: integer
+            example: 120
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              description: An array of user IDs to remove from the supervision space
+              items:
+                type: integer
+              example:
+                - 24
+                - 422
+                - 404
+      responses:
+        '200':
+          description: The supervision space without the removed users
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpaceByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  supervision_spaces/{id}/user_groups:
+    post:
+      tags:
+        - Supervision Spaces
+      summary: Add user groups to supervision space
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The supervision space ID
+          schema:
+            type: integer
+            example: 120
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              description: An array of user group IDs to add to the supervision space
+              items:
+                type: integer
+              example:
+                - 75
+                - 84
+      responses:
+        '200':
+          description: The supervision space with the added user groups
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpaceByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Supervision Spaces
+      summary: Remove user groups from supervision space
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The supervision space ID
+          schema:
+            type: integer
+            example: 120
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              description: An array of user group IDs to remove from the supervision space
+              items:
+                type: integer
+              example:
+                - 75
+                - 84
+      responses:
+        '200':
+          description: The supervision space without the removed user groups
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpaceByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  supervision_spaces/{id}/directory_groups:
+    post:
+      tags:
+        - Supervision Spaces
+      summary: Add directory groups to supervision space
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The supervision space ID
+          schema:
+            type: integer
+            example: 120
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              description: An array of directory group IDs to add to the supervision space
+              items:
+                type: integer
+              example:
+                - 1988
+                - 1997
+      responses:
+        '200':
+          description: The supervision space with the added directory groups
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpaceByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Supervision Spaces
+      summary: Remove directory groups from supervision space
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The supervision space ID
+          schema:
+            type: integer
+            example: 120
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              description: An array of directory group IDs to remove from the supervision space
+              items:
+                type: integer
+              example:
+                - 1988
+                - 1997
+      responses:
+        '200':
+          description: The supervision space without the removed directory groups
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpaceByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  supervision_spaces/{id}/participants:
+    post:
+      tags:
+        - Supervision Spaces
+      summary: Add participants to supervision space
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:update`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:**
+        This route can be used to add participants to supervision spaces. The `participants_text` is a semi-CSV style list of name, email, or phone number separated by newlines.
+        ```
+        {
+          "participants_text": "johnsmith@example.com\nBob Jones, bob@example.com\nJames K Anderson, james@example.com, 123-333-4567\n"
+        }
+        ```
+        As shown in the example, the syntax is semi-CSV because any of the fields can be omitted.
+        Internally the fields are parsed and used to search through known identities. If a match is found, the identity is added to the supervision space. If a match is not found, a new identity is created and added to the supervision space.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The supervision space ID
+          schema:
+            type: integer
+            example: 120
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                participants_text:
+                  type: string
+                  description: A semi-CSV style list of newline separated name, email, or phone numbers that are associated with an identity
+                  example: |
+                    johnsmith@example.com
+                    Bob Jones, bob@example.com
+                    James K Anderson, james@example.com, 123-333-4567
+      responses:
+        '200':
+          description: The supervision space with the added directory groups
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpaceByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Supervision Spaces
+      summary: Remove participants from supervision space
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The supervision space ID
+          schema:
+            type: integer
+            example: 120
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identity_ids:
+                  type: array
+                  description: An array of participant's identity IDs to remove from the supervision space
+                  items:
+                    type: integer
+                  example:
+                    - 5647
+                    - 31973
+      responses:
+        '200':
+          description: The supervision space without the removed participants
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpaceByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  supervision_spaces/{id}/identities:
+    post:
+      tags:
+        - Supervision Spaces
+      summary: Add identities to supervision space
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The supervision space ID
+          schema:
+            type: integer
+            example: 120
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              description: An array of identity IDs to associate with this supervision space
+              items:
+                type: integer
+              maxItems: 500
+              example:
+                - 302
+                - 304
+                - 305
+      responses:
+        '200':
+          description: The supervision space with the added identities
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSupervisionSpaceByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetSupervisionSpacesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      supervision_spaces:
+        type: array
+        description: An array of supervision spaces
+        items:
+          $ref: '#/schemas/SupervisionSpacesSummary'
+
+  GetSupervisionSpacesResponseNew:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      supervision_spaces:
+        type: array
+        description: An array of supervision spaces
+        items:
+          $ref: '#/schemas/SupervisionSpacesSummaryNew'
+
+  PostPutSupervisionSpacesRequest:
+    type: object
+    properties:
+      all_participants:
+        type: boolean
+        description: Indicates if the supervision space should allow adding all participants, creating a catch all space for participants. Only one supervision space can have all participants enabled.
+        example: false
+      all_users:
+        type: boolean
+        description: Indicates if the supervision space should allow adding all users
+        example: false
+      name:
+        $ref: '#/schemas/name'
+      delete_on_expiration:
+        $ref: '#/schemas/delete_on_expiration'
+      description:
+        $ref: '#/schemas/description'
+      directory_group_ids:
+        type: array
+        description: An array of directory group IDs to associate with this supervision space
+        items:
+          type: integer
+        example:
+          - 1988
+          - 1989
+      external_id:
+        $ref: '#/schemas/external_id'
+      hard_enforce:
+        $ref: '#/schemas/hard_enforce'
+      integration_ids:
+        type: array
+        description: An array of integration IDs to associate with this supervision space
+        items:
+          type: integer
+        example:
+          - 302
+          - 304
+          - 305
+      media_type_ids:
+        type: array
+        description: An array of media type IDs to associate with this supervision space,
+        items:
+          type: integer
+        example:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+      retention_library_ids:
+        type: array
+        description: An array of retention library IDs to associate with this supervision space
+        items:
+          type: integer
+        example:
+          - 1
+          - 238
+      supervision_space_priority:
+        $ref: '#/schemas/supervision_space_priority'
+
+  PostSupervisionSpacesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      supervision_space:
+        $ref: '#/schemas/DetailedSupervisionSpace'
+
+  GetSupervisionSpaceByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      supervision_space:
+        $ref: '#/schemas/DetailedSupervisionSpace'
+
+  ### Request/Response above, objects below
+
+  SupervisionSpacesSummary:
+    type: object
+    properties:
+      all_participants:
+        $ref: '#/schemas/all_participants'
+      all_users:
+        $ref: '#/schemas/all_users'
+      can_delete:
+        $ref: '#/schemas/can_delete'
+      can_enable_all_participants:
+        $ref: '#/schemas/can_enable_all_participants'
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      delete_on_expiration:
+        $ref: '#/schemas/delete_on_expiration'
+      description:
+        $ref: '#/schemas/description'
+      directory_groups:
+        type: array
+        description: An array of directory groups
+        items:
+          type: object
+          properties:
+            id:
+              $ref: 'directory_groups.yml#/schemas/id'
+            name:
+              $ref: 'directory_groups.yml#/schemas/name'
+      disabled:
+        $ref: '#/schemas/disabled'
+      entry_strategies_count:
+        $ref: '#/schemas/entry_strategies_count'
+      external_id:
+        $ref: '#/schemas/external_id'
+      hard_enforce:
+        $ref: '#/schemas/hard_enforce'
+      id:
+        $ref: '#/schemas/id'
+      integrations:
+        $ref: '#/schemas/integrations'
+      media_types:
+        $ref: '#/schemas/media_types'
+      name:
+        $ref: '#/schemas/name'
+      participant_count:
+        $ref: '#/schemas/participant_count'
+      record_count:
+        $ref: '#/schemas/record_count'
+      retention_libraries:
+        $ref: '#/schemas/retention_libraries'
+      reviewer_count:
+        $ref: '#/schemas/reviewer_count'
+      supervision_space_priority:
+        $ref: '#/schemas/supervision_space_priority'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  SupervisionSpacesSummaryNew:
+    type: object
+    properties:
+      all_participants:
+        $ref: '#/schemas/all_participants'
+      all_users:
+        $ref: '#/schemas/all_users'
+      can_enable_all_participants:
+        $ref: '#/schemas/can_enable_all_participants'
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      delete_on_expiration:
+        $ref: '#/schemas/delete_on_expiration'
+      description:
+        $ref: '#/schemas/description'
+      directory_groups:
+        type: array
+        description: An array of directory groups
+        items:
+          type: object
+          properties:
+            id:
+              $ref: 'directory_groups.yml#/schemas/id'
+            name:
+              $ref: 'directory_groups.yml#/schemas/name'
+      disabled:
+        $ref: '#/schemas/disabled'
+      entry_strategies_count:
+        $ref: '#/schemas/entry_strategies_count'
+      external_id:
+        nullable: true
+        allOf:
+          - $ref: '#/schemas/external_id'
+      hard_enforce:
+        $ref: '#/schemas/hard_enforce'
+      id:
+        $ref: '#/schemas/id'
+      integrations:
+        $ref: '#/schemas/integrations'
+      media_types:
+        $ref: '#/schemas/media_types'
+      name:
+        $ref: '#/schemas/name'
+      participant_count:
+        $ref: '#/schemas/participant_count'
+      retention_libraries:
+        $ref: '#/schemas/retention_libraries'
+      reviewer_count:
+        $ref: '#/schemas/reviewer_count'
+      supervision_space_priority:
+        $ref: '#/schemas/supervision_space_priority'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  DetailedSupervisionSpace:
+    type: object
+    properties:
+      all_participants:
+        $ref: '#/schemas/all_participants'
+      all_users:
+        $ref: '#/schemas/all_users'
+      can_delete:
+        $ref: '#/schemas/can_delete'
+      can_enable_all_participants:
+        $ref: '#/schemas/can_enable_all_participants'
+      compiled_participant_list:
+        type: array
+        description: All identities associated with the supervision space, including identities from directory groups
+        items:
+          $ref: '#/schemas/participant'
+      compiled_user_list:
+        type: array
+        description: All users associated with the supervision space, including user groups
+        items:
+          $ref: '#/schemas/user'
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      delete_on_expiration:
+        $ref: '#/schemas/delete_on_expiration'
+      description:
+        $ref: '#/schemas/description'
+      directory_groups:
+        type: array
+        description: The directory groups associated with this supervision space
+        items:
+          type: object
+          properties:
+            description:
+              $ref: './directory_groups.yml#/schemas/description'
+            external_id:
+              $ref: './directory_groups.yml#/schemas/external_id'
+            id:
+              $ref: './directory_groups.yml#/schemas/id'
+            identities:
+              type: array
+              description: An array of identities
+              items:
+                $ref: './directory_groups.yml#/schemas/DirectoryGroupIdentity'
+            identity_count:
+              type: integer
+              description: The number of identities in the directory group
+              example: 231
+            name:
+              $ref: './directory_groups.yml#/schemas/name'
+      disabled:
+        $ref: '#/schemas/disabled'
+      entry_strategies_count:
+        $ref: '#/schemas/entry_strategies_count'
+      external_id:
+        nullable: true
+        allOf:
+          - $ref: '#/schemas/external_id'
+      hard_enforce:
+        $ref: '#/schemas/hard_enforce'
+      id:
+        $ref: '#/schemas/id'
+      integrations:
+        $ref: '#/schemas/integrations'
+      media_types:
+        $ref: '#/schemas/media_types'
+      name:
+        $ref: '#/schemas/name'
+      participant_count:
+        $ref: '#/schemas/participant_count'
+      participants:
+        type: array
+        description: The identities directly associated with the supervision space not including identities from directory groups
+        items:
+          $ref: '#/schemas/participant'
+      retention_libraries:
+        $ref: '#/schemas/retention_libraries'
+      reviewer_count:
+        $ref: '#/schemas/reviewer_count'
+      supervision_space_priority:
+        $ref: '#/schemas/supervision_space_priority'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      user_groups:
+        type: array
+        description: The user groups associated with this supervision space
+        items:
+          type: object
+          properties:
+            created_at:
+              $ref: '../common/schemas.yml#/schemas/created_at'
+            description:
+              type: string
+              description: The user group description
+              example: Engineering user group for testing
+            external_id:
+              type: string
+              description: An external identifier for the user group
+              example: 'THX-1138'
+              nullable: true
+            id:
+              type: integer
+              description: The user group ID
+              example: 64
+            name:
+              type: string
+              description: The user group name
+              example: Luke's testing group
+            updated_at:
+              $ref: '../common/schemas.yml#/schemas/updated_at'
+            # url: Mapped out
+            #   type: string
+            #   description:
+            #   example: https://uswest.thetalake.ai/api/v1/user_groups/34
+            user_count:
+              type: integer
+              description: The number of users in the group
+              example: 13
+      users:
+        type: array
+        description: All users associated with the supervision space, not including user groups
+        items:
+          $ref: '#/schemas/user'
+
+  # Objects above, primitives below
+
+  all_participants:
+    type: boolean
+    description: Indicates if the supervision space contains all the participants in the org
+    example: false
+
+  all_users:
+    type: boolean
+    description: Indicates if the supervision space contains all the users in the org
+    example: false
+
+  retention_libraries:
+    type: array
+    description: An array of retention libraries associated with this supervision space
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: The retention library ID
+        name:
+          type: string
+          example: Default
+          description: The retention library name
+
+  can_delete:
+    type: boolean
+    description: Indicates if the supervision space can be deleted
+    example: false
+
+  can_enable_all_participants:
+    type: boolean
+    description: Indicates if the supervision space can add all participants. Only one supervision space can have all participants enabled.
+    example: false
+
+  description:
+    type: string
+    description: The description of the supervision space given when created
+    example: All central time employees
+
+  disabled:
+    type: boolean
+    description: Indicates if supervision space is turned on or off
+    example: false
+
+  entry_strategies_count:
+    type: integer
+    description: The count of SWRV rules that include this supervision space
+    example: 0
+
+  external_id:
+    type: string
+    description: An external ID for the supervision space
+    example: 'THX-1138'
+    nullable: true
+
+  hard_enforce:
+    type: boolean
+    description: Indicates if users can be assigned records from other supervision spaces
+    example: false
+
+  delete_on_expiration:
+    type: boolean
+    description: Indicates if records are deleted in this supervision space after expiration
+    example: false
+
+  id:
+    type: integer
+    description: The supervision space ID
+    example: 12
+
+  integrations:
+    type: array
+    description: An array of integrations associated with this supervision space
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The integration ID
+          example: 24
+        name:
+          type: string
+          description: The integration name
+          example: Midwest Zoom users
+
+  media_types:
+    type: array
+    description: An array of media types included in this supervision space
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The media type ID
+          example: 1
+        name:
+          type: string
+          description: The media types applicable to this supervision space
+          example: Video
+
+  name:
+    type: string
+    description: The supervision space name
+    example: Central Time
+
+  participant_count:
+    type: integer
+    description: The number of participants in the supervision space
+    example: 5
+
+  record_count:
+    type: integer
+    description: The number of records uploaded to this supervision space. This field is deprecated.
+    example: 1245
+
+  reviewer_count:
+    type: integer
+    description: The number of reviewers assigned to the supervision space
+    example: 123
+
+  supervision_space_priority:
+    type: integer
+    description: The priority of assigning records to a supervision space
+    example: 3
+
+  participant:
+    type: object
+    properties:
+      email:
+        type: string
+        nullable: true
+        description: The participant's email address
+        example: john@smith.com
+      identity_id:
+        type: integer
+        description: The participant's ID
+        example: 42
+      is_submitter:
+        type: boolean
+        description: Indicates if the participant did submit data
+        example: true
+      name:
+        type: string
+        nullable: true
+        description: The participant's name
+        example: John Smith
+      phone_number:
+        type: string
+        nullable: true
+        description: The participant's phone number
+        example: 555-867-5309
+
+  user:
+    type: object
+    properties:
+      current_org_unit:
+        type: object
+        description: The user's current org unit
+        properties:
+          archive_only:
+            type: boolean
+            description: Indicates if this org unit is archive Only
+            example: false
+          id:
+            type: integer
+            description: The ID of the current org unit
+            example: 1
+          name:
+            type: string
+            description: The name of current org unit
+      disabled:
+        type: boolean
+        description: Indicates if the user is disabled
+        example: false
+      email:
+        type: string
+        description: The user's email address
+        example: john@smith.com
+      last_login:
+        type: string
+        format: date-time
+        nullable: true
+        description: The user's last login timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2023-01-13T22:50:58.000Z'
+      name:
+        type: string
+        description: The user's name
+        example: John Smith
+      role:
+        type: string
+        description: The user's role
+        example: Administrator
+      role_id:
+        type: integer
+        description: The ID of the user's role
+        example: 3
+      user_id:
+        type: integer
+        description: The user's ID
+        example: 422

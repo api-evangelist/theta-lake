@@ -1,0 +1,70 @@
+paths:
+  records/{id}/disposition:
+    get:
+      tags:
+        - Records
+      summary: Get a record's disposition
+      description: |
+        **REQUIRED PERMISSION:** `records:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID or UUID of the record
+          required: true
+          schema:
+            type: string
+          examples:
+            example1:
+              value: '501263'
+            example2:
+              value: ca116f96-bbd5-11ef-9468-53af98260bba
+      responses:
+        '200':
+          description: Returns the disposition of the record
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/DispositionResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  DispositionResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      disposition:
+        type: object
+        description: The disposition of the record
+        properties:
+          expires_at:
+            type: string
+            format: date-time
+            nullable: true
+            description: The expiration date of the record's disposition
+            example: '2030-12-31T23:59:59Z'
+          status:
+            type: string
+            description: The record's disposition status
+            example: accepted
+            enum:
+              - accepted
+              - rejected
+              - expired
+

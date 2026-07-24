@@ -1,0 +1,80 @@
+paths:
+  records/{id}/sentences:
+    get:
+      tags:
+        - Records
+      summary: Get sentences
+      description: |
+        **REQUIRED PERMISSION:** `records:read`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE** This endpoint is tied to a license within Theta Lake. If you would like access  
+        to this endpoint, please reach out to your Theta Lake account manager for license information.  
+        This endpoint will increase the quota by **1000 bytes** per API call.
+      parameters:
+        - name: id
+          in: path
+          description: The ID or UUID of the record
+          required: true
+          schema:
+            type: string
+          examples:
+            example1:
+              value: '501263'
+            example2:
+              value: 'ca116f96-bbd5-11ef-9468-53af98260bba'
+      responses:
+        '200':
+          description: Returns the sentences found for the record. See [this documentation](/documentation/records#sentences) for more information on the offsets.
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/sentences_response'
+
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '402':
+          $ref: '../common/errors.yml#/responses/PaymentRequired'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  sentences_response:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      sentences:
+        type: object
+        properties:
+          output_format_version:
+            type: string
+            example: 0.1.0
+            description: 'The version of the sentences in format: major.minor.patch'
+          offsets:
+            type: object
+            additionalProperties: true
+            example: { 'chat': [0, 34, 69] }
+          sentences:
+            type: object
+            additionalProperties: true
+            example:
+              {
+                'chat':
+                  [
+                    'sentence with offset starting at 0',
+                    'sentence with offset starting at 34',
+                    'sentence with offset starting at 69',
+                  ],
+              }

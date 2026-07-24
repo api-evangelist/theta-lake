@@ -1,0 +1,144 @@
+paths:
+  records/{id}/content:
+    get:
+      tags:
+        - Records
+      summary: Download content
+      description: |
+        **REQUIRED PERMISSION:** `records:read`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE** This endpoint is tied to a license within Theta Lake. If you would like access  
+        to this endpoint, please reach out to your Theta Lake account manager for license information.  
+        This endpoint will increase the monthly quota usage by the size of the record content.
+      parameters:
+        - name: id
+          in: path
+          description: The ID or UUID of the record to download
+          required: true
+          schema:
+            type: string
+          examples:
+            example1:
+              value: '501263'
+            example2:
+              value: ca116f96-bbd5-11ef-9468-53af98260bba
+        - name: type
+          in: query
+          description: The type of content to download
+          required: false
+          schema:
+            type: string
+            default: original
+            enum:
+              - original
+              - chat
+              - transcript
+        - name: attachment_id
+          in: query
+          description: The id of the chat attachment to download
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns the original content of the record
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+                description: The contents of the file
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '402':
+          $ref: '../common/errors.yml#/responses/PaymentRequired'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  records/quota:
+    get:
+      tags:
+        - Records
+      summary: Get download quota information
+      description: |
+        **REQUIRED PERMISSION:** `records:read`  
+        **RATE LIMIT:** `medium`
+      responses:
+        '200':
+          description: The download quota information
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/quota'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  PaymentRequired:
+    description: This error is a result of a missing license to access this endpoint. This can also happen when downloading more bytes than allowed by your license.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 402
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Payment Required
+            request_id:
+              $ref: '../common/schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: Human readable error message
+              example: Please contact your Theta Lake account manager for license information
+
+  quota:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      quota:
+        type: object
+        description: The quota information
+        properties:
+          bytes_alloted:
+            type: integer
+            description: Total number of bytes allotted
+            example: 21000000000
+          bytes_remaining:
+            type: integer
+            description: Total number of bytes remaining until the quota is reset
+            example: 854931307
+          bytes_used:
+            type: integer
+            description: Total number of bytes used since the quota was reset
+            example: 20145068693
+          resets_at:
+            type: string
+            format: date-time
+            description: The timestamp when the used quota resets back to 0 using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+            example: 2025-02-01T00:00:00Z

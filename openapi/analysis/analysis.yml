@@ -1,0 +1,285 @@
+paths:
+  analysis/policy_hits:
+    get:
+      tags:
+        - Analysis
+      summary: List all policy hits
+      description: |
+        **REQUIRED PERMISSIONS:** `analysis:read`  
+        **RATE LIMIT:** `medium`
+      responses:
+        '200':
+          description: A list of policy hits
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/ListAllPolicyHitsResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  analysis/policies:
+    get:
+      tags:
+        - Analysis
+      summary: List all policies
+      description: |
+        **REQUIRED PERMISSIONS:** `policies:read`  
+        **RATE LIMIT:** `heavy`
+      responses:
+        '200':
+          description: A list of policies
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/ListAllPoliciesResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  analysis/policies/{id}:
+    get:
+      tags:
+        - Analysis
+      summary: Get a policy by id
+      description: |
+        **REQUIRED PERMISSIONS:** `policies:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the policy to get
+          schema:
+            type: integer
+            example: 147
+      responses:
+        '200':
+          description: A policy with its detection rules and SWRV rules
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetPolicyByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  ListAllPolicyHitsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      policy_hits:
+        type: array
+        items:
+          $ref: '#/schemas/policy_hit'
+
+  policy_hit:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The policy hit id
+        example: 1234
+      name:
+        type: string
+        description: The policy hit name
+        example: Audio Unclear
+
+  ListAllPoliciesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      policies:
+        type: array
+        items:
+          $ref: '#/schemas/policy'
+
+  GetPolicyByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      policy:
+        $ref: '#/schemas/policy_details'
+
+  policy:
+    type: object
+    properties:
+      created_at:
+        type: string
+        format: date-time
+        nullable: true
+        description: The policy creation timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Will be null if the policy is built in.
+        example: '2023-03-13T18:54:09.000Z'
+      description:
+        type: string
+        description: The policy description
+        example: All Detections Active.
+      id:
+        type: integer
+        description: The policy ID
+        example: 147
+      is_built_in:
+        type: boolean
+        description: Indicates if this is a built in policy
+        example: true
+      name:
+        type: string
+        description: The policy name
+        example: All Detections Actives
+      redaction_policy:
+        $ref: '#/schemas/redaction_policy'
+      updated_at:
+        type: string
+        format: date-time
+        nullable: true
+        description: The policy last update timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Will be null if the policy is built in.
+        example: '2024-08-07T23:23:45.000Z'
+
+  policy_details:
+    type: object
+    properties:
+      created_at:
+        type: string
+        format: date-time
+        nullable: true
+        description: The policy creation timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Will be null if the policy is built in.
+        example: '2023-03-13T18:54:09.000Z'
+      description:
+        type: string
+        description: The policy description
+        example: All Detections Active.
+      detection_rules:
+        type: array
+        description: List of detection rules in the policy
+        items:
+          $ref: '#/schemas/detection_rule'
+      id:
+        type: integer
+        description: The policy ID
+        example: 147
+      is_built_in:
+        type: boolean
+        description: Indicates if this is a built-in policy
+        example: true
+      name:
+        type: string
+        description: The policy name
+        example: All Detections Active
+      redaction_policy:
+        $ref: '#/schemas/redaction_policy'
+      swrv_rules:
+        type: array
+        description: List of SWRV rules associated with the policy
+        items:
+          $ref: '../policy/workflow.yml#/schemas/SwrvRule'
+      updated_at:
+        type: string
+        format: date-time
+        nullable: true
+        description: The policy last update timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Will be null if the policy is built in.
+        example: '2024-08-07T23:23:45.000Z'
+
+  detection_rule:
+    type: object
+    properties:
+      active:
+        type: boolean
+        description: Indicates if the detection rule is active in the policy
+        example: true
+      beta:
+        type: boolean
+        description: Indicates if the detection rule is in beta
+        example: false
+      id:
+        type: integer
+        description: The ID of the detection rule
+        example: 385
+      is_multi_language_supported:
+        type: boolean
+        description: Indicates if the detection rule supports multiple languages
+        example: true
+      media_types:
+        type: array
+        items:
+          type: string
+          enum:
+            - Audio
+            - Chat
+            - Document
+            - Email
+            - Other
+            - Video
+        description: List of media types the detection rule applies to
+        example: ['Video', 'Audio', 'Chat']
+      name:
+        type: string
+        description: The name of the detection rule
+        example: Office and Document Apps
+      risk_type:
+        type: string
+        description: The risk classification of the detection rule
+        example: information
+        enum:
+          - information
+          - risk
+          - validation
+          - disabled
+
+  redaction_policy:
+    type: object
+    description: Will be set to null if the policy does not have a redaction policy
+    nullable: true
+    properties:
+      id:
+        type: integer
+        description: The ID of the redaction policy
+        example: 1
+      name:
+        type: string
+        description: The redaction policy name
+        example: 'Redaction Policy: PCI'

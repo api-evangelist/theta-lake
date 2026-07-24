@@ -1,0 +1,718 @@
+paths:
+  cases:
+    get:
+      tags:
+        - Cases
+      summary: List all cases
+      description: |
+        **REQUIRED PERMISSIONS:** `cases:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page
+          required: false
+          schema:
+            type: integer
+            example: 25
+            minimum: 1
+            maximum: 100
+            default: 25
+      responses:
+        '200':
+          description: A paginated list of cases
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetCasesResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    post:
+      tags:
+        - Cases
+      summary: Create new case
+      description: |
+        **REQUIRED PERMISSIONS:** `cases:create`  
+        **RATE LIMIT:** `heavy`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostCaseBody'
+      responses:
+        '200':
+          description: The created case
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/CaseWithoutManagersResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  cases/{id}:
+    get:
+      tags:
+        - Cases
+      summary: Get case by ID
+      description: |
+        **REQUIRED PERMISSIONS:** `cases:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the case to retrieve
+          required: true
+          schema:
+            type: integer
+            example: 787
+      responses:
+        '200':
+          description: The case with the given ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetCaseResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    put:
+      tags:
+        - Cases
+      summary: Update a case
+      description: |
+        **REQUIRED PERMISSIONS:** `cases:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the case to update
+          required: true
+          schema:
+            type: integer
+            example: 628
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostCaseBody'
+      responses:
+        '200':
+          description: The updated case
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/CaseWithoutManagersResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  cases/{id}/records:
+    post:
+      tags:
+        - Cases
+      summary: Add records to a case
+      description: |
+        **REQUIRED PERMISSIONS:** `cases:add_records`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the case to add records to
+          required: true
+          schema:
+            type: integer
+            example: 271
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/AddRecordIdsToCaseBody'
+      responses:
+        '201':
+          description: The response containing the added record ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/AddRecordIdsToCaseResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    delete:
+      tags:
+        - Cases
+      summary: Remove records from a case
+      description: |
+        **REQUIRED PERMISSIONS:** `cases:remove_records`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the case to remove records from
+          required: true
+          schema:
+            type: integer
+            example: 271
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/RemoveRecordIdsFromCaseBody'
+      responses:
+        '200':
+          description: The response containing the removed record ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/RemoveRecordIdsFromCaseResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  cases/{id}/close:
+    put:
+      tags:
+        - Cases
+      summary: Close a case
+      description: |
+        **REQUIRED PERMISSIONS:** `cases:update`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** This endpoint closes the case, it does not delete it.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the case to close
+          required: true
+          schema:
+            type: integer
+            example: 628
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/CloseCaseBody'
+      responses:
+        '200':
+          description: The closed case
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/CaseWithoutManagersResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  cases/{id}/open:
+    put:
+      tags:
+        - Cases
+      summary: Reopen a case
+      description: |
+        **REQUIRED PERMISSIONS:** `cases:update`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** This endpoint reopens a case that has been closed
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the case to reopen
+          required: true
+          schema:
+            type: integer
+            example: 628
+      responses:
+        '200':
+          description: The reopened case
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/CaseWithoutManagersResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  cases/{id}/managers:
+    put:
+      tags:
+        - Cases
+      summary: Add manager to case
+      description: |
+        **REQUIRED PERMISSIONS:** `cases:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the case to add a manager to
+          required: true
+          schema:
+            type: integer
+            example: 787
+            minimum: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: The ID of the user to add as a manager to the case
+                  example: 422
+      responses:
+        '200':
+          description: The case with the new manager added
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/AddManagerResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  cases/{id}/managers/{user_id}:
+    delete:
+      tags:
+        - Cases
+      summary: Remove manager from case
+      description: |
+        **REQUIRED PERMISSIONS:** `cases:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the case to remove a manager from
+          required: true
+          schema:
+            type: integer
+            example: 787
+            minimum: 1
+        - name: user_id
+          in: path
+          description: The ID of the user to remove from the case
+          required: true
+          schema:
+            type: integer
+            example: 422
+            minimum: 1
+      responses:
+        '200':
+          description: The case with the manager removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/RemoveManagerResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  AddManagerResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode201'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString201'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: The status of the add manager operation
+        example: 'Case manager successfully added'
+
+  RemoveManagerResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      result:
+        type: string
+        description: The result of the remove manager operation
+        example: 'Case manager successfully removed'
+
+  AddRecordIdsToCaseResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode201'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString201'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      message:
+        type: string
+        description: The message indicating the result of the operation
+        example: 'Records added to case successfully'
+      records:
+        type: array
+        items:
+          type: number
+          example: 12345
+        description: The record ids added to the case
+        example: [12345, 67890]
+
+  RemoveRecordIdsFromCaseResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode201'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString201'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      message:
+        type: string
+        description: The message indicating the result of the operation
+        example: 'Records removed from case successfully'
+      records:
+        type: array
+        items:
+          type: number
+          example: 12345
+        description: The record ids removed from the case
+        example: [12345]
+
+  GetCasesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      cases:
+        type: array
+        description: An array of all the cases
+        items:
+          $ref: '#/schemas/case'
+
+  GetCaseResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      case:
+        $ref: '#/schemas/caseWithManagers'
+
+  CaseWithoutManagersResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      case:
+        $ref: '#/schemas/case'
+
+  PostCaseBody:
+    type: object
+    properties:
+      description:
+        type: string
+        description: The case description
+        example: Example test case description
+      name:
+        type: string
+        description: The case name
+        example: Case name
+      number:
+        type: string
+        description: The case number, this is usually a unique identifier for the case
+        example: Case-2025-04-28
+      open_date:
+        type: string
+        format: date-time
+        description: The timestamp of when the case was opened. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2021-06-16T01:37:04.262Z'
+      visibility:
+        type: string
+        enum: [PUBLIC, PRIVATE]
+        description: The case visibility
+        example: PUBLIC
+
+  CloseCaseBody:
+    type: object
+    properties:
+      close_date:
+        type: string
+        format: date-time
+        description: The timestamp of the case close date. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2021-06-16T01:37:04.262Z'
+
+  AddRecordIdsToCaseBody:
+    type: object
+    properties:
+      ids:
+        type: array
+        items:
+          type: number
+          example: 12345
+        description: The record ids to add to case. Max is 100 per request
+        example: [12345, 67890]
+
+  RemoveRecordIdsFromCaseBody:
+    type: object
+    properties:
+      ids:
+        type: array
+        items:
+          type: number
+          example: 12345
+        description: The record ids to remove from case. Max is 100 per request
+        example: [12345, 67890]
+
+  case:
+    type: object
+    properties:
+      close_date:
+        $ref: '#/schemas/case_close_date'
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      description:
+        $ref: '#/schemas/case_description'
+      id:
+        $ref: '#/schemas/case_id'
+      name:
+        $ref: '#/schemas/case_name'
+      number:
+        $ref: '#/schemas/case_number'
+      open_date:
+        $ref: '#/schemas/case_open_date'
+      records_count:
+        $ref: '#/schemas/case_records_count'
+      status:
+        $ref: '#/schemas/case_status'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      visibility:
+        $ref: '#/schemas/case_visibility'
+
+
+  caseWithManagers:
+    type: object
+    properties:
+      close_date:
+        $ref: '#/schemas/case_close_date'
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      description:
+        $ref: '#/schemas/case_description'
+      id:
+        $ref: '#/schemas/case_id'
+      managers:
+        type: array
+        description: An array of the case managers for the case
+        items:
+          $ref: '#/schemas/case_manager'
+      name:
+        $ref: '#/schemas/case_name'
+      number:
+        $ref: '#/schemas/case_number'
+      open_date:
+        $ref: '#/schemas/case_open_date'
+      records_count:
+        $ref: '#/schemas/case_records_count'
+      status:
+        $ref: '#/schemas/case_status'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      visibility:
+        $ref: '#/schemas/case_visibility'
+
+  case_manager:
+    type: object
+    properties:
+      case_id:
+        type: integer
+        description: The ID of the case the manager is associated with
+        example: 787
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      id:
+        type: integer
+        description: The case manager ID (unique identifier for the case to user relationship)
+        example: 107
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      user_email:
+        type: string
+        description: The case manager's email
+        example: 'john@email.com'
+      user_id:
+        type: integer
+        description: The case manager's user ID
+        example: 422
+      user_name:
+        type: string
+        description: The case manager's name
+        example: 'John Doe'
+
+  case_close_date:
+    type: string
+    format: date-time
+    description: The timestamp of when the case was closed. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2021-07-16T01:37:04.262Z'
+    nullable: true
+  case_description:
+    type: string
+    description: The case description
+    example: Example test case description
+  case_id:
+    type: integer
+    description: The case ID
+    example: 27
+  case_name:
+    type: string
+    description: The case name
+    example: Case name
+  case_number:
+    type: string
+    description: The case number
+    example: Case number
+  case_open_date:
+    type: string
+    format: date-time
+    description: The timestamp of when the case was opened. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2021-06-16T01:37:04.262Z'
+  case_records_count:
+    type: integer
+    description: The number of records associated with the case
+    example: 31
+  case_status:
+    type: string
+    enum: [OPEN, CLOSED]
+    description: The current case status
+    example: OPEN
+  case_visibility:
+    type: string
+    enum: [PUBLIC, PRIVATE]
+    description: The case visibility
+    example: PUBLIC

@@ -1,0 +1,1036 @@
+paths:
+  search/records:
+    post:
+      tags:
+        - Search
+      summary: Search records
+      description: |
+        **REQUIRED PERMISSION:** `search:create`  
+        **RATE LIMIT:** `heavy`, uses [dynamic rate limiting](/documentation/search#dynamic-rate-limits)  
+        **NOTE:** This page supports pagination but does not support previous pages  
+        For more detailed examples see [the search api guide](/documentation/search).  
+        Limited to a max of 10,000 records
+      parameters:
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25, must not be more than 100
+          required: false
+          schema:
+            minimum: 0
+            maximum: 100
+            type: integer
+            example: 25
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostSearchBody'
+      responses:
+        '200':
+          description: Returns a list of records matching the searches
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostSearchResponseNew'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '422':
+          $ref: '#/schemas/invalid422Search'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  search/records/ids:
+    post:
+      tags:
+        - Search
+      summary: Search records by IDs
+      description: |
+        **REQUIRED PERMISSION:** `search:create`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** This endpoint supports searching up to 100 records at a time using a record ID or UUID. There is no date  
+        restriction for the search. This endpoint is different from the `/search/records` endpoint which enforces a timestamp  
+        restriction of 1 week.
+      parameters:
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25, must not be more than 100
+          required: false
+          schema:
+            minimum: 0
+            maximum: 100
+            type: integer
+            example: 25
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostSearchBodyIds'
+      responses:
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '200':
+          description: Returns a list of records matching the search
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostSearchResponseNew'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  search/saved:
+    get:
+      tags:
+        - Search
+      summary: List all saved searches
+      description: |
+        **REQUIRED PERMISSION:** `search:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25
+          required: false
+          schema:
+            type: integer
+            example: 25
+        - name: types
+          in: query
+          description: The type of search to retrieve
+          required: true
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [history, private, workflow, security_filter] # TODO re-enable 'public' once the crash is fixed
+      responses:
+        '200':
+          description: Returns a list of saved searches
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSearchResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  search/saved/{id}:
+    get:
+      tags:
+        - Search
+      summary: Run search by ID
+      description: |
+        **REQUIRED PERMISSION:** `search:read`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** This page supports pagination but does not support previous pages  
+        Limited to a max of 10,000 records
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the search to run
+          required: true
+          schema:
+            type: integer
+            example: 500311
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25, must not be more than 100
+          required: false
+          schema:
+            type: integer
+            example: 25
+      responses:
+        '200':
+          description: Returns a list of records matching the saved search
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostSearchResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  search/saved/{id}/reset_and_reenter:
+    post:
+      tags:
+        - Search
+      summary: Reset and reenter records to workflow
+      description: |
+        **REQUIRED PERMISSION:** `search:reset`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** This endpoint creates a batch job to process the reset & reenter request. Run the search again to see progress.  
+        This endpoint supports resetting up to 20,000 records in a single request. If the number of records exceeds 20,000, change  
+        the search criteria to reduce the number of records.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the search to run to find datums to reset
+          required: true
+          schema:
+            type: integer
+            example: 503460
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostResetRequest'
+      responses:
+        '202':
+          description: Batch job accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostResetResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+schemas:
+  GetSearchResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      searches:
+        type: array
+        description: An array of search objects
+        items:
+          type: object
+          properties:
+            created_at:
+              $ref: '../common/schemas.yml#/schemas/created_at'
+            description:
+              type: string
+              nullable: true
+              description: A description for the saved search
+              example: Search to find all datums from March
+            hits:
+              type: integer
+              nullable: true
+              description: The number of datums this search will return
+              example: 42
+            id:
+              type: integer
+              description: The ID for the security filter search
+              example: 59
+            name:
+              type: string
+              description: The security filter's name
+              example: Zoom chat only
+            type:
+              type: string
+              description: The type of saved search
+              example: history
+            updated_at:
+              $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  GetSearchByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      result:
+        type: object
+        properties:
+          created_at:
+            $ref: '../common/schemas.yml#/schemas/created_at'
+          creator_email:
+            type: string
+            description: The email address of the user that created the search
+            example: jane@email.com
+          creator_id:
+            type: integer
+            description: The user ID of the user that created the search
+            example: 422
+          creator_name:
+            type: string
+            description: The name of the user that created the search
+            example: Jane Doe
+          hits:
+            type: integer
+            description: The number of datums matching the search criteria
+            example: 1234
+          type:
+            type: string
+            description: The type of search
+            enum: [history, private, public, workflow, security_filter]
+          updated_at:
+            $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  PostResetRequest:
+    type: object
+    required: [reason]
+    properties:
+      reason:
+        type: string
+        description: The reason for resetting and reentering workflow
+        example: A good reason here
+
+  PostResetResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode202'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString202'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      result:
+        type: object
+        properties:
+          message:
+            type: string
+            description: A message from the server
+            example: We have successfully scheduled the selected records for processing. You will receive an email when the records have been reset.
+
+  PostSearchBody:
+    type: object
+    properties:
+      attachments:
+        type: object
+        nullable: true
+        properties:
+          attachment_count:
+            type: object
+            properties:
+              min:
+                type: integer
+                description: The minimum number of attachments to search for
+                example: 1
+              max:
+                type: integer
+                description: The maximum number of attachments to search for
+                example: 10
+      comments:
+        type: object
+        nullable: true
+        properties:
+          flags:
+            type: array
+            description: The comment flags to search for. If multiple comment flags are given, the search will use an OR operator
+            items:
+              type: string
+              enum:
+                [
+                  cleared,
+                  confirmed_risk,
+                  escalated,
+                  false_detection,
+                  noteworthy,
+                ]
+            example:
+              - confirmed_risk
+          author_name:
+            type: array
+            description: The name of the comment author to search for
+            items:
+              type: string
+            example: [John Doe, Jane Smith]
+          author_email:
+            type: array
+            description: The email of the comment author to search for
+            items:
+              type: string
+            example: [john.doe@example.com, jane.smith@example.com]
+      cases:
+        type: object
+        nullable: true
+        description: The [cases](/documentation/search#cases) attributes for the record
+        properties:
+          filter_type:
+            type: string
+            example: is
+            enum: [is, is_not]
+            description: The operator to search with, defaults to *is*
+          ids:
+            type: array
+            description: The case IDs to search for. If multiple case IDs are given, the search will use an OR operator
+            items:
+              type: integer
+              example: 1234
+      content:
+        type: array
+        nullable: true
+        description: Search for content in records. This uses [dynamic rate limiting](/documentation/search#dynamic-rate-limits)
+        items:
+          type: object
+          properties:
+            operator:
+              type: string
+              enum: [and, or]
+              example: and
+              description: The operator to search with, defaults to "or"
+            query:
+              type: string
+              example: ("keep it" | just) + "between us"
+              description: The query to search with
+            scopes:
+              type: array
+              description: The parts of the records that you would like to search with against. If not specified, all parts of the record will be searched
+              items:
+                enum:
+                  [
+                    attachment_name,
+                    attachment_text,
+                    chat_text,
+                    conference_chat,
+                    document_text,
+                    email_extended_body,
+                    email_headers,
+                    email_smart_body,
+                    image_text,
+                    journal_headers,
+                    media_title,
+                    screen_text,
+                    transcript,
+                  ]
+                type: string
+              example:
+                [
+                  attachment_name,
+                  attachment_text,
+                  chat_text,
+                  conference_chat,
+                  document_text,
+                  email_extended_body,
+                  email_headers,
+                  email_smart_body,
+                  image_text,
+                  journal_headers,
+                  media_title,
+                  screen_text,
+                  transcript,
+                ]
+      content_source:
+        type: array
+        nullable: true
+        items:
+          type: string
+        description: Each [content source](/documentation/search#content-source) is used with an OR operator. If 2 content_source's are given, records from both content_source's will be searched.
+        example:
+          - microsoft_teams
+          - webex_meetings_ecomms
+      email:
+        type: object
+        nullable: true
+        properties:
+          duplicate_count:
+            type: object
+            properties:
+              min:
+                type: integer
+                description: The minimum number of emails that have been duplicated
+                example: 1
+              max:
+                type: integer
+                description: The maximum number of emails that have been duplicated
+                example: 10
+          duplicate_date:
+            type: object
+            properties:
+              start:
+                type: string
+                format: date-time
+                description: '**Inclusive** start of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)'
+                example: '2021-06-14T01:37:04.262Z'
+              end:
+                type: string
+                format: date-time
+                description: '**Inclusive** end of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6), defaults to current date'
+                example: '2022-06-16T01:37:04.262Z'
+      identities:
+        type: object
+        nullable: true
+        properties:
+          ids:
+            type: array
+            description: This list is limited to 1 id per search
+            items:
+              type: integer
+              example: 7
+      media:
+        type: array
+        nullable: true
+        items:
+          type: string
+          enum: [audio, chat, document, email, other, video]
+          example: audio
+        description: The record [media type](/documentation/search#media). If multiple media types are given, the search will use an OR operator
+      participants:
+        type: object
+        nullable: true
+        description: The [participants](/documentation/search#participants) attributes for the record
+        properties:
+          operator:
+            type: string
+            example: AND
+            enum: [AND, OR]
+            description: The operator to search with
+          attributes:
+            type: array
+            description: The attribute to search on
+            items:
+              type: object
+              properties:
+                attribute:
+                  type: string
+                  enum:
+                    [
+                      email,
+                      first_name,
+                      id,
+                      last_name,
+                      location,
+                      name,
+                      phone_number,
+                      extension,
+                      org_relationship,
+                      primary_domain,
+                      all_domains,
+                    ]
+                  example: email
+                  description: The type of attribute to search on
+                participant_information:
+                  type: string
+                  example: user@thetalake.com
+                  description: The value of the attribute to search with
+          identity_ids:
+            type: array
+            description: The identity IDs to search for. Limited to 1 identity_id per search
+            items:
+              type: integer
+              example: 1
+              minimum: 1
+              maximum: 1
+      people:
+        type: object
+        nullable: true
+        properties:
+          communication_direction:
+            type: object
+            description: Filter records based on the direction of communication (internal vs external participants)
+            properties:
+              internal_sender:
+                type: boolean
+                description: Include records where the sender is internal to the organization
+                example: true
+              internal_receiver:
+                type: boolean
+                description: Include records where the receiver is internal to the organization
+                example: true
+              external_sender:
+                type: boolean
+                description: Include records where the sender is external to the organization
+                example: false
+              external_receiver:
+                type: boolean
+                description: Include records where the receiver is external to the organization
+                example: false
+          supervision_spaces:
+            type: object
+            properties:
+              ids:
+                type: array
+                description: The IDs of the supervision spaces to search in. If multiple supervision space IDs are given, the search will use an OR operator. Supervision space IDs can be found in the [list all supervision spaces](/api-reference#get-/supervision_spaces) endpoint
+                items:
+                  type: integer
+                example: [123456, 789012]
+      platform:
+        type: object
+        nullable: true
+        description: Filters related to the platform that captured the record
+        properties:
+          integrations:
+            type: object
+            properties:
+              ids:
+                type: array
+                description: The IDs of the integration that captured the records. If multiple integration IDs are given, the search will use an OR operator. Integration IDs can be found in the [list all integrations](/api-reference#get-/integrations) endpoint
+                items:
+                  type: integer
+                example: [1234, 5678]
+      policy_detections:
+        type: object
+        nullable: true
+        description: Filters related to policy detections
+        properties:
+          analyzed:
+            type: boolean
+            description: Search for records that have been analyzed by Theta Lake's risk engine. If true, only analyzed records will be returned. If false, only unanalyzed records will be returned. 
+          policy_hits:
+            type: object
+            description: Policy hits that triggered on the record
+            properties:
+              inclusion:
+                type: string
+                enum: [is, is_not]
+                example: is
+              policy_hit:
+                type: array
+                description: The `id` from the [list all policy_hits](/api-reference#get-/analysis/policy_hits) endpoint
+                items:
+                  type: integer
+                example: [640]
+
+          quantity:
+            type: object
+            description: The quantity of policy hits to search for
+            properties:
+              min:
+                type: integer
+                description: The minimum number of policy hits to search for
+                example: 1
+              max:
+                type: integer
+                description: The maximum number of policy hits to search for
+                example: 10
+      range:
+        type: object
+        nullable: true
+        description: A date [range](/documentation/search#range) to search on. If no range is provided, the system defaults to the last 7 days from the current date. The default type is `upload_date`. All dates are inclusive. This range is subject to [dynamic rate limits](/documentation/search#dynamic-rate-limits)
+        properties:
+          type:
+            type: string
+            enum: [create_date, upload_date, processed_date]
+            description: The type date range, default is *upload_date*
+            example: upload_date
+          start:
+            type: string
+            format: date-time
+            description: '**Inclusive** start of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)'
+            example: '2021-06-14T01:37:04.262Z'
+          end:
+            type: string
+            format: date-time
+            description: '**Inclusive** end of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6), defaults to current date'
+            example: '2022-06-16T01:37:04.262Z'
+      risk:
+        description: The analyzed risk of the record. If not_analyzed is passed, only not_analyzed records will be found. Other risks will be used as a OR operator
+        type: array
+        nullable: true
+        items:
+          type: string
+          enum: [low, slight, medium, high, not_analyzed]
+        example: [low, slight]
+      sort:
+        type: object
+        nullable: true
+        description: Sort by attribute of the results. See [this documentation](/documentation/search#sort) for more details
+        properties:
+          by:
+            type: string
+            enum: [create_date, upload_date, processed_date]
+            example: create_date
+            description: How to sort the results, default is *upload_date*
+          order:
+            type: string
+            enum: [asc, desc]
+            example: desc
+            description: How to sort the results, default is *desc*
+      workflow:
+        type: object
+        nullable: true
+        description: Search records related to workflows
+        properties:
+          name:
+            type: object
+            properties:
+              # inclusion:
+              #   type: string
+              #   example: is
+              #   enum: [is, is_not]
+              #   description: The operator to search with, defaults to *is*
+              id:
+                type: array
+                description: The workflow name to search for by id. If multiple workflow ids are given, the search will use an OR operator. Ids can be found in the [list all workflows](/api-reference#get-/workflows) endpoint
+                items:
+                  type: integer
+                example: [1, 2]
+          state:
+            type: object
+            properties:
+              inclusion:
+                type: string
+                example: is
+                enum: [is, is_not]
+                description: The operator to search with, defaults to *is*
+              id:
+                type: array
+                description: The workflow state ids to search for. If multiple ids are given, the search will use an OR operator. Ids can be found in the [list all states for a workflow](/api-reference#get-/workflows/-id-/states) endpoint
+                items:
+                  type: integer
+                example: [1, 2]
+
+  PostSearchBodyIds:
+    type: object
+    properties:
+      id:
+        type: array
+        items:
+          type: integer
+          example: 1520
+        description: The record ID. If multiple record IDs are given, the search will use an OR operator. Limit of 100 IDs can be provided.
+      uuid:
+        type: array
+        items:
+          type: string
+          example: 971219f9-3a00-3f2e-e835-55e7e2cfcc36
+        description: The record UUID. If multiple record UUIDs are given, the search will use an OR operator. Limit of 100 UUIDs can be provided.
+      sort:
+        type: object
+        description: Sort by attribute of the results. See [this documentation](/documentation/search#sort) for more details
+        properties:
+          by:
+            type: string
+            enum: [create_date, upload_date]
+            example: create_date
+            description: How to sort the results, default is *upload_date*
+          order:
+            type: string
+            enum: [asc, desc]
+            example: desc
+            description: How to sort the results, default is *desc*
+
+  PostSearchResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      records:
+        type: array
+        items:
+          $ref: '#/schemas/records'
+
+  PostSearchResponseNew:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      result:
+        type: object
+        properties:
+          created_at:
+            $ref: '../common/schemas.yml#/schemas/created_at'
+          id:
+            type: number
+            description: The id of the search # note: this for now is permanent, if we decide to change this in portal, we will need to document here.
+            example: 543
+          total_hits:
+            type: number
+            description: This is the total hits for this search. This value will not change during pagination
+            example: 24123
+          records:
+            type: array
+            items:
+              $ref: '#/schemas/records'
+
+  records:
+    type: object
+    properties:
+      analyzed:
+        type: boolean
+        description: Indicates if the record has been analyzed
+        example: true
+      attachment_count:
+        type: integer
+        description: The number of attachments associated with the record
+        example: 3
+      communication_direction:
+        type: object
+        nullable: true
+        description: The communication direction information for the record, indicating whether participants are internal or external to the organization
+        properties:
+          internal_sender:
+            type: boolean
+            nullable: true
+            description: Indicates if the sender is internal to the organization
+            example: true
+          internal_receiver:
+            type: boolean
+            nullable: true
+            description: Indicates if the receiver is internal to the organization
+            example: true
+          external_sender:
+            type: boolean
+            nullable: true
+            description: Indicates if the sender is external to the organization
+            example: false
+          external_receiver:
+            type: boolean
+            nullable: true
+            description: Indicates if the receiver is external to the organization
+            example: false
+      content_source:
+        type: string
+        description: The content source of the record
+        example: microsoft_teams
+      content_type:
+        type: string
+        description: The content-type of the data. Uses standard [MIME types](https://www.iana.org/assignments/media-types/media-types.xhtml)
+        example: video/mp4
+      create_date:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      data_path:
+        type: string
+        description: The path to the record in the the cloud storage. Only populated if the storage is BYOS
+        example: 2025-01-01/data/95292686-cbbb-b8c0-0351-25dab7c2154d
+      entitlement_spaces_ids:
+        type: array
+        description: The IDs of the detected entitlement supervision spaces. Only populated if record is associated with multiple supervision spaces
+        items:
+          type: integer
+        example: [123456]
+      hash_sha256:
+        type: string
+        description: The record's SHA256 hash
+        example: 5179a08ff65e6388a466447dd1c6ee5fae0c9b080ec3a61e21cd6818ed1d8624
+      id:
+        type: integer
+        description: The record ID
+        example: 215779
+      integration:
+        type: object
+        description: The integration that captured the record
+        properties:
+          id:
+            type: integer
+            description: The integration ID
+          name:
+            type: string
+            description: The integration name
+      media_type:
+        type: string
+        description: The record's Theta Lake media type
+        example: Audio
+        enum: [AI Interaction,Audio, Chat, Document, Email, Other, Video]
+      original_file_name:
+        type: string
+        description: The record's filename
+        example: Call Between Jim and Pam.mp3
+      participants:
+        nullable: true
+        type: object
+        description: The record's participants. The keys are participant roles (e.g. active-member, owner, passive-member) mapping to arrays of participant objects. Participant attributes vary by content source and availability.
+        example:
+          active-member:
+            - email: john@thetalake.com
+              id: "1236549872321682"
+              join_leave_info:
+                - join_time: "2024-10-08T14:40:06Z"
+                  leave_time: "2024-10-08T15:00:59Z"
+              name: John Doe
+              org_relationship: internal
+          owner:
+            - email: john@thetalake.com
+              extension: "125"
+              id: "1236549872321682"
+              join_leave_info:
+                - join_time: "2024-10-08T14:40:06Z"
+                  leave_time: "2024-10-08T15:00:59Z"
+              name: John Doe
+              org_relationship: unknown
+              phone_number: "18005240822"
+          passive-member:
+            - email: john@thetalake.com
+              id: "1236549872321682"
+              join_leave_info:
+                - join_time: "2024-10-08T14:40:06Z"
+                  leave_time: "2024-10-08T15:00:59Z"
+              name: John Doe
+              org_relationship: null
+        additionalProperties:
+          type: array
+          items:
+            $ref: '#/schemas/participant'
+      platform_attributes:
+        type: object
+        nullable: true
+        description: A map of key value pairs of the records platform attributes
+        example:
+          call_id: '2909b385-f84c-4935-bef0-87e6c6a3939b'
+          channel_id: '4'
+          duration: '1h02m29s'
+      processed_date:
+        type: string
+        format: date-time
+        description: Record processed timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2022-10-12T02:29:49.146Z'
+        nullable: true
+      record_size:
+        type: integer
+        description: The record's file size in bytes
+        example: 215779
+      retention_library_id:
+        type: integer
+        description: The ID of the retention library associated with the record. Can be `null` if record was not sent to a retention library
+        example: 270
+        nullable: true
+      risk:
+        type: string
+        description: The record's risk
+        example: low
+      supervision_space_id:
+        type: integer
+        description: The supervision space ID that correlates to the record. If set to `null` the record is not associated with a supervision space
+        nullable: true
+        example: 123456
+      upload_date:
+        type: string
+        format: date-time
+        description: Record upload timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2022-10-12T02:29:49.146Z'
+      uuid:
+        type: string
+        description: The record's UUID. This UUID matches the portal record ID
+        example: 95292686-cbbb-b8c0-0351-25dab7c2154d
+
+  participant:
+    description: 'The key in this object is the participants role. It can be one of: **activemember,additional_recipient,attendee,callee,caller,co-host,collaborator,creator,host,on_behalf_of,panelist,passivemember,recipient,recipient_bcc,recipient_cc,sender**'
+    type: object
+    properties:
+      email:
+        type: string
+        description: Participant's email, if null the content source did not provide the information
+        nullable: true
+      id:
+        type: string
+        description: The id given to the participant from the platform
+        example: '1202498425120564'
+      join_leave_info:
+        type: array
+        nullable: true
+        description: Participant's join and leave times, if null the content source did not provide the information
+        items:
+          type: object
+          properties:
+            join_time:
+              type: string
+              format: date-time
+              description: Participant's join time using [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+              example: '2022-10-12T02:29:49.146Z'
+            leave_time:
+              type: string
+              format: date-time
+              description: Participant's leave time using [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+              example: '2022-10-12T02:29:49.146Z'
+      name:
+        type: string
+        description: Participant's first name, if null the content source did not provide the information
+        nullable: true
+      org_relationship:
+        type: string
+        description: Participant's org relationship, if null the content source did not indicate
+        nullable: true
+
+  invalid422Search:
+    description: Search is no longer valid due to internal resources being exhausted
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 422
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Unprocessable Entity
+            request_id:
+              $ref: '../common/schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              example: This search is no longer valid, please create a new search
+              description: Human readable error message

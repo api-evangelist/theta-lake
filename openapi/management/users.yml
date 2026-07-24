@@ -1,0 +1,713 @@
+paths:
+  users:
+    get:
+      tags:
+        - Users
+      summary: List all users
+      description: |
+        **REQUIRED PERMISSION:** `users:read`  
+        **RATE LIMIT:** `heavy`
+      responses:
+        '200':
+          description: Returns a list of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetUsersResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    post:
+      tags:
+        - Users
+      summary: Create a new user
+      description: |
+        **REQUIRED PERMISSION:** `users:create`  
+        **RATE LIMIT:** `heavy`
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/CreateUserRequest'
+
+      responses:
+        '201':
+          description: The new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/CreateUserResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  users/me:
+    get:
+      tags:
+        - Users
+      summary: Get information about your user
+      description: |
+        **REQUIRED PERMISSION:** `users:read`  
+        **RATE LIMIT:** `heavy`
+      responses:
+        '200':
+          description: Returns your user information
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetMeResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user by ID
+      description: |
+        **REQUIRED PERMISSION:** `users:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The user ID to retrieve
+          required: true
+          schema:
+            type: integer
+            example: 691
+      responses:
+        '200':
+          description: The retrieved user
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetUserByIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    put:
+      tags:
+        - Users
+      summary: Update user
+      description: |
+        **REQUIRED PERMISSION:** `users:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The user ID to update
+          required: true
+          schema:
+            type: integer
+            example: 691
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: The retrieved user
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutUserByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Users
+      summary: Delete user
+      description: |
+        **REQUIRED PERMISSION:** `users:delete`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The user ID to delete
+          required: true
+          schema:
+            type: integer
+            example: 691
+      responses:
+        '200':
+          description: The deleted user
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutUserByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  users/{id}/disable:
+    put:
+      tags:
+        - Users
+      summary: Disable user
+      description: |
+        **REQUIRED PERMISSION:** `users:disable`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The user ID to disable
+          required: true
+          schema:
+            type: integer
+            example: 691
+      responses:
+        '200':
+          description: The disable response
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/DeleteUserResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  users/{id}/enable:
+    put:
+      tags:
+        - Users
+      summary: Enable user
+      description: |
+        **REQUIRED PERMISSION:** `users:disable`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The user ID to enable
+          required: true
+          schema:
+            type: integer
+            example: 691
+      responses:
+        '200':
+          description: The enable response
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/ReenableUserResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetUsersResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      users:
+        type: array
+        description: An array of User objects
+        items:
+          $ref: '#/schemas/UserAll'
+
+  CreateUserRequest:
+    type: object
+    properties:
+      name:
+        $ref: '#/schemas/name'
+      email:
+        $ref: '#/schemas/email'
+      password:
+        type: string
+        description: The user's password
+        example: JanesPassword
+      password_confirmation:
+        type: string
+        description: Password confirmation, must match password
+        example: JanesPassword
+      role_id:
+        type: integer
+        description: The ID of the role that will be assigned to the new user
+        example: 1
+      search_id:
+        $ref: '#/schemas/search_id'
+
+  UpdateUserRequest:
+    type: object
+    properties:
+      name:
+        $ref: '#/schemas/name'
+      email:
+        $ref: '#/schemas/email'
+      role_id:
+        type: integer
+        description: The ID of the role that will be assigned to the new user
+        example: 1
+      search_id:
+        $ref: '#/schemas/search_id'
+
+  CreateUserResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode201'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString201'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      user:
+        $ref: '#/schemas/CreatedUser'
+
+  GetMeResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      user:
+        $ref: '#/schemas/MeUser'
+
+  GetUserByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      user:
+        $ref: '#/schemas/GetUser'
+
+  PutUserByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      user:
+        $ref: '#/schemas/GetUser'
+
+  DeleteUserResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: Status message in response to the disable user action
+        example: Ok, Jane Doe has been disabled. They will no longer be able to log in.
+
+  ReenableUserResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: Status message in response to the re-enable user action
+        example: Ok, this user has been re-enabled.
+
+  UserAll:
+    type: object
+    properties:
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      current_org_unit:
+        $ref: '#/schemas/current_org_unit'
+      disabled:
+        $ref: '#/schemas/disabled'
+      disabled_at:
+        $ref: '#/schemas/disabled_at'
+      default_user_timezone:
+        $ref: '#/schemas/default_user_timezone'
+      email:
+        $ref: '#/schemas/email'
+      force_sso:
+        $ref: '#/schemas/force_sso'
+      has_datums:
+        $ref: '#/schemas/has_datums'
+      has_multiple_workspaces:
+        $ref: '#/schemas/has_multiple_workspaces'
+      id:
+        $ref: '#/schemas/id'
+      last_login:
+        $ref: '#/schemas/last_login'
+      name:
+        $ref: '#/schemas/name'
+      otp_enabled:
+        $ref: '#/schemas/otp_enabled'
+      otp_enabled_at:
+        $ref: '#/schemas/otp_enabled_at'
+      password_changed_at:
+        $ref: '#/schemas/password_changed_at'
+      queue_paused:
+        $ref: '#/schemas/queue_paused'
+      role:
+        $ref: '#/schemas/role'
+      security_filter:
+        $ref: '#/schemas/security_filter'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      user_initials:
+        $ref: '#/schemas/user_initials'
+
+  MeUser:
+    type: object
+    properties:
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      current_org_unit:
+        $ref: '#/schemas/current_org_unit'
+      current_org_unit_timezone:
+        type: string
+        description: The default timezone for the current org unit
+        example: Etc/UTC
+      disabled:
+        $ref: '#/schemas/disabled'
+      disabled_at:
+        $ref: '#/schemas/disabled_at'
+      default_user_timezone:
+        $ref: '#/schemas/default_user_timezone'
+      email:
+        $ref: '#/schemas/email'
+      force_sso:
+        $ref: '#/schemas/force_sso'
+      has_datums:
+        $ref: '#/schemas/has_datums'
+      has_multiple_workspaces:
+        $ref: '#/schemas/has_multiple_workspaces'
+      id:
+        $ref: '#/schemas/id'
+      last_login:
+        $ref: '#/schemas/last_login'
+      name:
+        $ref: '#/schemas/name'
+      otp_enabled:
+        $ref: '#/schemas/otp_enabled'
+      otp_enabled_at:
+        $ref: '#/schemas/otp_enabled_at'
+      otp_required:
+        type: boolean
+        description: Indicates if OTP is required for your user
+        example: false
+      password_changed_at:
+        $ref: '#/schemas/password_changed_at'
+      queue_paused:
+        $ref: '#/schemas/queue_paused'
+      role:
+        $ref: '#/schemas/role'
+      search_id:
+        $ref: '#/schemas/search_id'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      user_initials:
+        $ref: '#/schemas/user_initials'
+
+  GetUser:
+    type: object
+    properties:
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      current_org_unit:
+        $ref: '#/schemas/current_org_unit'
+      disabled:
+        $ref: '#/schemas/disabled'
+      disabled_at:
+        $ref: '#/schemas/disabled_at'
+      default_user_timezone:
+        $ref: '#/schemas/default_user_timezone'
+      email:
+        $ref: '#/schemas/email'
+      force_sso:
+        $ref: '#/schemas/force_sso'
+      has_datums:
+        $ref: '#/schemas/has_datums'
+      has_multiple_workspaces:
+        $ref: '#/schemas/has_multiple_workspaces'
+      id:
+        $ref: '#/schemas/id'
+      last_login:
+        $ref: '#/schemas/last_login'
+      name:
+        $ref: '#/schemas/name'
+      otp_enabled:
+        $ref: '#/schemas/otp_enabled'
+      otp_enabled_at:
+        $ref: '#/schemas/otp_enabled_at'
+      password_changed_at:
+        $ref: '#/schemas/password_changed_at'
+      queue_paused:
+        $ref: '#/schemas/queue_paused'
+      role:
+        $ref: '#/schemas/role'
+      security_filter:
+        $ref: '#/schemas/security_filter'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      user_initials:
+        $ref: '#/schemas/user_initials'
+
+  CreatedUser:
+    type: object
+    properties:
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      current_org_unit:
+        $ref: '#/schemas/current_org_unit'
+      disabled:
+        $ref: '#/schemas/disabled'
+      default_user_timezone:
+        $ref: '#/schemas/default_user_timezone'
+      disabled_at:
+        $ref: '#/schemas/disabled_at'
+      email:
+        $ref: '#/schemas/email'
+      force_sso:
+        $ref: '#/schemas/force_sso'
+      has_datums:
+        $ref: '#/schemas/has_datums'
+      has_multiple_workspaces:
+        $ref: '#/schemas/has_multiple_workspaces'
+      id:
+        $ref: '#/schemas/id'
+      last_login:
+        $ref: '#/schemas/last_login'
+      name:
+        $ref: '#/schemas/name'
+      otp_enabled:
+        $ref: '#/schemas/otp_enabled'
+      otp_enabled_at:
+        $ref: '#/schemas/otp_enabled_at'
+      password_changed_at:
+        $ref: '#/schemas/password_changed_at'
+      queue_paused:
+        $ref: '#/schemas/queue_paused'
+      role:
+        $ref: '#/schemas/role'
+      search_id:
+        $ref: '#/schemas/search_id'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      user_initials:
+        $ref: '#/schemas/user_initials'
+
+  current_org_unit:
+    type: object
+    properties:
+      archive_only:
+        type: boolean
+        description: Indicates if the org unit is archive only
+        example: false
+      id:
+        type: integer
+        description: The ID of the current org unit
+        example: 1
+      name:
+        type: string
+        description: The name of the current org unit
+        example: Theta Lake Support
+
+  role:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The role ID
+        example: 1
+      name:
+        type: string
+        description: The role name
+        example: Reviewer
+
+  security_filter:
+    type: object
+    nullable: true
+    properties:
+      search_id:
+        $ref: '#/schemas/search_id'
+      name:
+        type: string
+        description: The name of the security filter
+        example: High risk documents
+
+  email:
+    type: string
+    description: The email address associated with this user
+    example: jane@email.com
+
+  name:
+    type: string
+    description: The user's name
+    example: Jane Doe
+
+  search_id:
+    type: integer
+    description: The ID of the search used for the user's security filter
+    example: 10
+    nullable: true
+
+  disabled:
+    type: boolean
+    description: Indicates if the user has been disabled
+    example: false
+  disabled_at:
+    type: string
+    format: date-time
+    description: When the user was disabled timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: null
+    nullable: true
+  default_user_timezone:
+    type: string
+    description: Timezone the user is assigned to by default
+    example: null
+    nullable: true
+  force_sso:
+    type: boolean
+    description: Indicates if the user has to use SSO to sign in
+    example: false
+  has_datums:
+    type: boolean
+    description: Indicates if the user is associated with any captured datums
+    example: true
+  has_multiple_workspaces:
+    type: boolean
+    description: Indicates if the user is assigned to multiple workspaces
+    example: true
+  id:
+    type: integer
+    description: The user ID
+    example: 5
+  last_login:
+    type: string
+    format: date-time
+    description: The user's last login timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2022-10-21T16:08:37.000Z'
+    nullable: true
+  otp_enabled:
+    type: boolean
+    description: Indicates if the use has OTP enabled
+    example: false
+  otp_enabled_at:
+    type: string
+    format: date-time
+    description: The timestamp of when OTP was enabled using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: null
+    nullable: true
+  password_changed_at:
+    type: string
+    format: date-time
+    description: The timestamp of the last time the user's password was changed using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: null
+    nullable: true
+  queue_paused:
+    type: boolean
+    description: Indicates if the users queue has been paused
+    example: false
+  updated_at:
+    type: string
+    format: date-time
+    description: Last updated timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2022-10-21T16:08:37.000Z'
+    nullable: true
+  user_initials:
+    type: string
+    description: The user's initials
+    example: JD

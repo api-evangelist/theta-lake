@@ -1,0 +1,694 @@
+paths:
+  audit_logs/search:
+    post:
+      tags:
+        - Audit Logs
+      summary: Search all audit logs
+      description: |
+        **REQUIRED PERMISSIONS:** `audit_logs:read`  
+        **RATE LIMIT:** `heavy`  
+
+        **NOTE:** Returns a list of audit logs that match search parameters. This page supports pagination but does not support previous pages. The `next_page_token` is only valid for 60 seconds.
+
+      parameters:
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. Only the `next_page_token` will be populated and expires in 60 seconds.
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25, must not be more than 500
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 25
+            example: 50
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostAuditLogsSearchRequest'
+      responses:
+        '200':
+          description: Returns a list of audit logs matching the search
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostAuditLogsSearchResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  audit_logs:
+    get:
+      tags:
+        - Audit Logs
+      summary: List all audit logs
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSIONS:** `audit_logs:read`  
+        **RATE LIMIT:** `heavy`  
+
+        **NOTE:** This endpoint is deprecated and will be removed on August 1, 2026 at 00:00 UTC. Please use the [audit_logs/search](/api-reference#post-/audit_logs/search) endpoint instead.
+      parameters:
+        - name: user_id
+          in: query
+          description: An user ID to filter by
+          required: false
+          schema:
+            type: integer
+        - name: auditable_type
+          in: query
+          description: An auditable type to filter by
+          required: false
+          schema:
+            $ref: '#/schemas/AuditableType'
+        - name: from_date
+          in: query
+          description: Filter audit_logs with created_at date starting at this value, uses the [RFC3339 full-date format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Defaults to 7 days ago if not specified.
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: to_date
+          in: query
+          description: Filter audit_logs with created_at date ending at this value, uses the [RFC3339 full-date format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Defaults to now if not specified.
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: auditable_action
+          in: query
+          description: An auditable action to filter by (see response)
+          required: false
+          schema:
+            $ref: '#/schemas/AuditableAction'
+        - name: order
+          in: query
+          description: The order to sort the audit logs by
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+            example: desc
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page
+          required: false
+          schema:
+            type: integer
+            example: 25
+            minimum: 1
+            maximum: 500
+            default: 25
+      responses:
+        '200':
+          description: Returns a paginated list of org_unit's audit_logs matching the criteria, and the allowed values for the auditable type and action filters
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetAuditLogResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  audit_logs/config_change:
+    get:
+      tags:
+        - Audit Logs
+      summary: List all configuration change audit logs
+      description: |
+        **REQUIRED PERMISSIONS:** `audit_logs:read`  
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:**
+        Gets an (optionally filtered) list of audit logs for configuration changes related to the current user's org unit.
+        This will contain the following auditable types:
+        - Archive Bucket
+        - Directory Group
+        - Disclaimer Group
+        - Entry Strategy
+        - Integration
+        - License
+        - Microsoft Teams Disclaimer
+        - Org Unit
+        - Policy
+        - Role
+        - Storage Account
+        - Supervision Space
+        - Workflow
+
+        And the following auditable actions:
+        - Create
+        - Update
+        - Delete
+        - Disable
+        - Enable
+      parameters:
+        - name: user_id
+          in: query
+          description: An user ID to filter by
+          required: false
+          schema:
+            type: integer
+        - name: from_date
+          in: query
+          description: '**Inclusive** start of the date range using the RFC3339 full-date format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Defaults to 7 days ago if not specified.'
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: to_date
+          in: query
+          description: '**Inclusive** end of the date range using the [RFC3339 full-date format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Defaults to now if not specified.'
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: The order to sort the audit logs by
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+            example: desc
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25
+          required: false
+          schema:
+            type: integer
+            example: 25
+            default: 25
+            minimum: 1
+            maximum: 500
+      responses:
+        '200':
+          description: Returns a paginated list of org_unit's audit_logs matching the criteria, for configuration changes
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetAuditLogResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  PostAuditLogsSearchRequest:
+    type: object
+    properties:
+      auditable_action:
+        type: array
+        description: An auditable action to filter by (see response)
+        items:
+          $ref: '#/schemas/AuditableActionSnakeCase'
+        example: ['create', 'update', 'delete']
+      auditable_type:
+        type: array
+        description: An auditable type to filter by
+        items:
+          $ref: '#/schemas/AuditableTypeSnakeCase'
+        example: ['policy', 'record']
+      order:
+        type: string
+        description: The order to sort the audit logs by
+        example: desc
+      range:
+        description: Filter audit_logs with created_at date starting at this value, uses the [RFC3339 full-date format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Defaults to 7 days ago if not specified.
+        type: object
+        properties:
+          start:
+            type: string
+            format: date-time
+            description: '**Inclusive** start of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Defaults to 7 days from the current date if not specified.'
+            example: '2021-06-16T01:37:04.262Z'
+          end:
+            type: string
+            format: date-time
+            description: '**Exclusive** end of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Defaults to current date if not specified'
+            example: '2021-06-16T01:37:04.262Z'
+      source:
+        type: object
+        properties:
+          type:
+            type: string
+            description: Audit log type to search by
+            enum: [system, user]
+            example: user
+          user_id:
+            type: array
+            description: A list of user IDs to filter by
+            items:
+              type: integer
+              example: 123
+            example: [404]
+
+  PostAuditLogsSearchResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      result:
+        type: object
+        description: The audit logs that match the query
+        properties:
+          total_hits:
+            type: number
+            description: This is the total hits for this search. This value will not change during pagination
+            example: 24123
+          default_range:
+            type: boolean
+            description: This indicates whether a date range was provided in the request or whether the default range (previous 7 days) was used
+          range:
+            type: object
+            description: Filter audit_logs with created_at date starting at this value, uses the [RFC3339 full-date format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Defaults to 7 days ago if not specified.
+            properties:
+              start:
+                type: string
+                format: date-time
+                description: '**Inclusive** start of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Defaults to 7 days from the current date if not specified.'
+                example: '2021-06-16T01:37:04.262Z'
+              end:
+                type: string
+                format: date-time
+                description: '**Exclusive** end of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Defaults to current date if not specified'
+                example: '2021-06-16T01:37:04.262Z'
+          audit_logs:
+            type: array
+            description: The audit logs that match the query
+            items:
+              type: object
+              properties:
+                audit_log_details:
+                  type: array
+                  nullable: true
+                  items:
+                    $ref: '#/schemas/AuditLog'
+                auditable_action:
+                  $ref: '#/schemas/AuditableActionSnakeCase'
+                auditable_id:
+                  type: integer
+                  description: A context sensitive ID for the entity that this audit log entry pertains to
+                  example: 23
+                auditable_type:
+                  $ref: '#/schemas/AuditableTypeSnakeCase'
+                created_at:
+                  type: string
+                  format: date-time
+                  description: Audit log creation timestamp
+                  example: '2021-06-16T01:37:04.262Z'
+                description:
+                  type: string
+                  description: Description of the audited action
+                  example: Some descriptive text here
+                id:
+                  type: string
+                  description: Audit log ID
+                  example: 01986140-69eb-7c71-b8fe-2fb5a943dd90
+                user:
+                  type: object
+                  nullable: true
+                  properties:
+                    email:
+                      type: string
+                      description: The user's email address
+                      example: john@smith.com
+                    id:
+                      type: integer
+                      description: User ID
+                      example: 23
+                    name:
+                      type: string
+                      description: The user's name
+                      example: John Smith
+                workspace:
+                  type: object
+                  properties:
+                    archive_only:
+                      type: boolean
+                      format: boolean
+                      description: True if the workspace is archive only
+                      example: true
+                    id:
+                      type: integer
+                      description: Workspace ID
+                      example: 826
+                    name:
+                      type: string
+                      description: Workspace name
+                      example: Theta Lake Support
+
+  GetAuditLogResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      audit_logs:
+        type: array
+        description: The audit logs that match the query
+        items:
+          type: object
+          properties:
+            audit_log_details:
+              type: array
+              nullable: true
+              items:
+                $ref: '#/schemas/AuditLog'
+            auditable_action:
+              $ref: '#/schemas/AuditableAction'
+            auditable_id:
+              type: integer
+              description: The ID of the user who performed this action
+              example: 23
+            auditable_type:
+              $ref: '#/schemas/AuditableType'
+            created_at:
+              type: string
+              format: date-time
+              description: Audit log creation timestamp
+              example: '2021-06-16T01:37:04.262Z'
+            customer:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Customer ID
+                  example: 8056
+                name:
+                  type: string
+                  description: Customer name
+                  example: Theta Lake
+            description:
+              type: string
+              description: Description of the audited action
+              example: Some descriptive text here
+            id:
+              type: string
+              description: Audit log ID
+              example: 01986140-69eb-7c71-b8fe-2fb5a943dd90
+            org_unit:
+              type: object
+              properties:
+                archive_only:
+                  type: boolean
+                  format: boolean
+                  description: True if this org unit is archive only
+                  example: true
+                id:
+                  type: integer
+                  description: Org unit ID
+                  example: 826
+                name:
+                  type: string
+                  description: Org unit name
+                  example: Theta Lake Support
+            user:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: The user's email address
+                  example: john@smith.com
+                id:
+                  type: integer
+                  description: User ID
+                  example: 23
+                name:
+                  type: string
+                  description: The user's name
+                  example: John Smith
+
+  AuditableType:
+    type: string
+    enum:
+      [
+        ApiKey,
+        ArchiveBucket,
+        ArchiveSubjectFormat,
+        AuditReport,
+        Case,
+        Category,
+        ClassifierAuditReport,
+        Comment,
+        CustomDetectionRequest,
+        Customer,
+        CustomerReport,
+        CustomHeaderSet,
+        Datum,
+        DetectionRequest,
+        DeveloperApiKey,
+        DirectoryGroup,
+        DisclaimerGroup,
+        DisclaimerRequest,
+        EntryStrategy,
+        Identity,
+        IdpUser,
+        IgnoreMailPolicy,
+        InformationBarrier,
+        Integration,
+        KeywordsRequest,
+        License,
+        MicrosoftTeamsDisclaimer,
+        OrgUnit,
+        ParticipantFilter,
+        Policy,
+        PredefinedComment,
+        RcaInstall,
+        RcaInstall::MsTeams,
+        RcaInstall::RcaZoom,
+        ReviewItem,
+        Role,
+        Saml,
+        Saml::Azure,
+        Saml::General,
+        Saml::Google,
+        Saml::Okta,
+        Saml::Onelogin,
+        Saml::Ping,
+        Saml::PingFederate,
+        Saml::Zoom,
+        SamlRegisteredDomain,
+        Search,
+        StorageAccount,
+        SupervisionSpace,
+        UploadToolConfig,
+        User,
+        UserGroup,
+        Workflow,
+      ]
+
+  AuditableTypeSnakeCase:
+    type: string
+    enum:
+      [
+        api_key,
+        archive_bucket,
+        archive_subject_format,
+        audit_report,
+        case,
+        category,
+        classifier_audit_report,
+        classifier_exclusion,
+        comment,
+        custom_detection_request,
+        custom_header_set,
+        customer_report,
+        customer,
+        detection_request,
+        developer_api_key,
+        directory_group,
+        disclaimer_group,
+        disclaimer_request,
+        entry_strategy,
+        identity,
+        idp_user,
+        ignore_mail_policy,
+        information_barrier,
+        integration,
+        keyword_request,
+        license,
+        microsoft_teams_disclaimer,
+        participant_filter,
+        policy,
+        predefined_comment,
+        rca_install_ms_teams,
+        rca_install_rca_zoom,
+        rca_install,
+        record,
+        review_item,
+        role,
+        saml_azure,
+        saml_general,
+        saml_google,
+        saml_okta,
+        saml_onelogin,
+        saml_ping_federate,
+        saml_ping,
+        saml_registered_domain,
+        saml_zoom,
+        saml,
+        search,
+        storage_account,
+        supervision_space,
+        upload_tool_config,
+        user_group,
+        user,
+        workflow,
+        workspace_supervision_space,
+        workspace,
+      ]
+
+  AuditableAction:
+    type: string
+    enum:
+      [
+        Batch Review,
+        Create,
+        Delete,
+        Disable,
+        Download,
+        Enable,
+        Export,
+        Identities Merged,
+        Identity Update Prevented,
+        Login,
+        Logout,
+        Other,
+        Password Change,
+        RCA Approved Content,
+        Read,
+        Record Translated,
+        Record Update Prevented,
+        Reset and Resubmit,
+        Update Retention Library,
+        Update,
+        Workflow,
+      ]
+
+  AuditableActionSnakeCase:
+    type: string
+    enum:
+      [
+        batch_review,
+        create,
+        delete,
+        disable,
+        download,
+        enable,
+        export,
+        identities_merged,
+        identity_update_prevented,
+        login,
+        logout,
+        other,
+        password_change,
+        rca_approved_content,
+        read,
+        record_translated,
+        record_update_prevented,
+        reset_and_resubmit,
+        update_retention_library,
+        update,
+        workflow,
+      ]
+
+  AuditLog:
+    type: object
+    properties:
+      auditable_previous_value_id:
+        type: integer
+        nullable: true
+        description: The previous auditable value identifier
+        example: 125
+      auditable_previous_value_str:
+        type: string
+        description: The previous auditable value identifier as in string format
+        example: '125'
+      auditable_previous_value_type:
+        type: string
+        description: The previous auditable human readable type
+        example: Integer
+      auditable_value_id:
+        type: integer
+        nullable: true
+        description: The current auditable value identifier
+        example: 125
+      auditable_value_str:
+        type: string
+        description: The current auditable value identifier as in string format
+        example: '125'
+      auditable_value_type:
+        type: string
+        description: The current auditable human readable type
+        example: Integer
+      description:
+        type: string
+        description: The description of the auditable_value
+        example: Supervision space priority
+      long_description:
+        type: string
+        description: Long description of the auditable_value
+        example: Supervision space priority updated from '50' to '51'

@@ -1,0 +1,761 @@
+paths:
+  directory_groups:
+    get:
+      tags:
+        - Directory Groups
+      summary: List all directory groups
+      description: |
+        **REQUIRED PERMISSION:** `directory_groups:read`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25,  max is 500
+          required: false
+          schema:
+            type: integer
+            example: 25
+            minimum: 1
+            maximum: 500
+        - name: include_identities
+          in: query
+          description: Include the identities in the response. Defaults to **true**
+          required: false
+          schema:
+            type: boolean
+            example: true
+
+      responses:
+        '200':
+          description: The response contains a paged list of directory groups
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetDirectoryGroupResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    post:
+      tags:
+        - Directory Groups
+      summary: Create a new directory group
+      description: |
+        **REQUIRED PERMISSION:** `directory_groups:create`  
+        **RATE LIMIT:** `light`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostDirectoryGroupRequest'
+
+      responses:
+        '200':
+          description: The response contains a list of directory groups with optional paging.
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostDirectoryGroupResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  directory_groups/{id}:
+    get:
+      tags:
+        - Directory Groups
+      summary: Get directory group by ID
+      description: |
+        **REQUIRED PERMISSION:** `directory_groups:read`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the directory group to get
+          schema:
+            type: integer
+            example: 1988
+        - name: include_identities
+          in: query
+          description: Include the identities in the response. Defaults to **true**
+          required: false
+          schema:
+            type: boolean
+            example: true
+
+      responses:
+        '200':
+          description: Responds with the directory group and the associated identities
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetDirectoryGroupByIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    put:
+      tags:
+        - Directory Groups
+      summary: Update directory group
+      description: |
+        **REQUIRED PERMISSION:** `directory_groups:update`  
+        **RATE LIMIT:** `light`  
+        **NOTE:** Allows updating the external ID, name, and description of a directory group. The external ID must be unique among the directory groups otherwise the API will return a `409 Conflict` error.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the directory group to update
+          schema:
+            type: integer
+            example: 1996
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PutDirectoryGroupByIdRequest'
+
+      responses:
+        '200':
+          description: The directory group has been successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutDirectoryGroupByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '409':
+          $ref: '../common/errors.yml#/responses/Conflict'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Directory Groups
+      summary: Delete directory group
+      description: |
+        **REQUIRED PERMISSION:** `directory_groups:delete`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the directory group to delete
+          schema:
+            type: integer
+            example: 1996
+      responses:
+        '200':
+          description: The directory group has been successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/DeleteDirectoryGroupResponse'
+
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  directory_groups/{id}/identity:
+    post:
+      tags:
+        - Directory Groups
+      summary: Create a new identity in directory group
+      description: |
+        **REQUIRED PERMISSION:** `directory_groups:update`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the directory group to add the identity
+          schema:
+            type: integer
+            example: 1996
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostDirectoryGroupIdentityRequest'
+      responses:
+        '200':
+          description: The directory group has been successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostDirectoryGroupIdentityResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '409':
+          $ref: '../common/errors.yml#/responses/Conflict'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  directory_groups/{id}/identity/{identity_id}:
+    delete:
+      tags:
+        - Directory Groups
+      summary: Remove identity from directory group
+      description: |
+        **REQUIRED PERMISSION:** `directory_groups:update`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: id
+          in: path
+          description: The group ID
+          required: true
+          schema:
+            type: integer
+            example: 1988
+        - name: identity_id
+          in: path
+          description: The ID of the identity to delete from the group
+          required: true
+          schema:
+            type: integer
+            example: 23
+      responses:
+        '200':
+          description: The directory group has been successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/DeleteDirectoryGroupIdentityResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  directory_groups/{id}/identities:
+    post:
+      tags:
+        - Directory Groups
+      summary: Add existing identities to directory group
+      description: |
+        **REQUIRED PERMISSION:** `directory_groups:update`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: id
+          in: path
+          description: The group ID
+          required: true
+          schema:
+            type: integer
+            example: 1988
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              description: An array of identity IDs to add to the directory group
+              items:
+                type: integer
+              example:
+                - 66690
+                - 51593
+                - 5454
+      responses:
+        '200':
+          description: The directory group has been successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutDirectoryGroupIdentitiesResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '409':
+          $ref: '../common/errors.yml#/responses/Conflict'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  directory_groups/upload:
+    post:
+      tags:
+        - Directory Groups
+      summary: Upload directory groups & identities
+      description: |
+        **REQUIRED PERMISSION:** `directory_groups:update`  
+        **RATE LIMIT:** `light`  
+        **NOTE:**
+        CSV headers are `name,email,phone,userid,groupname,groupdesc,groupid`<br />
+        Extra columns can be added and will be processed as `extra_attributes`.<br />
+        Example CSV can be found [here](/files/upload_example.csv).<br />
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file to upload
+      responses:
+        '200':
+          description: The CSV was successfully uploaded and processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostUploadCsvResponse'
+
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '422':
+          $ref: '../common/errors.yml#/responses/UnprocessableEntity'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetDirectoryGroupResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      directory_groups:
+        type: array
+        description: An array of DirectoryGroup objects
+        items:
+          $ref: '#/schemas/DirectoryGroupObject'
+
+  PostDirectoryGroupRequest:
+    type: object
+    properties:
+      name:
+        $ref: '#/schemas/name'
+      external_id:
+        $ref: '#/schemas/external_id'
+      description:
+        $ref: '#/schemas/description'
+
+  PostDirectoryGroupResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      directory_group:
+        type: object
+        properties:
+          created_at:
+            $ref: '../common/schemas.yml#/schemas/created_at'
+          description:
+            $ref: '#/schemas/description'
+          external_id:
+            $ref: '#/schemas/external_id'
+          id:
+            $ref: '#/schemas/id'
+          name:
+            $ref: '#/schemas/name'
+          org_unit_id:
+            type: integer
+            description: The org unit associated with the new directory group
+            example: 108
+          updated_at:
+            $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  GetDirectoryGroupByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      directory_group:
+        $ref: '#/schemas/DirectoryGroupObject'
+
+  DirectoryGroupObject:
+    type: object
+    required:
+      - created_at
+      - description
+      - external_id
+      - id
+      - identity_count
+      - name
+      - updated_at
+      - identities
+    additionalProperties: false
+    properties:
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      description:
+        $ref: '#/schemas/description'
+      external_id:
+        $ref: '#/schemas/external_id'
+      id:
+        $ref: '#/schemas/id'
+      identity_count:
+        type: integer
+        description: The number of identities in the directory group
+        example: 231
+      name:
+        $ref: '#/schemas/name'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      identities:
+        type: array
+        description: An array of identities
+        items:
+          $ref: '#/schemas/DirectoryGroupIdentity'
+
+  PutDirectoryGroupByIdRequest:
+    type: object
+    description: The fields to be updated on the group
+    properties:
+      description:
+        $ref: '#/schemas/description'
+      external_id:
+        $ref: '#/schemas/external_id'
+      name:
+        $ref: '#/schemas/name'
+
+  PutDirectoryGroupByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      directory_group:
+        type: object
+        properties:
+          description:
+            $ref: '#/schemas/description'
+          external_id:
+            $ref: '#/schemas/external_id'
+          id:
+            $ref: '#/schemas/id'
+          name:
+            $ref: '#/schemas/name'
+
+  DeleteDirectoryGroupResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: Success message
+        example: Ok, we have successfully deleted the directory
+
+  PostDirectoryGroupIdentityRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The identity's name
+        example: John Smith
+      phone_number:
+        type: string
+        description: The identity's phone number
+        example: 555-867-5309
+      email:
+        type: string
+        description: The identity's email address
+        example: john@smith.com
+      external_id:
+        type: string
+        description: An external ID for the identity
+        example: it-236
+        nullable: true
+
+  PostDirectoryGroupIdentityResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      identity:
+        type: object
+        properties:
+          ai_participant:
+            $ref: 'identities.yml#/schemas/ai_participant'
+          created_at:
+            $ref: '../common/schemas.yml#/schemas/created_at'
+          email:
+            $ref: 'identities.yml#/schemas/email'
+          email_end_date:
+            $ref: 'identities.yml#/schemas/email_end_date'
+          email_start_date:
+            $ref: 'identities.yml#/schemas/email_start_date'
+          external_id:
+            $ref: 'identities.yml#/schemas/external_id'
+          external_id_end_date:
+            $ref: 'identities.yml#/schemas/external_id_end_date'
+          external_id_start_date:
+            $ref: 'identities.yml#/schemas/external_id_start_date'
+          extra_attributes:
+            $ref: 'identities.yml#/schemas/ExtraAttributes'
+          id:
+            $ref: 'identities.yml#/schemas/id'
+          is_submitter:
+            $ref: 'identities.yml#/schemas/is_submitter'
+          name:
+            $ref: 'identities.yml#/schemas/name'
+          participant:
+            $ref: 'identities.yml#/schemas/participant'
+          phone_number:
+            nullable: true
+            allOf:
+              - $ref: 'identities.yml#/schemas/phone_number'
+          phone_number_end_date:
+            $ref: 'identities.yml#/schemas/phone_number_end_date'
+          phone_number_start_date:
+            $ref: 'identities.yml#/schemas/phone_number_start_date'
+          source:
+            $ref: 'identities.yml#/schemas/source'
+          updated_at:
+            $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  DeleteDirectoryGroupIdentityResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: Result message
+        example: The user John Smith has been removed from the directory group UK IT Support
+
+  PostUploadCsvResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      upload_response:
+        type: object
+        properties:
+          message:
+            type: string
+            description: Upload response message
+            example: Group upload has been scheduled successfully. We will send you an email when it finishes.
+          success:
+            type: boolean
+            description: Indicates the upload was successful
+            example: true
+
+  PutDirectoryGroupIdentitiesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      identities:
+        type: array
+        description: An array of the added identities
+        items:
+          type: object
+          properties:
+            ai_participant:
+              $ref: 'identities.yml#/schemas/ai_participant'
+            created_at:
+              $ref: '../common/schemas.yml#/schemas/created_at'
+            email:
+              $ref: 'identities.yml#/schemas/email'
+            email_end_date:
+              $ref: 'identities.yml#/schemas/email_end_date'
+            email_start_date:
+              $ref: 'identities.yml#/schemas/email_start_date'
+            external_id:
+              $ref: 'identities.yml#/schemas/external_id'
+            external_id_end_date:
+              $ref: 'identities.yml#/schemas/external_id_end_date'
+            external_id_start_date:
+              $ref: 'identities.yml#/schemas/external_id_start_date'
+            id:
+              $ref: 'identities.yml#/schemas/id'
+            is_submitter:
+              $ref: 'identities.yml#/schemas/is_submitter'
+            name:
+              $ref: 'identities.yml#/schemas/name'
+            participant:
+              $ref: 'identities.yml#/schemas/participant'
+            phone_number:
+              $ref: 'identities.yml#/schemas/phone_number'
+            phone_number_end_date:
+              $ref: 'identities.yml#/schemas/phone_number_end_date'
+            phone_number_start_date:
+              $ref: 'identities.yml#/schemas/phone_number_start_date'
+            source:
+              $ref: 'identities.yml#/schemas/source'
+            updated_at:
+              $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  DirectoryGroupIdentity:
+    type: object
+    properties:
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      email:
+        type: string
+        description: The identity's email address
+        example: john@smith.com
+        nullable: true
+      external_id:
+        type: string
+        description: An external ID for the identity
+        example: it-236
+        nullable: true
+      id:
+        type: integer
+        description: The identity ID
+        example: 88484
+      name:
+        type: string
+        description: The identity's name
+        example: John Smith
+      phone_number:
+        type: string
+        description: The identity's phone number
+        example: 555-867-5309
+        nullable: true
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+  id:
+    type: integer
+    description: The directory group's ID
+    example: 1996
+
+  external_id:
+    type: string
+    description: An external identifier for the directory group
+    example: GroupID1
+    nullable: true
+
+  name:
+    type: string
+    description: Name of the directory group
+    example: Directory group Name
+
+  description:
+    type: string
+    description: A short description of the directory group
+    example: UK IT Support
+    nullable: true

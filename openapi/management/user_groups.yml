@@ -1,0 +1,599 @@
+paths:
+  user_groups:
+    get:
+      tags:
+        - User Groups
+      summary: List all user groups
+      description: |
+        **REQUIRED PERMISSION:** `user_groups:read`  
+        **RATE LIMIT:** `heavy`
+      responses:
+        '200':
+          description: The list of user groups
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetUserGroupsResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    post:
+      tags:
+        - User Groups
+      summary: Create new user group
+      description: |
+        **REQUIRED PERMISSION:** `user_groups:create`  
+        **RATE LIMIT:** `heavy`
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostPutUserGroupsRequest'
+      responses:
+        '201':
+          description: The new user group
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostUserGroupsResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  user_groups/{id}:
+    get:
+      tags:
+        - User Groups
+      summary: Get user group by ID
+      description: |
+        **REQUIRED PERMISSION:** `user_groups:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The user group ID
+          schema:
+            type: integer
+            example: 208
+      responses:
+        '200':
+          description: The list of user groups
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetUserGroupsIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    put:
+      tags:
+        - User Groups
+      summary: Update user group
+      description: |
+        **REQUIRED PERMISSION:** `user_groups:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The user group ID
+          schema:
+            type: integer
+            example: 208
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostPutUserGroupsRequest'
+      responses:
+        '200':
+          description: The new user group
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostUserGroupsResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - User Groups
+      summary: Delete user group
+      description: |
+        **REQUIRED PERMISSION:** `user_groups:delete`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The user group ID
+          schema:
+            type: integer
+            example: 208
+      responses:
+        '200':
+          description: The response result
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/DeleteUserGroupsResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  user_groups/{id}/add_users:
+    put:
+      tags:
+        - User Groups
+      summary: Add users to group
+      description: |
+        **REQUIRED PERMISSION:** `user_groups:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The user group ID
+          schema:
+            type: integer
+            example: 210
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PutAddUsersRequest'
+      responses:
+        '200':
+          description: The response result
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutUserGroupsResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  user_groups/{id}/remove_users:
+    put:
+      tags:
+        - User Groups
+      summary: Remove users from group
+      description: |
+        **REQUIRED PERMISSION:** `user_groups:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The user group ID
+          schema:
+            type: integer
+            example: 210
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PutAddUsersRequest'
+      responses:
+        '200':
+          description: The response result
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutUserGroupsResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+
+schemas:
+  GetUserGroupsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      user_groups:
+        type: array
+        description: A array of user group objects
+        items:
+          $ref: '#/schemas/UserGroup'
+
+  PostPutUserGroupsRequest:
+    type: object
+    properties:
+      name:
+        $ref: '#/schemas/name'
+      description:
+        $ref: '#/schemas/description'
+      external_id:
+        $ref: '#/schemas/external_id'
+      category_ids:
+        type: array
+        description: An array of category IDs for this user group
+        items:
+          type: integer
+        example:
+          - 549
+          - 550
+          - 273
+
+  PostUserGroupsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      user_group:
+        $ref: '#/schemas/UserGroup'
+
+  GetUserGroupsIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      user_group:
+        $ref: '#/schemas/UserGroup'
+
+  PutUserGroupsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      user_group:
+        $ref: '#/schemas/UserGroup'
+
+  DeleteUserGroupsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: The status of the delete
+        example: We have successfully deleted the user group Accounting.
+
+  PutAddUsersRequest:
+    type: array
+    description: An array of user IDs to add
+    items:
+      type: integer
+    example:
+      - 101
+      - 102
+      - 103
+
+
+  UserGroup:
+    type: object
+    properties:
+      categories:
+        $ref: '#/schemas/categories'
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      description:
+        $ref: '#/schemas/description'
+      external_id:
+        nullable: true
+        allOf:
+          - $ref: '#/schemas/external_id'
+      name:
+        $ref: '#/schemas/name'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      id:
+        $ref: '#/schemas/id'
+      users:
+        $ref: '#/schemas/users'
+
+
+  categories:
+    type: array
+    description: An array of categories
+    items:
+      type: object
+      properties:
+        # beta:
+        #   type: boolean
+        #   description: Indicates
+        #   example: false
+        # built_in_id:
+        #   type: integer
+        #   description: TBD
+        #   example: 40105
+        category_group_id:
+          type: integer
+          description: The category's group ID
+          example: 275
+        created_at:
+          $ref: '../common/schemas.yml#/schemas/created_at'
+        deprecated:
+          type: boolean
+          description: Indicates if the category has been deprecated
+          example: false
+        description:
+          type: string
+          description: Describes the category
+          example: Apps shared on screen
+        detection_media_types:
+          type: array
+          description: An array of the detection media types in this category
+          items:
+            type: object
+            properties:
+              # built_in_id:
+              #   type: string
+              #   description: TBD
+              #   example: VIDEO
+              # created_at:
+              #   $ref: '../common/schemas.yml#/schemas/created_at'
+              id:
+                type: integer
+                description: The detection media type ID
+                example: 1
+              name:
+                type: string
+                description: The detection media type name
+                example: Video
+              # updated_at:
+              #   $ref: '../common/schemas.yml#/schemas/updated_at'
+        detection_type:
+          type: string
+          enum:
+            [
+              "SPEECH",
+              "SPOKEN",
+              "SCREEN",
+              "DOCUMENT",
+              "CHAT",
+              "BOTH"
+            ]
+          description: Detection type permitted in this category
+          example: SCREEN
+          nullable: true
+        disabled_at:
+          type: string
+          format: date-time
+          description: Timestamp of when the category was disabled. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+          example: null
+          nullable: true
+        disclaimer:
+          type: boolean
+          description: Indicates that this category is detecting for the presence of a disclaimer
+          example: false
+        from_date:
+          type: string
+          format: date-time
+          description: Only datums after this date are permitted in this category. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+          example: null
+          nullable: true
+        hidden:
+          type: boolean
+          description: Indicates if the category is hidden on the UI
+          example: false
+        id:
+          type: integer
+          description: The category's ID
+          example: 388
+        identifier:
+          type: string
+          description: Unique text identifier for the category
+          example: "APPS_ON_SCREEN"
+        keywords:
+          type: boolean
+          description: Indicates that this category is a customer classifier that uses keywords
+          example: false
+        # license_feature_type:
+        #   type: TBD
+        #   description: TBD
+        #   example: null
+        #   nullable: true
+        name:
+          type: string
+          description: The category's name
+          example: Online Apps and Portals
+        # org_unit_id:
+        #   type: integer
+        #   description: TBD
+        #   example: null
+        #   nullable: true
+        risk_type:
+          type: string
+          enum:
+            [
+              VALIDATION,
+              INFORMATION,
+              RISK
+            ]
+          description: Defines how a detection impacts the risk of datums
+          example: "INFORMATION"
+        status:
+          type: string
+          description: The category's status
+          example: Active
+        status_color:
+          type: string
+          description: A color representing the category's status
+          example: '#0bb676'
+        terms:
+          type: string
+          description: A new line (`\n`) separated list of terms used for detections
+          example: "\"term1\"\\n\"term2\"\\n\"term3\""
+          nullable: true
+        to_date:
+          type: string
+          format: date-time
+          description: Only datums up to this date are permitted in this category. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+          example: null
+          nullable: true
+        updated_at:
+          $ref: '../common/schemas.yml#/schemas/updated_at'
+
+
+
+  users:
+    type: array
+    description: An array of the users in this group
+    items:
+      type: object
+      properties:
+        current_org_unit:
+          type: object
+          description: The user's current org unit
+          properties:
+            archive_only:
+              type: boolean
+              description: Indicates if the org unit is archive only
+              example: false
+            id:
+              type: integer
+              description: The org unit's ID
+              example: 1
+            name:
+              type: string
+              description: The org unit's name
+              example: Theta Lake Support
+        disabled:
+          type: boolean
+          description: Indicates if the user is disabled
+          example: false
+        email:
+          type: string
+          description: The user's email address
+          example: jane@email.com
+        last_login:
+          type: string
+          format: date-time
+          description: The timestamp of the user's last login. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+          example: null
+          nullable: true
+        name:
+          type: string
+          description: The user's name
+          example: Jane Doe
+        role:
+          type: string
+          description: The user's role
+          example: Reviewer
+        role_id:
+          type: integer
+          description: The ID of the user's role
+          example: 80
+        id:
+          type: integer
+          description: The user's ID
+          example: 92
+
+  name:
+    type: string
+    description: The user group's name
+    example: Accounting
+
+  description:
+    type: string
+    description: The user group's description
+    example: Accounting Department
+
+  external_id:
+    type: string
+    description: An eternal ID for the user group
+    example: acct-123
+    nullable: true
+
+  id:
+    type: integer
+    description: The user group's ID
+    example: 117

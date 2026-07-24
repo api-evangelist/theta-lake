@@ -1,0 +1,57 @@
+paths:
+  records/{id}/shareable_link:
+    get:
+      tags:
+        - Records
+      summary: Get shareable link
+      description: |
+        **REQUIRED PERMISSION:** `records:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID or UUID of the record to get a shareable link for
+          schema:
+            type: string
+          examples:
+            example1:
+              value: '501263'
+            example2:
+              value: ca116f96-bbd5-11ef-9468-53af98260bba
+      responses:
+        '200':
+          description: The response contains the shareable link for the record
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetShareableLinkResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetShareableLinkResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      shareable_link:
+        type: string
+        description: The shareable link for the record
+        example: https://app-useast.thetalake.com/api/v1/datum_shared_links/ca116f96-bbd5-11ef-9468-53af98260bba

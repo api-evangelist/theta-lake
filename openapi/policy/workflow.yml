@@ -1,0 +1,1246 @@
+paths:
+  workflows:
+    get:
+      tags:
+        - Workflow
+      summary: List all workflows
+      description: |
+        **REQUIRED PERMISSIONS:** `workflows:read`  
+        **RATE LIMIT:** `medium`
+      responses:
+        '200':
+          description: A list of workflows
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/ListAllWorkflowsResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  workflows/queue:
+    get:
+      tags:
+        - Workflow
+      summary: List all records in workflow queues
+      description: |
+        **REQUIRED PERMISSIONS:** `workflows:use`  
+        **RATE LIMIT:** `medium`
+      parameters:
+        - name: state_type
+          in: query
+          required: false
+          description: The type of state to get records for
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - open
+                - closed
+                - in_progress
+        - name: max
+          in: query
+          required: false
+          description: The maximum number of records to return
+          schema:
+            type: integer
+            default: 25
+            minimum: 1
+            maximum: 100
+        - name: page_token
+          in: query
+          required: false
+          description: The page token to query next, this comes from the `paging` in the response.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paginated list of records in workflow queues
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetWorkflowQueueResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  workflows/{id}:
+    get:
+      tags:
+        - Workflow
+      summary: Get workflow by id
+      description: |
+        **REQUIRED PERMISSIONS:** `workflows:read`  
+        **RATE LIMIT:** `medium`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the workflow
+          schema:
+            type: integer
+            example: 67
+      responses:
+        '200':
+          description: The workflow details
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/ListWorkflowByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  workflows/swrv_rules:
+    get:
+      tags:
+        - Workflow
+      summary: List all SWRV rules
+      description: |
+        **REQUIRED PERMISSIONS:** `swrv_rules:read`  
+        **RATE LIMIT:** `heavy`
+      responses:
+        '200':
+          description: A list of SWRV (Smart Workflow Review) rules ordered by priority (highest to lowest)
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/ListAllSwrvRulesResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    post:
+      tags:
+        - Workflow
+      summary: Create new SWRV rule
+      description: |
+        **REQUIRED PERMISSIONS:** `swrv_rules:create`  
+        **RATE LIMIT:** `heavy`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/CreateSwrvRuleRequestBody'
+      responses:
+        '201':
+          description: The created SWRV rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/CreateSwrvRuleResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  workflows/swrv_rules/{id}:
+    get:
+      tags:
+        - Workflow
+      summary: Get SWRV rule by id
+      description: |
+        **REQUIRED PERMISSIONS:** `swrv_rules:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the SWRV rule to get
+          schema:
+            type: integer
+            example: 2337
+      responses:
+        '200':
+          description: The SWRV rule details
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetSwrvRuleByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    put:
+      tags:
+        - Workflow
+      summary: Update SWRV rule
+      description: |
+        **REQUIRED PERMISSIONS:** `swrv_rules:update`  
+        **RATE LIMIT:** `medium`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the SWRV rule
+          schema:
+            type: integer
+            example: 2337
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/UpdateSwrvRuleRequestBody'
+      responses:
+        '200':
+          description: The SWRV rule details
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/UpdateSwrvRuleResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Workflow
+      summary: Delete SWRV Rule
+      description: |
+        **REQUIRED PERMISSIONS:** `swrv_rules:delete`  
+        **RATE LIMIT:** `medium`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the workflow
+          schema:
+            type: integer
+            example: 67
+      responses:
+        '200':
+          description: The workflow deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/DeleteSwrvRuleResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  workflows/record/{id}:
+    get:
+      tags:
+        - Workflow
+      summary: Get workflow actions for a record
+      description: |
+        **REQUIRED PERMISSION:** `workflows:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID or UUID of the record
+          required: true
+          schema:
+            type: string
+          examples:
+            example1:
+              value: '501263'
+            example2:
+              value: ca116f96-bbd5-11ef-9468-53af98260bba
+      responses:
+        '200':
+          description: The workflow actions available for the record
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetWorkflowActionsForRecordResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    put:
+      tags:
+        - Workflow
+      summary: Perform workflow action on a Record
+      description: |
+        **REQUIRED PERMISSION:** `workflows:use`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID or UUID of the record
+          required: true
+          schema:
+            type: string
+          examples:
+            example1:
+              value: '501263'
+            example2:
+              value: ca116f96-bbd5-11ef-9468-53af98260bba
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PerformWorkflowActionRequest'
+      responses:
+        '200':
+          description: The new identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PerformWorkflowActionResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetWorkflowActionsForRecordResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      record:
+        $ref: '#/schemas/RecordWorkflowDetails'
+
+  RecordWorkflowDetails:
+    type: object
+    description: The record's workflow details including available actions and current state
+    properties:
+      assigned_to:
+        $ref: '#/schemas/AssignedTo'
+      workflow:
+        $ref: '#/schemas/RecordWorkflow'
+      workflow_actions:
+        type: array
+        description: List of available workflow actions that can be performed on the record
+        items:
+          $ref: '#/schemas/RecordWorkflowAction'
+      workflow_state:
+        $ref: '#/schemas/RecordWorkflowState'
+
+  RecordWorkflow:
+    type: object
+    description: The workflow the record is in
+    properties:
+      id:
+        type: integer
+        description: The ID of the workflow
+        example: 19077
+      name:
+        type: string
+        description: The name of the workflow
+        example: Review Workflow
+      description:
+        type: string
+        description: Description of the workflow
+        example: Workflow to route the API content
+
+  RecordWorkflowAction:
+    type: object
+    description: A workflow action available to perform on the record
+    properties:
+      description:
+        type: string
+        description: Description of the workflow action
+        example: Content is low risk and meets requirements. Approve and close the item
+      id:
+        type: integer
+        description: The ID of the workflow action
+        example: 87219
+      name:
+        type: string
+        description: The name of the workflow action
+        example: Send to "Review"
+      to_state:
+        $ref: '#/schemas/RecordWorkflowStateWithoutDescription'
+
+  RecordWorkflowStateWithoutDescription:
+    type: object
+    description: The workflow state details
+    properties:
+      id:
+        type: integer
+        description: The ID of the workflow state
+        example: 83359
+      name:
+        type: string
+        description: The name of the workflow state
+        example: Approved
+      reassign_users:
+        type: array
+        description: List of users that the record can be reassigned to in this state
+        items:
+          $ref: '#/schemas/ReassignUser'
+      state_type:
+        type: string
+        description: The type of workflow state
+        example: in_progress
+        enum:
+          - open
+          - in_progress
+          - closed
+
+  RecordWorkflowState:
+    type: object
+    description: The workflow state details
+    properties:
+      description:
+        type: string
+        description: Description of the workflow state
+        example: Content that has been reviewed and approved
+      id:
+        type: integer
+        description: The ID of the workflow state
+        example: 83359
+      name:
+        type: string
+        description: The name of the workflow state
+        example: Approved
+      reassign_users:
+        type: array
+        description: List of users that the record can be reassigned to in this state
+        items:
+          $ref: '#/schemas/ReassignUser'
+      state_type:
+        type: string
+        description: The type of workflow state
+        example: in_progress
+        enum:
+          - open
+          - in_progress
+          - closed
+
+  AssignedTo:
+    type: object
+    description: The user assigned to the record
+    properties:
+      id:
+        type: integer
+        nullable: true
+        description: The ID of the user
+        example: 404
+      name:
+        type: string
+        nullable: true
+        description: The name of the user
+        example: Jane Doe
+
+  ReassignUser:
+    type: object
+    description: A user that can be assigned to the record
+    properties:
+      email:
+        type: string
+        format: email
+        description: The email address of the user
+        example: jane.doe@email.com
+      id:
+        type: integer
+        description: The ID of the user
+        example: 404
+      name:
+        type: string
+        description: The name of the user
+        example: Jane Doe
+
+  ListAllWorkflowsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      workflows:
+        type: array
+        items:
+          $ref: '#/schemas/Workflow'
+
+  ListWorkflowByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      workflow:
+        $ref: '#/schemas/WorkflowDetails'
+
+  ListAllSwrvRulesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      swrv_rules:
+        type: array
+        description: List of SWRV rules
+        items:
+          $ref: '#/schemas/SwrvRule'
+
+  GetSwrvRuleByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      swrv_rule:
+        $ref: '#/schemas/SwrvRule'
+
+  CreateSwrvRuleResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      swrv_rule:
+        $ref: '#/schemas/SwrvRule'
+
+  UpdateSwrvRuleResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      swrv_rule:
+        $ref: '#/schemas/SwrvRule'
+
+  SwrvRule:
+    type: object
+    properties:
+      default_rule:
+        type: boolean
+        description: Indicates if this is the default SWRV rule
+        example: false
+      description:
+        type: string
+        nullable: true
+        description: Description of the SWRV rule
+        example: My SWRV rule
+      id:
+        type: integer
+        description: The ID of the SWRV rule
+        example: 2337
+      input_source:
+        type: array
+        description: List of input sources for the SWRV rule
+        items:
+          $ref: '#/schemas/SwrvInputSource'
+      is_built_in:
+        type: boolean
+        description: Indicates if this is a built-in SWRV rule
+        example: true
+      name:
+        type: string
+        description: The name of the SWRV rule
+        example: swrv-example
+      policy:
+        $ref: '#/schemas/SwrvPolicy'
+      priority:
+        type: integer
+        description: The priority of the SWRV rule (lower numbers have higher priority)
+        example: 4
+      retention_library:
+        $ref: '#/schemas/SwrvRetentionLibrary'
+      search:
+        $ref: '#/schemas/SwrvSearch'
+      supervision_space:
+        $ref: '#/schemas/SwrvSupervisionSpace'
+      workflow:
+        $ref: '#/schemas/SwrvWorkflow'
+
+  SwrvInputSource:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The name of the input source
+        example: 'Any'
+      integration:
+        type: object
+        nullable: true
+        properties:
+          id:
+            type: integer
+            description: The ID of the integration
+            example: 2345
+          name:
+            type: string
+            description: The name of the integration
+            example: 'Zoom Chat'
+      type:
+        type: string
+        description: The type of the input source
+        example: 'integration'
+        enum:
+          - integration
+          - all_integration_uploads
+          - all_submission_portal_uploads
+          - all_uploads
+          - all_user_uploads
+
+  SwrvPolicy:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The ID of the policy
+        example: 147
+      name:
+        type: string
+        description: The name of the policy
+        example: 'All Detections Active'
+
+  SwrvRetentionLibrary:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The ID of the retention library
+        example: 1
+      name:
+        type: string
+        description: The name of the retention library
+        example: 'Test Bucket - update2 - US West (Oregon)'
+
+  SwrvSearch:
+    type: object
+    nullable: true
+    properties:
+      id:
+        type: integer
+        description: The ID of the saved search
+        example: 739139
+      name:
+        type: string
+        description: The name of the search
+        example: 'All org users'
+
+  SwrvSupervisionSpace:
+    type: object
+    nullable: true
+    properties:
+      id:
+        type: integer
+        description: The ID of the supervision space
+        example: 10420
+      name:
+        type: string
+        description: The name of the supervision space
+        example: 'Executive Team'
+
+  SwrvWorkflow:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The ID of the workflow
+        example: 14536
+      name:
+        type: string
+        description: The name of the workflow
+        example: 'My workflow'
+
+  Workflow:
+    type: object
+    properties:
+      created_at:
+        $ref: '#/schemas/created_at'
+      creator_user_id:
+        $ref: '#/schemas/creator_user_id'
+      description:
+        $ref: '#/schemas/description'
+      id:
+        $ref: '#/schemas/id'
+      name:
+        $ref: '#/schemas/name'
+      records_closed:
+        $ref: '#/schemas/records_closed'
+      records_in_progress:
+        $ref: '#/schemas/records_in_progress'
+      records_open:
+        $ref: '#/schemas/records_open'
+      swrv_count:
+        $ref: '#/schemas/swrv_count'
+      updated_at:
+        $ref: '#/schemas/updated_at'
+      workflow_type:
+        $ref: '#/schemas/workflow_type'
+
+  WorkflowDetails:
+    type: object
+    properties:
+      created_at:
+        $ref: '#/schemas/created_at'
+      creator_user_id:
+        $ref: '#/schemas/creator_user_id'
+      description:
+        $ref: '#/schemas/description'
+      has_records:
+        type: boolean
+        description: Indicates if the workflow has records
+        example: true
+      id:
+        $ref: '#/schemas/id'
+      name:
+        $ref: '#/schemas/name'
+      records_closed:
+        $ref: '#/schemas/records_closed'
+      records_closed_last_30_days:
+        type: integer
+        description: The number of records closed in the last 30 days in the workflow
+        example: 100
+      records_closed_unassigned:
+        type: integer
+        description: The number of records closed in the workflow that were unassigned to a user
+        example: 100
+      records_in_progress:
+        $ref: '#/schemas/records_in_progress'
+      records_open:
+        $ref: '#/schemas/records_open'
+      states:
+        type: array
+        items:
+          $ref: '#/schemas/WorkflowState'
+        description: List of workflow states
+      swrv_count:
+        $ref: '#/schemas/swrv_count'
+      updated_at:
+        $ref: '#/schemas/updated_at'
+      workflow_type:
+        $ref: '#/schemas/workflow_type'
+
+  WorkflowState:
+    type: object
+    properties:
+      actions:
+        type: array
+        items:
+          $ref: '#/schemas/WorkflowAction'
+        description: List of actions in this workflow state
+      description:
+        type: string
+        description: Description of the workflow state
+        example: Content that has been reviewed and approved.
+      id:
+        type: integer
+        description: The ID of the workflow state
+        example: 8806
+      name:
+        type: string
+        description: The name of the workflow state
+        example: Approved
+      workflow_state_events:
+        type: array
+        items:
+          $ref: '#/schemas/WorkflowStateEvent'
+        description: The events configured for this workflow state
+
+  WorkflowAction:
+    type: object
+    properties:
+      description:
+        type: string
+        description: Description of the action
+        example: Content is low risk and meets requirements. Approve and close the item
+      id:
+        type: integer
+        description: The ID of the action
+        example: 10391
+      name:
+        type: string
+        description: The name of the action
+        example: Approve and Close
+      type:
+        type: string
+        description: The action type
+        example: Button Action
+        enum:
+          - Button Action
+          - Automatic Action
+      to_state:
+        type: integer
+        description: The ID of the workflow state the record will be in after the action is taken
+        example: 69
+  WorkflowStateEvent:
+    type: object
+    properties:
+      event_type:
+        type: string
+        description: The event type
+        example: Event Notify Submitter
+      external_email:
+        type: string
+        nullable: true
+        description: The external email address associated with the event
+        example: jon.doe@gmail.com
+      id:
+        type: integer
+        description: The ID of the event
+        example: 2128
+      message:
+        type: string
+        nullable: true
+        description: Message content for the event
+        example: 'APPROVED for production. This video has been reviewed and is approved for release.'
+
+  # Common workflow properties
+  created_at:
+    type: string
+    format: date-time
+    description: Timestamp when the workflow was created at using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: 2023-01-01T00:00:00Z
+
+  creator_user_id:
+    type: integer
+    nullable: true
+    description: The user ID of who created the workflow
+    example: 12345
+
+  description:
+    type: string
+    nullable: true
+    description: Description of the workflow
+    example: This workflow handles the processing of data from ingestion to analysis
+
+  id:
+    type: integer
+    description: The ID of the workflow
+    example: 12345
+
+  name:
+    type: string
+    description: The name of the workflow
+    example: Data Processing Workflow
+
+  records_closed:
+    type: integer
+    description: The number of records closed in the workflow
+    example: 100
+
+  records_in_progress:
+    type: integer
+    description: The number of records in progress in the workflow
+    example: 100
+
+  records_open:
+    type: integer
+    description: The number of records open in the workflow
+    example: 100
+
+  swrv_count:
+    type: integer
+    description: The number of smart workflow rules applicable to the workflow
+    example: 3
+
+  updated_at:
+    type: string
+    format: date-time
+    description: Timestamp when the workflow was last updated at using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: 2023-01-01T00:00:00Z
+
+  workflow_type:
+    type: string
+    description: The type of workflow
+    example: TEAM
+    enum:
+      - OPEN
+      - TEAM
+
+  SwrvRuleRequestBodyBase:
+    type: object
+    properties:
+      description:
+        type: string
+        description: The description of the SWRV rule
+        example: My SWRV rule
+      input_sources:
+        type: array
+        description: The input sources for the SWRV rule
+        items:
+          $ref: '#/schemas/swrv_input_source'
+      name:
+        type: string
+        description: The name of the SWRV rule
+        example: My SWRV rule
+      policy_id:
+        type: integer
+        description: The ID of the policy
+        example: 12345
+      priority:
+        type: integer
+        description: The priority of the SWRV rule starting from 0. Lower numbers have higher priority. If not specified, the priority will be given the lowest priority (highest number)
+        example: 7
+      retention_library_id:
+        type: integer
+        description: The ID of the retention library
+        example: 12345
+      supervision_space_id:
+        type: integer
+        description: The ID of the supervision space. Can be omitted if no supervision space is needed
+        example: 12345
+        nullable: true
+      workflow_id:
+        type: integer
+        description: The ID of the workflow
+        example: 12345
+
+  CreateSwrvRuleRequestBody:
+    allOf:
+      - $ref: '#/schemas/SwrvRuleRequestBodyBase'
+      - type: object
+        required:
+          - description
+          - input_sources
+          - name
+          - policy_id
+          - workflow_id
+          - retention_library_id
+
+  UpdateSwrvRuleRequestBody:
+    allOf:
+      - $ref: '#/schemas/SwrvRuleRequestBodyBase'
+
+  swrv_input_source:
+    type: object
+    properties:
+      type:
+        type: string
+        description: The type of the input source
+        enum:
+          - all_integration_uploads
+          - all_submission_portal_uploads
+          - all_uploads
+          - all_user_uploads
+          - integration
+        example: integration
+      id:
+        type: integer
+        description: The ID of the integration. Required if type is `integration`.
+        example: 12345
+
+  DeleteSwrvRuleResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: The status of the request
+        example: 'Workflow deleted successfully'
+
+  PerformWorkflowActionRequest:
+    type: object
+    required:
+      - action_id
+      - comment
+    properties:
+      action_id:
+        type: integer
+        description: The ID of the action to perform
+        example: 223
+      assign_to_user_id:
+        type: integer
+        description: The ID of the user to assign the record to after the action is performed
+        example: 404
+      comment:
+        type: string
+        description: The comment to add to the action that is performed
+        example: 'This record has been approved.'
+
+  PerformWorkflowActionResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      record:
+        type: object
+        description: The record's workflow state after the action performed
+        properties:
+          assigned_user:
+            $ref: '#/schemas/user'
+          current_state:
+            $ref: '#/schemas/actionPerformedWorkflowState'
+
+  user:
+    type: object
+    properties:
+      id:
+        type: integer
+        nullable: true
+        description: The ID of the user
+        example: 1
+      name:
+        type: string
+        nullable: true
+        description: The name of the user
+        example: Admin
+
+  actionPerformedWorkflowState:
+    type: object
+    properties:
+      description:
+        type: string
+        description: Description of the workflow state
+        example: Content that has been reviewed and approved.
+      id:
+        type: integer
+        description: The ID of the workflow state
+        example: 8806
+      name:
+        type: string
+        description: The name of the workflow state
+        example: Approved
+
+  GetWorkflowQueueResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      queue:
+        $ref: '#/schemas/WorkflowQueue'
+
+  WorkflowQueue:
+    type: object
+    description: The workflow queue containing records assigned to the user or a group the user is assigned to
+    properties:
+      total_records:
+        type: integer
+        description: The total number of records in the queue
+        example: 247
+      records:
+        type: array
+        description: List of records in the workflow queue
+        items:
+          $ref: '#/schemas/WorkflowQueueRecord'
+
+  WorkflowQueueRecord:
+    type: object
+    description: A record in the workflow queue
+    properties:
+      assigned_to:
+        $ref: '#/schemas/QueueRecordAssignedTo'
+      content_type:
+        type: string
+        description: The content-type of the data. Uses standard [MIME types](https://www.iana.org/assignments/media-types/media-types.xhtml)
+        example: video/mp4
+      data_length:
+        type: integer
+        description: The size of the record in bytes
+        example: 189138
+      first_assigned_at:
+        type: string
+        format: date-time
+        description: Timestamp when the record was first assigned to a user in the queue using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2026-01-29T14:20:06Z'
+      hash_sha256:
+        type: string
+        description: The record's SHA256 hash
+        example: b12a8301e23754fc17c48e36541b796882d8ef890f1eb0be948fd49b11bb9b36
+      id:
+        type: integer
+        description: The ID of the record
+        example: 1234002
+      media_type:
+        type: string
+        description: The record's Theta Lake media type
+        example: Audio
+        enum:
+          - AI Interaction
+          - Audio
+          - Chat
+          - Document
+          - Email
+          - Other
+          - Video
+      original_file_name:
+        type: string
+        description: The original file name or subject of the record
+        example: Simplify your architecture and cut costs with MongoDB
+      upload_date:
+        type: string
+        format: date-time
+        description: Timestamp when the record was uploaded using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2026-01-29T14:16:51.18Z'
+      uuid:
+        type: string
+        format: uuid
+        description: The UUID of the record
+        example: 019c0a1d-30ec-770c-bd1a-b23ab3584008
+      workflow:
+        $ref: '#/schemas/QueueRecordWorkflow'
+
+  QueueRecordAssignedTo:
+    type: object
+    description: The user currently assigned to the record
+    properties:
+      assigned_at:
+        type: string
+        format: date-time
+        description: Timestamp when the record was assigned to the user using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2026-01-29T14:20:06Z'
+      id:
+        type: integer
+        description: The ID of the assigned user
+        example: 404
+
+  QueueRecordWorkflow:
+    type: object
+    description: The workflow the record belongs to
+    properties:
+      id:
+        type: integer
+        description: The ID of the workflow
+        example: 8618
+      name:
+        type: string
+        description: The name of the workflow
+        example: My Awesome Workflow
+      description:
+        type: string
+        description: Description of the workflow
+        example: Testing routing bulk email to a non-review workflow
+      state:
+        $ref: '#/schemas/QueueRecordWorkflowState'
+
+  QueueRecordWorkflowState:
+    type: object
+    description: The current workflow state of the record
+    properties:
+      id:
+        type: integer
+        description: The ID of the workflow state
+        example: 37961
+      type:
+        type: string
+        description: The state of the record in the workflow
+        example: in_progress
+        enum:
+          - open
+          - in_progress
+          - closed

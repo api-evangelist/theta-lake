@@ -1,0 +1,1296 @@
+paths:
+  identities:
+    get:
+      tags:
+        - Identities
+      summary: List all identities
+      description: |
+        **REQUIRED PERMISSION:** `identities:read`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page
+          required: false
+          schema:
+            type: integer
+            example: 25
+            minimum: 1
+            maximum: 100
+            default: 25
+        - name: query
+          in: query
+          description: >
+            Search across identity fields and identity extra_attributes: `email`, `name`, `phone_number`, `id`, and `external_id`. If `field_name` is specified the query will search only that field.
+          required: false
+          schema:
+            type: string
+            example: john@thetalake.com
+        - name: field_name
+          in: query
+          description: If specified, query value will only check this field name
+          required: false
+          schema:
+            type: string
+            example: email
+            enum:
+              - email
+              - external_id
+              - id
+              - name
+              - phone_number
+
+      responses:
+        '200':
+          description: The response contains a paged list of identities
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetIdentitiesResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    put:
+      tags:
+        - Identities
+      summary: Merge identities
+      description: |
+        **REQUIRED PERMISSION:** `identities:update`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:**
+        Depending on the number of records associated with the merging identities, this endpoint may run slowly. An `extra_attribute` is added to the target identity to indicate each merged identity.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identity_ids:
+                  type: array
+                  description: An array of identity IDs to merge to the target identity
+                  items:
+                    type: integer
+                  example:
+                    - 21
+                    - 22
+                    - 23
+                    - 24
+                    - 25
+                target_identity_id:
+                  type: integer
+                  description: The target identity ID to merge the identities into
+                  example: 20
+      responses:
+        '200':
+          description: The merged identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutMergeIdentitiesResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    post:
+      tags:
+        - Identities
+      summary: Create a new identity
+      description: |
+        **REQUIRED PERMISSION:** `identities:create`  
+        **RATE LIMIT:** `light`
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostIdentityRequest'
+      responses:
+        '200':
+          description: The new identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostIdentityResponse'
+        '409':
+          description: The identity already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostIdentityResponseConflict'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  identities/merge/async:
+    put:
+      tags:
+        - Identities
+      summary: Merge identities asynchronously
+      description: |
+        **REQUIRED PERMISSION:** `identities:update`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** If `reset_and_reenter_reason` is provided, the records associated with the `identity_ids` will be reset and reentered through workflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/MergeRequestBody'
+      responses:
+        '202':
+          description: Indicates that the merge request was accepted and queued for processing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutMergeIdentitiesAsyncResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  identities/merge/async/{uuid}:
+    get:
+      tags:
+        - Identities
+      summary: Get asynchronous merge request status
+      description: |
+        **REQUIRED PERMISSION:** `identities:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: The request ID from the initial merge request
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The status of the asynchronous merge request
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetMergeStatusAsyncResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  identities/search:
+    get:
+      tags:
+        - Identities
+      summary: Search identities
+      description: |
+        **REQUIRED PERMISSION:** `identities:read`  
+        **RATE LIMIT:** `light`  
+        **NOTE**: If managed is not provided, or set to false, the start and end dates cannot be more than 7 days apart. If start and end  
+        date are not provided, they will default to the last 7 days.
+      parameters:
+        - name: date_type
+          in: query
+          required: false
+          schema:
+            type: string
+            default: updated_at
+            enum:
+              - created_at
+              - updated_at
+          description: The date type to search by. If not provided, the default is `updated_at`
+          example: updated_at
+        - name: end
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: '**Inclusive** end of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Will default to current date if managed is set to false, or not provided'
+        - name: managed
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Denotes if only managed identities should be returned. Identities are managed if they are created by the API, CSV upload, or Active Directory sync
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25
+          required: false
+          schema:
+            type: integer
+            example: 25
+            default: 25
+            minimum: 1
+            maximum: 500
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: start
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: '**Inclusive** start of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Will default to current date if managed is set to false, or not provided'
+
+      responses:
+        '200':
+          description: The response contains a paged list of identities
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetIdentitiesBySearchResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  identities/{id}:
+    get:
+      tags:
+        - Identities
+      summary: Get identity by ID
+      description: |
+        **REQUIRED PERMISSION:** `identities:read`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: id
+          in: path
+          description: The identity ID to retrieve
+          required: true
+          schema:
+            type: integer
+            example: 235
+      responses:
+        '200':
+          description: The retrieved identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetIdentityByIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    put:
+      tags:
+        - Identities
+      summary: Update identity
+      description: |
+        **REQUIRED PERMISSION:** `identities:update`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: id
+          in: path
+          description: The identity ID to update
+          required: true
+          schema:
+            type: integer
+            example: 235
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PutIdentityByIdRequest'
+      responses:
+        '200':
+          description: The updated identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutIdentityByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Identities
+      summary: Delete an identity
+      description: |
+        **REQUIRED PERMISSION:** `identities:delete`  
+        **RATE LIMIT:** `light`  
+        **NOTE:**
+        Identities have many connections including to individual media records and cannot be deleted when they are connected
+      parameters:
+        - name: id
+          in: path
+          description: The identity ID to delete
+          required: true
+          schema:
+            type: integer
+            example: 235
+      responses:
+        '200':
+          description: Confirms successful execution of the delete request
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/DeleteIdentityByIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  identities/{id}/supervision_spaces:
+    get:
+      tags:
+        - Identities
+      summary: Get supervision spaces for identity
+      description: |
+        **REQUIRED PERMISSION:** `supervision_spaces:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The identity ID to retrieve supervision spaces for
+          required: true
+          schema:
+            type: integer
+            example: 235
+      responses:
+        '200':
+          description: The supervision spaces the given identity ID is in
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/IdentitySupervisionSpace'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  identities/{id}/risk:
+    get:
+      tags:
+        - Identities
+      summary: Get identity risk log
+      description: |
+        **REQUIRED PERMISSION:** `identities:read`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: id
+          in: path
+          description: The identity ID to retrieve the risk log
+          required: true
+          schema:
+            type: integer
+            example: 66690
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page
+          required: false
+          schema:
+            type: integer
+            example: 25
+            minimum: 1
+            maximum: 100
+            default: 25
+      responses:
+        '200':
+          description: The risks currently documented for the identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetRiskLogResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    post:
+      tags:
+        - Identities
+      summary: Flag the identity as risky
+      description: |
+        **REQUIRED PERMISSION:** `identities:update`  
+        **RATE LIMIT:** `light`
+      parameters:
+        - name: id
+          in: path
+          description: The identity ID to flag as risky
+          required: true
+          schema:
+            type: integer
+            example: 66690
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostIdentityRiskRequest'
+      responses:
+        '200':
+          description: Status message confirming the user has been marked risky
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostIdentityRiskResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  identities/merge/async/{uuid}/report:
+    get:
+      tags:
+        - Identities
+      summary: Download asynchronous merge report
+      description: |
+        **REQUIRED PERMISSION:** `identities:read`  
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** The report will be available after the completion of the asynchronous merge request and the records were  
+        reset and re-entered. If the asynchronous merge request is not completed, the report will not be available.
+
+        The CSV has 3 columns: `uuid`, `status`, `reason`. If a record is successful, the status will be `Success`. Otherwise,  
+        the status will be `Move Restricted`, with a reason of the restriction in the `reason` column. The reason varies depending on the restriction.
+
+        Example CSV Response  
+
+        ```
+        uuid,status,reason
+        019c93d9-4c4c-7996-9d78-b5ba4a37a708,Success,Success
+        019bb82c-e912-7aba-be7a-654c0957dc89,Move Restricted,reason for restriction
+        ```
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: The asynchronous merge request ID from the merge request
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Merge report file in CSV format
+          content:
+            application/csv:
+              schema:
+                type: string
+                format: binary
+                example: |
+                  uuid,status,reason
+                  019c93d9-4c4c-7996-9d78-b5ba4a37a708,Success,Success
+                  019bb82c-e912-7aba-be7a-654c0957dc89,Move Restricted,reason for restriction
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetIdentitiesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      identities:
+        type: array
+        description: An array of identities
+        items:
+          type: object
+          properties:
+            ai_participant:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/ai_participant'
+            created_at:
+              $ref: '../common/schemas.yml#/schemas/created_at'
+            email:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/email'
+            email_end_date:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/email_end_date'
+            email_start_date:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/email_start_date'
+            external_id:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/external_id'
+            external_id_end_date:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/external_id_end_date'
+            external_id_start_date:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/external_id_start_date'
+            extra_attributes:
+              $ref: '#/schemas/IdentityExtraAttributes'
+            id:
+              $ref: '#/schemas/id'
+            is_submitter:
+              $ref: '#/schemas/is_submitter'
+            managed:
+              $ref: '#/schemas/managed'
+            name:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/name'
+            phone_number:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/phone_number'
+            phone_number_end_date:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/phone_number_end_date'
+            phone_number_start_date:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/phone_number_start_date'
+            risky:
+              $ref: '#/schemas/risky'
+            source:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/source'
+            updated_at:
+              $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  GetIdentitiesBySearchResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      identities:
+        type: array
+        description: An array of identities that match the search
+        items:
+          type: object
+          properties:
+            created_at:
+              $ref: '../common/schemas.yml#/schemas/created_at'
+            email:
+              $ref: '#/schemas/email'
+            email_end_date:
+              $ref: '#/schemas/email_end_date'
+            email_start_date:
+              $ref: '#/schemas/email_start_date'
+            external_id:
+              $ref: '#/schemas/external_id'
+            external_id_end_date:
+              $ref: '#/schemas/external_id_end_date'
+            external_id_start_date:
+              $ref: '#/schemas/external_id_start_date'
+            extra_attributes:
+              $ref: '#/schemas/IdentityExtraAttributes'
+            id:
+              $ref: '#/schemas/id'
+            is_submitter:
+              $ref: '#/schemas/is_submitter'
+            managed:
+              $ref: '#/schemas/managed'
+            name:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/name'
+            phone_number:
+              nullable: true
+              allOf:
+                - $ref: '#/schemas/phone_number'
+            phone_number_end_date:
+              $ref: '#/schemas/phone_number_end_date'
+            phone_number_start_date:
+              $ref: '#/schemas/phone_number_start_date'
+            risky:
+              $ref: '#/schemas/risky'
+            source:
+              $ref: '#/schemas/source'
+            updated_at:
+              $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  PostIdentityRequest:
+    type: object
+    properties:
+      name:
+        $ref: '#/schemas/name'
+      email:
+        $ref: '#/schemas/email'
+      email_start_date:
+        $ref: '#/schemas/email_start_date'
+      email_end_date:
+        $ref: '#/schemas/email_end_date'
+      phone_number:
+        $ref: '#/schemas/phone_number'
+      phone_number_start_date:
+        $ref: '#/schemas/phone_number_start_date'
+      phone_number_end_date:
+        $ref: '#/schemas/phone_number_end_date'
+      external_id:
+        $ref: '#/schemas/external_id'
+      external_id_start_date:
+        $ref: '#/schemas/external_id_start_date'
+      external_id_end_date:
+        $ref: '#/schemas/external_id_end_date'
+      extra_attributes:
+        type: array
+        items:
+          type: object
+          properties:
+            end_date:
+              $ref: '#/schemas/end_date'
+            field:
+              $ref: '#/schemas/field'
+            source:
+              $ref: '#/schemas/source'
+            start_date:
+              $ref: '#/schemas/start_date'
+            value:
+              $ref: '#/schemas/value'
+  PostIdentityResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      identity:
+        $ref: '#/schemas/Identity'
+  PostIdentityResponseConflict:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode409'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString409'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      identity:
+        $ref: '#/schemas/Identity'
+
+  GetIdentityByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      identity:
+        $ref: '#/schemas/Identity'
+
+  PutIdentityByIdRequest:
+    type: object
+    properties:
+      name:
+        $ref: '#/schemas/name'
+      email:
+        $ref: '#/schemas/email'
+      email_start_date:
+        $ref: '#/schemas/email_start_date'
+      email_end_date:
+        $ref: '#/schemas/email_end_date'
+      phone_number:
+        $ref: '#/schemas/phone_number'
+      phone_number_start_date:
+        $ref: '#/schemas/phone_number_start_date'
+      phone_number_end_date:
+        $ref: '#/schemas/phone_number_end_date'
+      external_id:
+        $ref: '#/schemas/external_id'
+      external_id_start_date:
+        $ref: '#/schemas/external_id_start_date'
+      external_id_end_date:
+        $ref: '#/schemas/external_id_end_date'
+
+  PutIdentityByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      identity:
+        $ref: '#/schemas/Identity'
+
+  DeleteIdentityByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: Request status
+        example: Request successfully completed
+
+  GetRiskLogResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      risk_log:
+        type: array
+        description: An array of risks
+        items:
+          $ref: '#/schemas/IdentityRisks'
+
+  PostIdentityRiskRequest:
+    type: object
+    properties:
+      datum_id:
+        $ref: '#/schemas/risk_datum_id'
+      risky:
+        $ref: '#/schemas/risk_risky'
+      comment:
+        $ref: '#/schemas/risk_comment'
+
+  PostIdentityRiskResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: Status message confirming the user has been marked risky
+        example: Successfully marked user as risky
+
+  PutMergeIdentitiesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      merged_identity:
+        $ref: '#/schemas/Identity'
+
+  PutMergeIdentitiesAsyncResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode202'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString202'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      data:
+        $ref: '#/schemas/RequestStatus'
+
+  GetMergeStatusAsyncResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      data:
+        $ref: '#/schemas/RequestStatusWithResult'
+
+  MergeRequestBody:
+    type: object
+    properties:
+      identity_ids:
+        type: array
+        description: An array of identity IDs to merge to the target identity
+        items:
+          type: integer
+        example:
+          - 21
+          - 22
+          - 23
+          - 24
+          - 25
+      target_identity_id:
+        type: integer
+        description: The target identity ID to merge the identities into
+        example: 20
+      reset_and_reenter_reason:
+        type: string
+        description: '**The reason for resetting and reentering the identities. If not provided, the records will not be reset and reentered**'
+        example: 'Change of department - reprocessing needed for compliance'
+        nullable: true
+
+  RequestStatus:
+    type: object
+    properties:
+      async_request_id:
+        type: string
+        description: The request ID of the initial asynchronous merge request
+      request_parameters:
+        $ref: '#/schemas/MergeRequestBody'
+      status:
+        type: string
+        description: The status of the asynchronous merge request
+        example: completed
+        enum:
+          - accepted
+          - queued
+          - in_progress
+          - completed
+          - failed
+
+  RequestStatusWithResult:
+    type: object
+    allOf:
+      - $ref: '#/schemas/RequestStatus'
+    properties:
+      result:
+        type: object
+        nullable: true
+        allOf:
+          - $ref: '#/schemas/Identity'
+        description: The merged identity from the async request
+
+  Identity:
+    type: object
+    properties:
+      ai_participant:
+        $ref: '#/schemas/ai_participant'
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      email:
+        $ref: '#/schemas/email'
+      email_end_date:
+        $ref: '#/schemas/email_end_date'
+      email_start_date:
+        $ref: '#/schemas/email_start_date'
+      external_id:
+        $ref: '#/schemas/external_id'
+      external_id_end_date:
+        $ref: '#/schemas/external_id_end_date'
+      external_id_start_date:
+        $ref: '#/schemas/external_id_start_date'
+      extra_attributes:
+        $ref: '#/schemas/IdentityExtraAttributes' # An Identities extra_attributes have created_at and updated_at
+      globally_risky:
+        type: boolean
+        description: Indicates if the identity was marked risky from identity index
+        example: false
+      id:
+        $ref: '#/schemas/id'
+      is_submitter:
+        $ref: '#/schemas/is_submitter'
+      managed:
+        $ref: '#/schemas/managed'
+      name:
+        $ref: '#/schemas/name'
+      participant:
+        $ref: '#/schemas/participant'
+      phone_number:
+        $ref: '#/schemas/phone_number'
+      phone_number_end_date:
+        $ref: '#/schemas/phone_number_end_date'
+      phone_number_start_date:
+        $ref: '#/schemas/phone_number_start_date'
+      risky:
+        $ref: '#/schemas/risky'
+      source:
+        $ref: '#/schemas/source'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  ExtraAttributes:
+    type: array
+    description: Extra attributes are free form attributes that can be used to store any extra meta data about this identity
+    items:
+      type: object
+      properties:
+        end_date:
+          $ref: '#/schemas/end_date'
+        field:
+          $ref: '#/schemas/field'
+        id:
+          type: integer
+          description: Extra attribute field identifier
+          example: 1052392
+        start_date:
+          $ref: '#/schemas/start_date'
+        value:
+          $ref: '#/schemas/value'
+
+  IdentityExtraAttributes:
+    type: array
+    description: Extra attributes are free form attributes that can be used to store any extra meta data about this identity
+    items:
+      type: object
+      properties:
+        created_at:
+          nullable: true
+          allOf:
+            - $ref: '../common/schemas.yml#/schemas/created_at'
+        end_date:
+          $ref: '#/schemas/end_date'
+        field:
+          $ref: '#/schemas/field'
+        id:
+          type: integer
+          description: Extra attribute field identifier
+          example: 1052392
+        source:
+          $ref: '#/schemas/source'
+        start_date:
+          $ref: '#/schemas/start_date'
+        updated_at:
+          nullable: true
+          allOf:
+            - $ref: '../common/schemas.yml#/schemas/updated_at'
+        value:
+          $ref: '#/schemas/value'
+
+  IdentitySupervisionSpace:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      supervision_spaces:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: The ID of the supervision space
+            example: 129
+          name:
+            type: string
+            description: Name of the supervision space
+            example: Front Office Users
+
+  email:
+    type: string
+    description: Email of the identity user
+    example: john.smith@gmail.com
+    nullable: true
+
+  external_id:
+    type: string
+    description: An external ID for the identity
+    example: it-236
+    nullable: true
+
+  id:
+    type: integer
+    description: The identity ID
+    example: 88532
+
+  is_submitter:
+    type: boolean
+    description: Indicates if the identity did submit data
+    example: true
+
+  name:
+    type: string
+    nullable: true
+    description: The identity's name
+    example: John Smith
+
+  participant:
+    type: boolean
+    description: Indicates if this identity was generated from a record (video/audio/text) participant
+    example: false
+
+  ai_participant:
+    type: boolean
+    description: Indicates if the identity is an AI participant
+    example: false
+
+  phone_number:
+    type: string
+    nullable: true
+    description: The identity's phone number
+    example: 555-867-5309
+
+  risky:
+    type: boolean
+    description: Indicates if the user has been classified as risky
+    example: false
+
+  risk_comment:
+    type: string
+    description: Comment for the identity's risk in the datum
+    example: John is sharing Personal Identifying Information of a client
+
+  risk_risky:
+    type: boolean
+    description: Indicates if identity is behaving in a risky fashion
+    example: true
+
+  risk_datum_id:
+    type: integer
+    description: The datum ID with the risky behavior in it
+    example: 215779
+    nullable: true
+
+  IdentityRisks:
+    type: object
+    properties:
+      comment:
+        $ref: '#/schemas/risk_comment'
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      datum_id:
+        $ref: '#/schemas/risk_datum_id'
+      id:
+        type: integer
+        example: 138
+        description: Identity of the risk
+      identity_id:
+        type: integer
+        example: 66690
+        description: The ID of the identity behaving riskily
+      risky:
+        $ref: '#/schemas/risk_risky'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      user_id:
+        type: integer
+        description: The ID of the user that created the risk
+        example: 188
+
+  email_end_date:
+    type: string
+    format: date-time
+    description: Email end date timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: null
+    nullable: true
+
+  email_start_date:
+    type: string
+    format: date-time
+    description: Email start date timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2018-11-28T17:12:12.000Z'
+    nullable: true
+
+  external_id_end_date:
+    type: string
+    format: date-time
+    description: External ID end date timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: null
+    nullable: true
+
+  external_id_start_date:
+    type: string
+    format: date-time
+    description: External ID start date timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: null
+    nullable: true
+
+  phone_number_end_date:
+    type: string
+    format: date-time
+    description: Phone number end date timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: null
+    nullable: true
+
+  phone_number_start_date:
+    type: string
+    format: date-time
+    description: Phone number start date timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: null
+    nullable: true
+
+  source:
+    type: string
+    description: The originating source for the identity or attribute
+    example: API
+    nullable: true
+
+  managed:
+    type: boolean
+    description: Indicates if the identity is externally managed by the API
+
+  end_date:
+    type: string
+    format: date-time
+    description: End date timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: null
+    nullable: true
+
+  field:
+    type: string
+    description: Extra attribute field name
+    example: external_id
+
+  start_date:
+    type: string
+    format: date-time
+    description: Start date timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2023-01-14T18:25:27.000Z'
+    nullable: true
+
+  value:
+    type: string
+    description: Extra attribute field value
+    example: '88531'

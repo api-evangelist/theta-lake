@@ -1,0 +1,607 @@
+paths:
+  integrations:
+    get:
+      tags:
+        - Integrations
+      summary: List all integrations
+      description: |
+        **REQUIRED PERMISSION:** `integrations:read`  
+        **RATE LIMIT:** `heavy`
+      responses:
+        '200':
+          description: An array of integrations
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetIntegrationsResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  integrations/{id}:
+    get:
+      tags:
+        - Integrations
+      summary: Get integration by ID
+      description: |
+        **REQUIRED PERMISSION:** `integrations:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the integration to get
+          schema:
+            type: integer
+            example: 8
+      responses:
+        '200':
+          description: The retrieved integration
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetIntegrationByIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  integrations/{id}/run_history:
+    get:
+      tags:
+        - Integrations
+      summary: Get an integrations run history
+      description: |
+        **REQUIRED PERMISSION:** `integrations:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the integration to get run history for
+          schema:
+            type: integer
+            example: 8
+        - name: start
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: '**Inclusive** start of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Will default to 7 days from the current date'
+        - name: end
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: '**Inclusive** end of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Will default to current date'
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` object in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25
+          required: false
+          schema:
+            type: integer
+            example: 25
+            minimum: 1
+            maximum: 100
+
+      responses:
+        '200':
+          description: The retrieved integration run history
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetIntegrationRunHistoryResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  integrations/user_installs:
+    get:
+      tags:
+        - Integrations
+      summary: Get integration's user install status
+      description: |
+        **REQUIRED PERMISSION:** `integrations:read`  
+        **RATE LIMIT:** `minimal`
+      parameters:
+        - name: integration_type
+          in: query
+          description: The type of integration to search for
+          required: true
+          schema:
+            type: string
+            enum: [ms_teams]
+            description: The integration type
+            example: ms_teams
+        - name: tenant_id
+          in: query
+          description: The integration's tenant ID
+          required: true
+          schema:
+            type: string
+            description: The tenant ID
+            example: 5ab96ce0-ce6a-43d4-981b-2388dde4449f
+        - name: account_user_id
+          in: query
+          description: The account user ID to lookup
+          required: false
+          schema:
+            type: string
+            example: 96524ddb-d06e-45ae-97ba-596c9d8449c7
+        - name: email
+          in: query
+          description: The email address to lookup
+          required: false
+          schema:
+            type: string
+            example: test@email.com
+
+      responses:
+        '200':
+          description: The retrieved integration
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetIntegrationsInstallResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  integrations/{id}/installed_users:
+    get:
+      tags:
+        - Integrations
+      summary: Get integration's installed users
+      description: |
+        **REQUIRED PERMISSION:** `integrations:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the integration to find installed users for
+          required: true
+          schema:
+            type: integer
+            example: 2149
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+        - name: max
+          in: query
+          description: The max number of items in each page
+          required: false
+          schema:
+            type: integer
+            example: 25
+            minimum: 1
+            maximum: 100
+            default: 25
+      responses:
+        '200':
+          description: The installed users for the integration
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetIntegrationsInstalledUsersResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetIntegrationsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      integrations:
+        type: array
+        description: An array of integration objects
+        items:
+          $ref: '#/schemas/Integration'
+
+  GetIntegrationByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      integration:
+        $ref: '#/schemas/Integration'
+
+  GetIntegrationsInstallResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      user_token_status:
+        type: object
+        description: The integration's user identity and token status
+        properties:
+          tenant_id:
+            type: string
+            description: The Microsoft Active Directory tenant ID
+            example: 5ab96ce0-ce6a-43d4-981b-2388dde4449f
+          account_user_id:
+            type: string
+            description: The user's Microsoft Active Directory account ID
+            example: f6ad3565-db9f-4a63-bff3-7b89409bec32
+          account_user_email:
+            type: string
+            description: The user's Microsoft Active Directory email address
+            example: jane@email.com
+          account_user_name:
+            type: string
+            description: Rich
+            example: Jane Doe
+          access_token_expiration_date:
+            type: string
+            format: date-time
+            description: The access token expiration date. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+            example: '2022-10-13T19:42:29.000Z'
+          refresh_token_expiration_date:
+            type: string
+            format: date-time
+            description: The refresh token expiration date. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+            example: '2022-08-01T13:31:38.000Z'
+
+  GetIntegrationsInstalledUsersResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      installed_users:
+        type: array
+        items:
+          oneOf:
+            - $ref: '#/schemas/VerizonInstalledUser'
+            - $ref: '#/schemas/LinkedInInstalledUser'
+
+  Integration:
+    type: object
+    properties:
+      access_token_expiration_date:
+        type: string
+        format: date-time
+        description: If a token is used for authentication, and has a expiration date, it will be reflected here using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2023-01-15T06:50:44.000Z'
+        nullable: true
+      account_user_email:
+        type: string
+        description: The account email that is associated with the API
+        example: john@smith.com
+        nullable: true
+      account_user_id:
+        type: string
+        description: The account ID that is associated with the API
+        example: 35OVrJQu
+        nullable: true
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      description:
+        type: string
+        description: The description entered when adding the integration
+        example: Integration to Zoom corporate account
+        nullable: true
+      has_integration_policy:
+        type: boolean
+        description: Indicates if the datum produced by this integration are being analyzed by a detection policy
+        example: true
+      id:
+        type: integer
+        description: The integration ID
+        example: 302
+      integration_group:
+        type: string
+        description: The type of integration
+        example: Collaboration Platform
+      integration_policy_id:
+        type: integer
+        description: The ID of the policy for this integration
+        example: 165
+      integration_type:
+        type: string
+        description: Name of the service integrated with
+        example: Zoom
+      integration_type_id:
+        type: number
+        description: Theta Lake's internal integration ID
+        example: 1
+      last_upload_at:
+        type: string
+        format: date-time
+        description: The last date the integration uploaded content using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2022-03-21T17:14:55.000Z'
+        nullable: true
+      name:
+        type: string
+        description: Name of the integration when it was created
+        example: "David's Zoom Integration"
+      not_before_date:
+        format: date-time
+        type: string
+        description: Indicates the date that no data can be consumed before using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2022-01-10T00:00:00.000Z'
+        nullable: true
+      notify_submitter:
+        type: boolean
+        description: Indicates if the submitter assigned to review data will be notified when new data is uploaded
+        example: false
+        nullable: true
+      scopes_changed:
+        type: boolean
+        description: Indicates if the scopes have been changed
+        example: false
+      service_last_run_at:
+        type: string
+        format: date-time
+        description: The timestamp of the last integration run using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). This is not the last time data was uploaded
+        example: '2023-01-15T05:50:45.000Z'
+        nullable: true
+      service_paused:
+        type: boolean
+        description: Indicates if the integration has been paused
+        example: true
+      service_status:
+        type: string
+        deprecated: true
+        description: '**DEPRECATED:** The state of the last integration run'
+        example: SKIPPED
+        enum: [OK, FAILED, BADAUTH, BADCONFIG, SKIPPED, QUOTA_EXCEED]
+        nullable: true
+      status:
+        type: string
+        description: The integration's current status. **The status `Active` is deprecated and will be removed in a future release.**
+        example: Paused
+        enum:
+          [
+            Active,
+            Error,
+            In-Progress,
+            Invalid Credentials,
+            Paused,
+            Queued,
+            Quota Exceeded,
+          ]
+        nullable: true
+      status_color:
+        type: string
+        description: RGB hex color value representing the current status
+        example: '#FFC906'
+        nullable: true
+      updated_at:
+        type: string
+        format: date-time
+        description: The last time the integration was updated in the Theta Lake portal UI
+        example: '2022-06-01T17:39:12.000Z'
+        nullable: true
+      uploads_last_30_days:
+        type: integer
+        description: How many records have been uploaded in the last 30 days
+        example: 32
+        nullable: true
+      user:
+        type: object
+        description: The user that set up the integration
+        properties:
+          email:
+            type: string
+            description: The user's email
+            example: john@email.com
+          id:
+            type: integer
+            description: The user's ID
+            example: 199
+          name:
+            type: string
+            description: The user's name
+            example: John Smith
+
+  VerizonInstalledUser:
+    title: Verizon
+    type: object
+    properties:
+      phone_number:
+        type: string
+        description: The installed user's Verizon phone_number
+        example: '5557568904'
+      provisioned_date:
+        type: string
+        format: date-time
+        description: The date the Verizon user was provisioned using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2022-01-10T00:00:00.000Z'
+
+  LinkedInInstalledUser:
+    title: LinkedIn
+    type: object
+    properties:
+      display_name:
+        type: string
+        description: The installed user's LinkedIn display name
+        example: Test User
+      email:
+        type: string
+        description: The installed user's email
+        example: test@email.com
+      expired:
+        type: boolean
+        description: Indicates if the user's LinkedIn token has expired
+        example: false
+      expiry_date:
+        type: string
+        format: date-time
+        description: The date the user's LinkedIn token expires using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-10-21T22:15:00.000Z'
+      last_processed_at:
+        type: string
+        format: date-time
+        nullable: true
+        description: The date the user's LinkedIn token was last processed using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-10-21T22:15:00.000Z'
+      last_processed_error_description:
+        type: string
+        description: The error description of the last time the user's LinkedIn token was processed
+        example: REVOKED_ACCESS_TOKEN
+        nullable: true
+      last_processed_status:
+        type: string
+        description: The status of the last time the user's LinkedIn token was processed
+        example: BADAUTH
+        nullable: true
+      last_processed_successfully_at:
+        type: string
+        format: date-time
+        description: The date the user's LinkedIn token was last processed successfully using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-10-21T22:15:00.000Z'
+        nullable: true
+      opted_out:
+        type: boolean
+        description: Indicates if the user has opted out of the integration
+        example: false
+
+  GetIntegrationRunHistoryResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      history:
+        type: array
+        items:
+          type: object
+          properties:
+            finished_at:
+              type: string
+              format: date-time
+              description: The date and time the integration run finished using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+              example: '2025-10-03T15:28:38.900051671Z'
+            metrics:
+              anyOf:
+                - title: Metrics for email
+                  type: object
+                  properties:
+                    email:
+                      $ref: '#/schemas/MetricDetails'
+                - title: Metrics for chat
+                  type: object
+                  properties:
+                    chat:
+                      $ref: '#/schemas/MetricDetails'
+                - title: Metrics for zip
+                  type: object
+                  properties:
+                    zip:
+                      $ref: '#/schemas/MetricDetails'
+                - title: Metrics for XML
+                  type: object
+                  properties:
+                    xml:
+                      $ref: '#/schemas/MetricDetails'
+            started_at:
+              type: string
+              format: date-time
+              description: The date and time the integration run started using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+              example: '2025-10-03T15:28:38.900051671Z'
+            status:
+              type: string
+              example: OK
+              enum: [OK, FAILED, BADAUTH, BADCONFIG, SKIPPED, QUOTA_EXCEED]
+              description: The status of the integration run
+
+  MetricDetails:
+    type: object
+    properties:
+      downloaded:
+        type: integer
+        description: The number of items downloaded
+        example: 100
+      failed:
+        type: integer
+        description: The number of items failed
+        example: 0
+      processed:
+        type: integer
+        description: The number of items processed
+        example: 100
+      skipped:
+        type: integer
+        description: The number of items skipped
+        example: 0
+      uploaded:
+        type: integer
+        description: The number of items uploaded
+        example: 100

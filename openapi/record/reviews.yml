@@ -1,0 +1,129 @@
+# This is here because it will be in the records API in the 2.0 release.
+paths:
+  reviews/escalated_comments:
+    get:
+      tags:
+        - Reviews
+      summary: Get escalated comments
+      description: |
+        **REQUIRED PERMISSION:** `comments:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: start
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: '**Inclusive** start of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Will default to 7 days from the current date.'
+        - name: end
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: '**Inclusive** end of the date range using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Will default to current date.'
+      responses:
+        '200':
+          description: The new identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/EscalatedCommentsResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  EscalatedCommentsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      escalated_comments:
+        type: array
+        description: An array of escalated comments
+        items:
+          $ref: '#/schemas/escalated_comment'
+
+  escalated_comment:
+    type: object
+    properties:
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      escalation_type:
+        type: string
+        description: Type of escalation
+        example: request for information
+      classification_id:
+        type: integer
+        example: 699590
+        description: The classification ID
+      detection_rule:
+        type: object
+        description: Details about the detection rule that triggered the comment
+        properties:
+          id:
+            type: integer
+            description: Unique identifier for the detection rule
+          name:
+            type: string
+            description: Name of the detection rule (e.g., "Sensitive Data Detection")
+      flag:
+        type: string
+        description: Will always be "escalate" for escalated comments
+        example: escalate
+      id:
+        type: integer
+        description: The ID of the comment
+        example: 12345
+      parent_id:
+        type: integer
+        nullable: true
+        description: The ID of the parent comment, if this comment is a reply
+        example: 12344
+      particpant:
+        type: object
+        description: The participant associated with the escalated comment
+        properties:
+          email:
+            type: string
+            format: email
+            description: Email address of the participant associated with the escalated comment
+            example: jane@email.com
+          role:
+            type: string
+            description: Role of the participant in the escalation
+            example: passivemember
+      record_id:
+        type: integer
+        description: The record ID the comment is associated with
+        example: 501263
+      shareable_link:
+        type: string
+        format: uri
+        description: A shareable link to the escalated comment
+        example: https://app.thetalake.com/a164acced555c3cac7c79d7afd513e81656f72cc145c94d8aa7b0a409ebb3f62
+      text:
+        type: string
+        description: The text content of the comment
+        example: User comment text
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      user_id:
+        type: integer
+        nullable: true
+        description: The ID of the user who created the comment. Will be null if the comment is a system comment

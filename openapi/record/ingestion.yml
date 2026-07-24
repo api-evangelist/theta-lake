@@ -1,0 +1,1923 @@
+paths:
+  ingestion/integration/{id}/ai_interactions:
+    post:
+      tags:
+        - Data Ingestion
+      summary: Upload AI interactions
+      description: |
+        **REQUIRED PERMISSION:** `ingestion:upload`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** Constants have been assigned for well known AI participants.  
+        Use the following `name` and `id` values in the `participants` array when uploading AI interactions:  
+        | Name                 | ID                                   |  
+        |----------------------|--------------------------------------|  
+        | Anthropic Claude     | e31a9f3d-62d8-3b60-5d52-9366a8852932 |  
+        | Google Gemini        | 019b1356-a860-7fba-940f-924d6b1f28c4 |  
+        | Microsoft Copilot    | 019b1356-a860-770a-b95b-0b19660f6b48 |  
+        | OpenAI ChatGPT       | 019b1356-a860-7eab-8920-097001ea2f1a |  
+        | X.ai Grok            | 019b1356-a860-74a8-bdcc-3af06f5d0bdb |
+        | Zoom AI Companion    | acc7f28a-f3e1-0366-9192-fd5008404c16 |  
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the integration to which the AI interaction should be uploaded
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/schemas/PostAiInteractionBody'
+      responses:
+        '201':
+          description: The response when the AI interaction has been uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostDatumResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '409':
+          $ref: '#/schemas/ConflictedResponse'
+        '415':
+          $ref: '../common/errors.yml#/responses/UnsupportedMediaType'
+        '423':
+          $ref: '../common/errors.yml#/responses/Locked'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  ingestion/integration/{id}/audio:
+    post:
+      tags:
+        - Data Ingestion
+      summary: Upload audio
+      description: |
+        **REQUIRED PERMISSION:** `ingestion:upload`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the integration to which the audio should be uploaded
+          schema:
+            type: integer
+            example: 5
+        - name: X-Thetalake-Metaonly
+          in: header
+          description: Must be set true if no audio file is attached
+          schema:
+            type: boolean
+        - name: X-Thetalake-Content-Type
+          in: header
+          description: The content type using standard [MIME types](https://www.iana.org/assignments/media-types/media-types.xhtml). Must be set if no audio file is attached, must **NOT** be set if there is an audio file attached
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/schemas/PostAudioBody'
+      responses:
+        '201':
+          description: The response when the audio has been uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostDatumResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '409':
+          $ref: '#/schemas/ConflictedResponse'
+        '415':
+          $ref: '../common/errors.yml#/responses/UnsupportedMediaType'
+        '423':
+          $ref: '../common/errors.yml#/responses/Locked'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  ingestion/integration/{id}/chat:
+    post:
+      tags:
+        - Data Ingestion
+      summary: Upload chats
+      description: |
+        **REQUIRED PERMISSION:** `ingestion:upload`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** This endpoint performs the upload of the chat data, image attachments, and file attachments.
+                  The response contains upload responses for the chat data which includes the image attachments 
+                  and for the file attachments.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the integration to which the chat conversation should be uploaded
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/schemas/PostChatConversationBody'
+      responses:
+        '201':
+          description: The response when the chat conversation has been uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostChatResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '409':
+          $ref: '#/schemas/ConflictedResponse'
+        '415':
+          $ref: '../common/errors.yml#/responses/UnsupportedMediaType'
+        '423':
+          $ref: '../common/errors.yml#/responses/Locked'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  ingestion/integration/{id}/document:
+    post:
+      tags:
+        - Data Ingestion
+      summary: Upload documents
+      description: |
+        **REQUIRED PERMISSION:** `ingestion:upload`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the integration to which the document should be uploaded
+          schema:
+            type: integer
+            example: 5
+        - name: X-Thetalake-Metaonly
+          in: header
+          description: Must be set true if no data file is attached
+          schema:
+            type: boolean
+        - name: X-Thetalake-Content-Type
+          in: header
+          description: The content type using standard [MIME types](https://www.iana.org/assignments/media-types/media-types.xhtml). Must be set if no data file is attached, must **NOT** be set if there is a data file attached
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/schemas/PostDocumentBody'
+      responses:
+        '201':
+          description: The response when the data has been uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostDatumResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '409':
+          $ref: '#/schemas/ConflictedResponse'
+        '415':
+          $ref: '../common/errors.yml#/responses/UnsupportedMediaType'
+        '423':
+          $ref: '../common/errors.yml#/responses/Locked'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  ingestion/integration/{id}/email:
+    post:
+      tags:
+        - Data Ingestion
+      summary: Upload emails
+      description: |
+        **REQUIRED PERMISSION:** `ingestion:upload`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** The `Content-Type` of the data part must be `message/rfc822`. Participant metadata should not be included in the JSON meta payload as it is parsed directly from the attached EML file.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the integration to which the data should be uploaded
+          schema:
+            type: integer
+            example: 5
+        - name: X-Thetalake-Metaonly
+          in: header
+          description: Must be set true if no data file is attached
+          schema:
+            type: boolean
+        - name: X-Thetalake-Content-Type
+          in: header
+          description: The content type using standard [MIME types](https://www.iana.org/assignments/media-types/media-types.xhtml). Must be set if no data file is attached, must **NOT** be set if there is a data file attached
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/schemas/PostEmailBody'
+      responses:
+        '201':
+          description: The response when the data has been uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostDatumResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '409':
+          $ref: '#/schemas/ConflictedResponse'
+        '415':
+          $ref: '../common/errors.yml#/responses/UnsupportedMediaType'
+        '423':
+          $ref: '../common/errors.yml#/responses/Locked'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  ingestion/integration/{id}/other:
+    post:
+      tags:
+        - Data Ingestion
+      summary: Upload other data
+      description: |
+        **REQUIRED PERMISSION:** `ingestion:upload`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the integration to which the data should be uploaded
+          schema:
+            type: integer
+            example: 5
+        - name: X-Thetalake-Metaonly
+          in: header
+          description: Must be set true if no data file is attached
+          schema:
+            type: boolean
+        - name: X-Thetalake-Content-Type
+          in: header
+          description: The content type using standard [MIME types](https://www.iana.org/assignments/media-types/media-types.xhtml). Must be set if no data file is attached, must **NOT** be set if there is a data file attached
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/schemas/PostDatumBody'
+      responses:
+        '201':
+          description: The response when the data has been uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostDatumResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '409':
+          $ref: '#/schemas/ConflictedResponse'
+        '415':
+          $ref: '../common/errors.yml#/responses/UnsupportedMediaType'
+        '423':
+          $ref: '../common/errors.yml#/responses/Locked'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  ingestion/integration/{id}/video:
+    post:
+      tags:
+        - Data Ingestion
+      summary: Upload videos
+      description: |
+        **REQUIRED PERMISSION:** `ingestion:upload`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the integration to which the video should be uploaded
+          schema:
+            type: integer
+            example: 5
+        - name: X-Thetalake-Metaonly
+          in: header
+          description: Must be set true if no video file is attached
+          schema:
+            type: boolean
+        - name: X-Thetalake-Content-Type
+          in: header
+          description: The content type using standard [MIME types](https://www.iana.org/assignments/media-types/media-types.xhtml). Must be set if no video file is attached, must **NOT** be set if there is an video file attached
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/schemas/PostVideoBody'
+      responses:
+        '201':
+          description: The response when the video has been uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostDatumResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '409':
+          $ref: '#/schemas/ConflictedResponse'
+        '415':
+          $ref: '../common/errors.yml#/responses/UnsupportedMediaType'
+        '423':
+          $ref: '../common/errors.yml#/responses/Locked'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  ingestion/integration/{id}/state:
+    get:
+      tags:
+        - Data Ingestion
+      summary: Get integration state
+      description: |
+        **REQUIRED PERMISSION:** `ingestion:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the integration state to get
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: The retrieved integration state
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetIntegrationStateResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    put:
+      tags:
+        - Data Ingestion
+      summary: Update integration state
+      description: |
+        **REQUIRED PERMISSION:** `ingestion:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the integration state to update
+          schema:
+            type: integer
+            example: 5
+      requestBody:
+        required: true
+        description: The integration state to set
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PutIntegrationStateRequest'
+      responses:
+        '200':
+          description: The updated integration state
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetIntegrationStateResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  ingestion/exists:
+    get:
+      tags:
+        - Data Ingestion
+      summary: Check data already exists
+      description: |
+        **REQUIRED PERMISSION:** `ingestion:read`  
+        **RATE LIMIT:** `light`  
+        **NOTE:** This endpoint supports searching for multiple datums. Because of this behavior it will never return a 404 Not Found, but instead just a blank response array.  
+        Depending on the datum type (audio, chat, document, email, other, or video) different fields are returned. Fields that are always returned are denoted with a '*'.  
+        Only 1 identifier can be specified, if both are specified, only `identity_data` will be checked
+
+      parameters:
+        - name: identity_data
+          in: query
+          description: 'The arbitrary string identifier data associated with the record. NOTE: Limit of 20 per request'
+          schema:
+            type: array
+            items:
+              type: string
+        - name: hash_sha256
+          in: query
+          description: 'The sha256 hash of the record to check. NOTE: Limit of 20 per request'
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: The datums matching the given `identity_data` in the request
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetDatumIdentityResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  ingestion/quota:
+    get:
+      tags:
+        - Data Ingestion
+      summary: Get upload quota
+      description: |
+        **REQUIRED PERMISSION:** `ingestion:read`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** The quota is for the entire org unit
+
+      parameters:
+        - name: from
+          in: query
+          required: false
+          description: A date in YYYY-MM-DD format that is the start of the time range to summarize in, if not provided the summary starts at the beginning of time
+          schema:
+            type: string
+            example: '2023-01-01'
+        - name: to
+          in: query
+          required: false
+          description: A date in YYY_MM_DD format that is the end of the time range to summarize, if not provided the summary ends with the current day
+          schema:
+            type: string
+            example: '2023-01-31'
+      responses:
+        '200':
+          description: The upload quota
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/QuotaResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  ConflictedResponse:
+    description: The data has already been uploaded
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              $ref: '../common/schemas.yml#/schemas/StatusCode200'
+            status_string:
+              $ref: '../common/schemas.yml#/schemas/StatusString200'
+            request_id:
+              $ref: '../common/schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              description: A message stating the data file has already been uploaded
+            result:
+              type: object
+              properties:
+                content_type:
+                  $ref: '#/schemas/response_content_type'
+                hash_sha256:
+                  $ref: '#/schemas/hash_sha256'
+                uuid:
+                  $ref: '#/schemas/uuid'
+
+  QuotaResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      quota:
+        type: object
+        properties:
+          data:
+            type: object
+            properties:
+              api_attachment_bytes_used:
+                type: integer
+                description: The used quota in bytes for API attachment data
+                example: 0
+              api_bytes:
+                type: integer
+                description: The quota in bytes for API data
+                example: 1000000000
+              api_bytes_daily:
+                type: integer
+                description: The daily used quota in bytes for API data
+                example: 1000000000
+              api_bytes_used:
+                type: integer
+                description: The used quota in bytes for API data
+                example: 2136220124
+              audio_attachment_bytes_used:
+                type: integer
+                description: The used quota in bytes for audio attachment data
+                example: 397
+              audio_bytes:
+                type: integer
+                description: The quota in bytes for audio data
+                example: 1000000000
+              audio_bytes_used:
+                type: integer
+                description: The used quota in bytes for audio data
+                example: 424210501
+              document_attachment_bytes_used:
+                type: integer
+                description: The used quota in bytes for document attachment data
+                example: 8317757
+              document_bytes:
+                type: integer
+                description: The quota in bytes for document data
+                example: 1000000000
+              document_bytes_used:
+                type: integer
+                description: The used quota in bytes for document data
+                example: 24145186
+              email_attachment_bytes_used:
+                type: integer
+                description: The used quota in bytes for email attachment data
+                example: 0
+              email_bytes:
+                type: integer
+                description: The quota in bytes for email data
+                example: 1000000000
+              email_bytes_used:
+                type: integer
+                description: The used quota in bytes for email data
+                example: 28652866
+              other_attachment_bytes_used:
+                type: integer
+                description: The used quota in bytes for all other attachment data
+                example: 0
+              other_bytes:
+                type: integer
+                description: The quota in bytes for all other types of data
+                example: 1000000000
+              other_bytes_used:
+                type: integer
+                description: The used quota in bytes for all other types of data
+                example: 653135
+              total_bytes:
+                type: integer
+                description: The quota in bytes for all data
+                example: 1000000000
+              total_bytes_daily:
+                type: integer
+                description: The daily used quota in bytes for all data
+                example: 1000000000
+              total_bytes_used:
+                type: integer
+                description: The used quota in bytes for all data
+                example: 6220124
+              video_attachment_bytes_used:
+                type: integer
+                description: The used quota in bytes for video attachment data
+                example: 25181
+              video_bytes:
+                type: integer
+                description: The quota in bytes for video data
+                example: 1000000000
+              video_bytes_used:
+                type: integer
+                description: The used quota in bytes for video data
+                example: 81802101
+          message:
+            type: string
+            description: A message with the date range for the quota summary
+            example: Quota usage summary for date range 2023-01-01 to 2023-01-31
+
+  GetDatumIdentityResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      datums:
+        type: array
+        description: An array of datums matching the identity_data's from the query string, will be empty if no results found
+        items:
+          type: object
+          required:
+            [
+              content_type,
+              create_date,
+              data_length,
+              hash_sha256,
+              transport_type,
+              upload_date,
+              identity_data,
+              uuid,
+              publishing_type,
+            ]
+          properties:
+            audio_type:
+              $ref: '#/schemas/audio_type'
+            call_direction:
+              $ref: '#/schemas/call_direction'
+            call_scope:
+              $ref: '#/schemas/call_scope'
+            content_type:
+              $ref: '#/schemas/content_type'
+            create_date:
+              $ref: '#/schemas/create_date'
+            custom_transport_type:
+              $ref: '#/schemas/custom_transport_type'
+            data_length:
+              type: integer
+              description: The datum length in bytes
+              example: 770537
+            # document_type:
+            #   $ref: '#/schemas/document_type'
+            hash_sha256:
+              type: string
+              description: A SHA256 hash of the datum content
+              example: 3489beffbc55532f4019f49b1a279592f4fdcd5d7dd9c7802ab789405a4e0359
+            identity_data:
+              $ref: '#/schemas/identity_data'
+            original_uri:
+              type: string
+              description: If the upload was a URL (via the text/x-uri Content-Type), this field will hold the original URI used to download the content
+              example: https://youtu.be/dQw4w9WgXcQ
+            publishing_type:
+              $ref: '#/schemas/publishing_type'
+            transport_type:
+              type: string
+              description: MIME formated string which identifies the platform from which the datum was generated
+              example: video/zoomarchive
+            upload_date:
+              type: string
+              format: date-time
+              description: The datum upload timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+              example: '2023-06-07T13:13:50.925Z'
+            uuid:
+              type: string
+              description: Generated by the ingestion service to uniquely identify the datum
+              example: a50e8729-0453-5908-02a7-50f6e0e9c654
+            video_type:
+              $ref: '#/schemas/video_type'
+
+  PostDatumBody:
+    type: object
+    properties:
+      meta:
+        type: object
+        required: [file_name, identity_data, create_date]
+        properties:
+          create_date:
+            $ref: '#/schemas/create_date'
+          custom_transport_type:
+            $ref: '#/schemas/custom_transport_type'
+          file_name:
+            type: string
+            description: The filename for the data
+            example: my-data-upload.zip
+          identity_data:
+            $ref: '#/schemas/identity_data'
+          platform_attributes:
+            $ref: '#/schemas/platform_attributes'
+          owner:
+            $ref: '#/schemas/owner_info'
+          participants:
+            $ref: '#/schemas/datum_participants'
+      data:
+        type: string
+        format: binary
+        description: The file to upload
+
+  PostAiInteractionBody:
+    type: object
+    properties:
+      meta:
+        type: object
+        required: [file_name, identity_data, create_date]
+        properties:
+          create_date:
+            $ref: '#/schemas/create_date'
+          custom_transport_type:
+            $ref: '#/schemas/custom_transport_type'
+          file_name:
+            type: string
+            description: This is the **title** of the AI interaction record.
+            example: Conversation with ChatGPT on June 1st
+          identity_data:
+            $ref: '#/schemas/identity_data'
+          platform_attributes:
+            $ref: '#/schemas/platform_attributes'
+          participants:
+            $ref: '#/schemas/ai_interaction_participants'
+      ai_interaction:
+        type: object
+        required: [application, conversation, participants, messages, attachments]
+        additionalProperties: false
+        properties:
+          application:
+            type: object
+            additionalProperties: false
+            required: [name]
+            properties:
+              name:
+                type: string
+                description: The name of the application hosting the AI interaction
+                example: 'ChatGPT'
+          model:
+            type: object
+            additionalProperties: false
+            required: [name]
+            properties:
+              name:
+                type: string
+                description: The name of the AI model used in the interaction
+                example: 'GPT-4'
+              provider:
+                type: string
+                description: The provider of the AI model
+                example: 'OpenAI'
+              version:
+                type: string
+                description: The version of the AI model
+                example: '2024-03-15'
+              temperature:
+                type: string
+                description: The temperature setting used for the AI model
+                example: '0.7'
+              max_tokens:
+                type: string
+                description: The maximum number of tokens used in the AI model
+                example: '2048'
+          conversation:
+            type: object
+            additionalProperties: false
+            required: [id, name, begin_time, end_time]
+            properties:
+              id:
+                type: string
+                description: The AI interaction conversation ID
+                example: 'claude_chat_01SRJsrWaqczVoPgPNBps7yW'
+              name:
+                type: string
+                description: The AI interaction conversation name
+                example: 'Chat with Claude on June 1st'
+              begin_time:
+                type: string
+                format: date-time
+                description: The AI interaction conversation start time in [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+                example: '2024-06-01T14:30:00Z'
+              end_time:
+                type: string
+                format: date-time
+                description: The AI interaction conversation end time in [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+                example: '2024-06-01T15:00:00Z'
+              previous_uuid:
+                type: string
+                description: The UUID of the previous AI interaction in the conversation. Required if connecting multiple AI interactions in a conversation.
+                example: 'a50e8729-0453-5908-02a7-50f6e0e9c654'
+
+          messages:
+            type: array
+            items:
+              type: object
+              required: [id, participant_id, text, content_type, timestamp]
+              properties:
+                id:
+                  $ref: '#/schemas/message_id'
+                participant_id:
+                  $ref: '#/schemas/activemember_participant_id'
+                text:
+                  $ref: '#/schemas/message_text'
+                content_type:
+                  $ref: '#/schemas/message_content_type'
+                timestamp:
+                  $ref: '#/schemas/message_timestamp'
+                message_type: 
+                  type: string
+                  description: The type of message in the AI interaction
+                  enum: ['message', 'prompt', 'systemprompt', 'disclaimer']
+                  example: 'message'
+                tokens_used:
+                  type: string
+                  description: The number of tokens used by the AI interaction message
+                  example: '150'
+                confidence_score:
+                  type: string
+                  description: The confidence score of the AI interaction message
+                  example: '0.95'
+                stop_reason:
+                  type: string
+                  description: The reason the AI interaction message was stopped
+                  example: 'max_tokens'
+                explanation:
+                  type: string
+                  description: Explanation for the AI interaction message
+                  example: 'The model reached the maximum token limit.'
+                reasoning:
+                  type: string
+                  description: The reasoning behind the AI interaction message
+                  example: 'The model inferred the user wanted a summary.'
+                latency:
+                  type: string
+                  description: The latency of the AI interaction message in milliseconds
+                  example: '250'
+                deleted_timestamp:
+                  $ref: '#/schemas/deleted_timestamp'
+                edited_message_id:
+                  $ref: '#/schemas/edited_message_id'
+                reaction_to_message_id:
+                  $ref: '#/schemas/reaction_to_message_id'
+                reply_to_message_id:
+                  $ref: '#/schemas/reply_to_message_id'
+                attachment_ids:
+                  $ref: '#/schemas/attachment_ids'
+            example:
+              - id: msg-001
+                participant_id: user-123
+                text: "What is the capital of France?"
+                content_type: "text/plain"
+                timestamp: "2024-06-01T14:31:00Z"
+              - id: msg-002
+                participant_id: ai-456
+                text: "The capital of France is Paris."
+                reply_to_message_id: "msg-001"
+                content_type: "text/plain"
+                timestamp: "2024-06-01T14:31:05Z"
+          attachments:
+            type: array
+            description: An array of meta data for all the attachments. If there are no attachments, this should just be an empty array.
+            items:
+              type: object
+              required: [id, name, content_type]
+              properties:
+                id:
+                  $ref: '#/schemas/attachment_id'
+                name:
+                  $ref: '#/schemas/attachment_name'
+                size:
+                  $ref: '#/schemas/attachment_size'
+                content_type:
+                  $ref: '#/schemas/attachment_content_type'
+                create_time:
+                  $ref: '#/schemas/attachment_create_time'
+      attachments:
+        type: array
+        description: The actual attachment files from the AI interaction messages
+        items:
+          type: string
+          format: binary
+
+  PostAudioBody:
+    type: object
+    properties:
+      meta:
+        type: object
+        required: [file_name, identity_data, create_date]
+        properties:
+          audio_type:
+            $ref: '#/schemas/audio_type'
+          call_direction:
+            $ref: '#/schemas/call_direction'
+          call_scope:
+            $ref: '#/schemas/call_scope'
+          create_date:
+            $ref: '#/schemas/create_date'
+          custom_transport_type:
+            $ref: '#/schemas/custom_transport_type'
+          file_name:
+            type: string
+            description: This is the **title** of the audio file. It appears as the record title in the Theta Lake Portal. When you search by 'media title' in the Portal, you search for this text.
+            example: Conference call with Jim and Jane
+          identity_data:
+            $ref: '#/schemas/identity_data'
+          platform_attributes:
+            $ref: '#/schemas/platform_attributes'
+          owner:
+            $ref: '#/schemas/owner_info'
+          participants:
+            $ref: '#/schemas/audio_participants'
+      data:
+        type: string
+        format: binary
+        description: The audio to upload
+
+  PostDocumentBody:
+    type: object
+    properties:
+      meta:
+        type: object
+        required: [file_name, identity_data, create_date]
+        properties:
+          create_date:
+            $ref: '#/schemas/create_date'
+          custom_transport_type:
+            $ref: '#/schemas/custom_transport_type'
+          document_type:
+            $ref: '#/schemas/document_type'
+          file_name:
+            type: string
+            description: This is the **title** of the document. It appears as the record title in the Theta Lake Portal. When you search by 'media title' in the Portal, you search for this text.
+            example: my-document-upload.pdf
+          identity_data:
+            $ref: '#/schemas/identity_data'
+          platform_attributes:
+            $ref: '#/schemas/platform_attributes'
+          owner:
+            $ref: '#/schemas/owner_info'
+          participants:
+            $ref: '#/schemas/datum_participants'
+      data:
+        type: string
+        format: binary
+        description: The document to upload
+
+  PostChatConversationBody:
+    type: object
+    properties:
+      meta:
+        type: object
+        required: [file_name, identity_data, create_date]
+        properties:
+          create_date:
+            $ref: '#/schemas/create_date'
+          custom_transport_type:
+            $ref: '#/schemas/custom_transport_type'
+          file_name:
+            type: string
+            description: This is the **title** of the chat conversation. It appears as the record title in the Theta Lake Portal. When you search by 'media title' in the Portal, you search for this text.
+            example: Chat between Jim and Pam
+          identity_data:
+            $ref: '#/schemas/identity_data'
+          platform_attributes:
+            $ref: '#/schemas/platform_attributes'
+          participants:
+            $ref: '#/schemas/chat_participants'
+      chat:
+        type: object
+        required:
+          [application, conversation, participants, messages, attachments]
+        properties:
+          application:
+            type: object
+            required: [name]
+            properties:
+              name:
+                type: string
+                description: The name of the chat application
+                example: 'Teams'
+          conversation:
+            type: object
+            required: [id, name, begin_time, end_time]
+            properties:
+              id:
+                type: string
+                description: The chat conversation's ID
+                example: some-id-string-here-2
+              name:
+                type: string
+                description: The chat conversation's name
+                example: Conversation between Jim and Pam
+              begin_time:
+                type: string
+                format: date-time
+                description: The chat conversation's begin time in [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+                example: '2023-12-09T13:13:50.925Z'
+              end_time:
+                type: string
+                format: date-time
+                description: The chat conversation's end time in [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+                example: '2023-12-09T17:13:50.925Z'
+              previous_uuid:
+                type: string
+                description: The UUID of the conversation's previous chat messages. Required if connecting chat messages into a conversation.
+                example: UUID to previous chat message
+          messages:
+            type: array
+            items:
+              type: object
+              required: [id, participant_id, text, content_type, timestamp]
+              properties:
+                id:
+                  $ref: '#/schemas/message_id'
+                participant_id:
+                  $ref: '#/schemas/activemember_participant_id'
+                text:
+                  $ref: '#/schemas/message_text'
+                content_type:
+                  $ref: '#/schemas/message_content_type'
+                timestamp:
+                  $ref: '#/schemas/message_timestamp'
+                deleted_timestamp:
+                  $ref: '#/schemas/deleted_timestamp'
+                edited_message_id:
+                  $ref: '#/schemas/edited_message_id'
+                reaction_to_message_id:
+                  $ref: '#/schemas/reaction_to_message_id'
+                reply_to_message_id:
+                  $ref: '#/schemas/reply_to_message_id'
+                attachment_ids:
+                  $ref: '#/schemas/attachment_ids'
+                importance:
+                  type: object
+                  required: [type]
+                  properties:
+                    text:
+                      type: string
+                      description: A description of why this message is important
+                    type:
+                      type: string
+                      enum: [high, urgent]
+                      description: The importance of the message
+                      example: high
+            example:
+              - {
+                  'id': 'message-1',
+                  'participant_id': 'user1',
+                  'text': 'Whats your favorite color?',
+                  'content_type': 'text/plain',
+                  'timestamp': '2023-06-07T13:08:43Z',
+                }
+              - {
+                  'id': 'message-2',
+                  'participant_id': 'user1',
+                  'text': 'Hey want to go to lunch?',
+                  'content_type': 'text/plain',
+                  'timestamp': '2023-06-07T14:08:43Z',
+                }
+              - {
+                  'id': 'message-3',
+                  'participant_id': 'user2',
+                  'text': 'Sorry! Totally thought I responded to this message. Its blue 💙 😀',
+                  'content_type': 'text/plain',
+                  'timestamp': '2023-06-07T14:09:43Z',
+                  'reply_to_message_id': 'message-1',
+                }
+              - {
+                  'id': 'message-4',
+                  'participant_id': 'user2',
+                  'text': "Yes! Lets go to lunch. Want to go to Alreado's Pizza Cafe?",
+                  'content_type': 'text/plain',
+                  'timestamp': '2023-06-08T14:10:43Z',
+                }
+              - {
+                  'id': 'message-5',
+                  'participant_id': 'user1',
+                  'text': 'Blue is okay, not my favorite',
+                  'content_type': 'text/plain',
+                  'timestamp': '2023-06-08T14:11:43Z',
+                  'deleted_timestamp': '2023-06-08T14:11:43Z',
+                  'reply_to_message_id': 'message-3',
+                }
+              - {
+                  'id': 'message-6',
+                  'participant_id': 'user1',
+                  'text': 'Thats my favorite too!',
+                  'content_type': 'text/plain',
+                  'timestamp': '2023-06-07T14:12:00Z',
+                  'reply_to_message_id': 'message-3',
+                }
+              - {
+                  'id': 'message-7',
+                  'participant_id': 'user1',
+                  'text': 'Lets do pizza by Alredo?',
+                  'content_type': 'text/plain',
+                  'timestamp': '2023-06-07T15:12:43Z',
+                }
+              - {
+                  'id': 'message-8',
+                  'participant_id': 'user1',
+                  'text': 'Lets do pizza by Alredo!',
+                  'content_type': 'text/plain',
+                  'timestamp': '2023-06-07T15:13:43Z',
+                  'edited_message_id': 'message-7',
+                }
+              - {
+                  'id': 'message-9',
+                  'participant_id': 'user1',
+                  'text': '💙',
+                  'content_type': 'text/plain',
+                  'timestamp': '2023-06-07T15:14:43Z',
+                  'reaction_to_message_id': 'message-3',
+                }
+
+          attachments:
+            type: array
+            description: An array of meta data for all the attachments. If there are no attachments, this should just be an empty array.
+            items:
+              type: object
+              required: [id, name, content_type]
+              properties:
+                id:
+                  $ref: '#/schemas/attachment_id'
+                name:
+                  $ref: '#/schemas/attachment_name'
+                size:
+                  $ref: '#/schemas/attachment_size'
+                content_type:
+                  $ref: '#/schemas/attachment_content_type'
+                create_time:
+                  $ref: '#/schemas/attachment_create_time'
+      attachments:
+        type: array
+        description: The actual attachment files from the chat messages
+        items:
+          type: string
+          format: binary
+
+  PostEmailBody:
+    type: object
+    properties:
+      meta:
+        type: object
+        required: [file_name, identity_data, create_date]
+        properties:
+          create_date:
+            $ref: '#/schemas/create_date'
+          custom_transport_type:
+            $ref: '#/schemas/custom_transport_type'
+          file_name:
+            type: string
+            description: This is the **title** of the email file. It appears as the record title in the Theta Lake Portal. When you search by 'media title' in the Portal, you search for this text.
+            example: my-email-upload.eml
+          identity_data:
+            $ref: '#/schemas/identity_data'
+          platform_attributes:
+            $ref: '#/schemas/platform_attributes'
+      data:
+        type: string
+        format: binary
+        description: The file to upload
+
+  PostVideoBody:
+    type: object
+    properties:
+      meta:
+        type: object
+        required: [file_name, identity_data, create_date]
+        properties:
+          create_date:
+            $ref: '#/schemas/create_date'
+          custom_transport_type:
+            $ref: '#/schemas/custom_transport_type'
+          file_name:
+            type: string
+            description: This is the **title** of the video file. It appears as the record title in the Theta Lake Portal. When you search by 'media title' in the Portal, you search for this text.
+            example: Zoom meeting recording with John and Jane
+          identity_data:
+            $ref: '#/schemas/identity_data'
+          video_type:
+            $ref: '#/schemas/video_type'
+          platform_attributes:
+            $ref: '#/schemas/platform_attributes'
+          owner:
+            $ref: '#/schemas/owner_info'
+          participants:
+            $ref: '#/schemas/datum_participants'
+      data:
+        type: string
+        format: binary
+        description: The video to upload
+
+  PostDatumResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode201'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString201'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      result:
+        $ref: '#/schemas/post_datum_result'
+  post_datum_result:
+    type: object
+    properties:
+      content_type:
+        $ref: '#/schemas/response_content_type'
+      hash_sha256:
+        $ref: '#/schemas/hash_sha256'
+      uuid:
+        $ref: '#/schemas/uuid'
+      upload_date:
+        $ref: '#/schemas/upload_date'
+  GetIntegrationStateResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      state:
+        type: object
+        properties:
+          created_at:
+            $ref: '../common/schemas.yml#/schemas/created_at'
+          internal:
+            $ref: '#/schemas/internal'
+          last_run:
+            $ref: '#/schemas/last_run'
+          last_upload:
+            $ref: '#/schemas/last_upload'
+          name:
+            type: string
+            description: Name of the integration when it was created
+            example: "Theta Lake API Integration"
+          paused:
+            $ref: '#/schemas/paused'
+          status:
+            $ref: '#/schemas/status'
+
+  PutIntegrationStateRequest:
+    type: object
+    properties:
+      internal:
+        $ref: '#/schemas/internal'
+      last_run:
+        $ref: '#/schemas/last_run'
+      status:
+        $ref: '#/schemas/status'
+
+  PostChatResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      result:
+        type: object
+        properties:
+          chat:
+            $ref: '#/schemas/post_datum_result'
+          file_attachments:
+            type: object
+            description: A map of the attachment upload responses. The keys are the attachment filenames.
+            additionalProperties:
+              $ref: '#/schemas/post_datum_result'
+            example:
+              chat_pdf:
+                content_type: application/pdf
+                hash_sha256: ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+                uuid: 856c2aee-d5ac-4e95-9f88-9a63b1b3e10a
+                upload_date: '2023-06-07T13:08:43Z'
+
+  internal:
+    type: object
+    description: Free form JSON object that can be used to track any internal integration state
+    nullable: true
+    example: { 'A': 1, 'B': 2, 'C': 3 }
+
+  status:
+    type: string
+    enum: [OK, FAILED, BADAUTH, SKIPPED, QUOTA_EXCEED]
+    description: The integration's status
+    example: OK
+
+  last_run:
+    type: string
+    format: date-time
+    description: The timestamp of the last run of the integration in [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6), must be set by the integration
+    example: '2023-06-07T13:08:43Z'
+
+  last_upload:
+    type: string
+    format: date-time
+    description: The timestamp of the last upload to the integration in [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Automatically set by the API.
+    example: '2023-06-07T13:08:43Z'
+
+  paused:
+    type: boolean
+    description: Indicates if the integration is paused
+    example: false
+
+  audio_type:
+    type: string
+    enum: [callrecording, conferencecall, voicemail]
+    description: The type of audio
+    example: conferencecall
+
+  publishing_type:
+    type: string
+    enum: [pre, post]
+    default: post
+    description: Indicates whether or not the content has been published and therefore is in a pre-publishing or post-publishing workflow
+    example: post
+
+  video_type:
+    type: string
+    enum: [videoconference, marketingasset, webinar]
+    description: The type of video
+    example: videoconference
+
+  call_direction:
+    type: string
+    enum: [outbound, inbound]
+    description: The direction of the call
+    example: outbound
+
+  call_scope:
+    type: string
+    enum: [internalonly, includesexternal]
+    description: The scope of the call
+    example: includesexternal
+
+  content_type:
+    type: string
+    description: The content-type of the data. Uses standard [MIME types](https://www.iana.org/assignments/media-types/media-types.xhtml)
+    example: video/mp4
+
+  create_date:
+    type: string
+    format: date-time
+    description: The data creation timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2023-06-07T13:08:43Z'
+
+  custom_transport_type:
+    type: string
+    description: A custom MIME style string which identifies the platform from which the content was generated
+    example: video/zoom
+
+  document_type:
+    type: string
+    enum: [chattranscript, fax, provided-transcript, videoscript]
+    description: The type of document
+    example: chattranscript
+
+  transport_type:
+    type: string
+    description: A MIME style string which identifies the platform from which the content was generated
+    example: video/zoom
+
+  identity_data:
+    type: string
+    description: A unique, arbitrary string identifier that is specified by the client. You can use this identifier to verify whether the data has been uploaded.
+    example: something-unique
+
+  datum_participants:
+    type: object
+    description: >
+      A map of role names to arrays of participant objects, where the keys in the map can be any of the following 
+      participant role names: **host, attendee, caller, callee, or collaborator**.
+    additionalProperties:
+      $ref: '#/schemas/participant_infos'
+    example:
+      host: [
+          {
+            id: abc123,
+            name: John Doe,
+            first_name: John,
+            last_name: Doe,
+            email: john.doe@email.com,
+            phone_number: '5555555555',
+            extension: x3071,
+            location: California,
+            device_id: John's cell,
+            # is_external: false,
+          },
+        ]
+      attendee:
+        [
+          {
+            id: xyz456,
+            name: Jane Doe,
+            first_name: Jane,
+            last_name: Doe,
+            email: jane.doe@email.com,
+            phone_number: '5555556666',
+            extension: x3081,
+            location: Texas,
+            device_id: Jane's home,
+            is_external: false,
+          },
+          {
+            id: lmn789,
+            name: George Smith,
+            first_name: George,
+            last_name: Smith,
+            email: george.smith@email.com,
+            phone_number: '5555557777',
+            extension: x3234,
+            location: New York,
+            device_id: George's office,
+            is_external: true,
+          },
+        ]
+
+  ai_interaction_participants:
+    type: object
+    description: >
+      A map of role names to arrays of participant objects, where the keys in the map can be any of the following 
+      participant role names: **activemember**.
+    additionalProperties:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            $ref: '#/schemas/participant_id'
+          name:
+            $ref: '#/schemas/name'
+          first_name:
+            $ref: '#/schemas/first_name'
+          last_name:
+            $ref: '#/schemas/last_name'
+          email:
+            $ref: '#/schemas/email'
+          phone_number:
+            $ref: '#/schemas/phone_number'
+    example:
+      activemember: [
+          {
+            id: user-123,
+            name: 'Jim Halpert',
+            email: 'jim.halpert@dundermifflin.com'
+          },
+          {
+            id: ai-456,
+            name: Computron
+          }
+        ]
+
+  audio_participants:
+    type: object
+    description: >
+      A map of role names to arrays of participant objects, where the keys in the map can be any of the following 
+      participant role names: **caller, callee, host, or attendee**.
+    additionalProperties:
+      $ref: '#/schemas/participant_infos'
+    example:
+      caller:
+        [
+          {
+            id: user1,
+            name: Jim Halpert,
+            first_name: Jim,
+            last_name: Halpert,
+            email: jimmyhalpert@email.com,
+            phone_number: '5555555555',
+            extension: x3071,
+            location: Scranton,
+            device_id: Jims Desk,
+            is_external: false,
+          },
+        ]
+      callee:
+        [
+          {
+            id: xyz456,
+            name: Jane Doe,
+            first_name: Jane,
+            last_name: Doe,
+            email: jane.doe@email.com,
+            phone_number: '5555556666',
+            extension: x3081,
+            location: Texas,
+            device_id: Jane's home,
+            is_external: false,
+          },
+        ]
+
+  chat_participants:
+    type: object
+    description: |
+      Participants that have sent messages in this chat should be in the **activemember** array.  
+      Participants that have not sent messages in this chat should be in the **passivemember** array.
+    properties:
+      activemember:
+        $ref: '#/schemas/chat_participant_infos'
+      passivemember:
+        $ref: '#/schemas/chat_participant_infos'
+    example:
+      activemember:
+        [
+          {
+            id: user1,
+            name: Jim Halpert,
+            first_name: Jim,
+            last_name: Halpert,
+            email: jim.halpert@dundermifflin.com,
+            phone_number: '5555556666',
+            extension: x3081,
+            location: Scranton,
+            device_id: Jims Office Phone,
+          },
+          {
+            id: user2,
+            name: Pam Beasley,
+            first_name: Pam,
+            last_name: Beasley,
+            email: pam.beasley@dundermifflin.com,
+            phone_number: '5555556667',
+            extension: x3082,
+            location: Scranton,
+            device_id: Dunder Mifflin Front Desk,
+          },
+        ]
+      passivemember:
+        [
+          {
+            id: user3,
+            name: Micheal Scoot,
+            first_name: Micheal,
+            last_name: Scott,
+            email: great.scott@dundermifflin.com,
+            phone_number: '5555557774',
+            extension: x3234,
+            location: The Bosses office,
+            device_id: nonya bidness,
+          },
+        ]
+
+  participant_infos:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          $ref: '#/schemas/participant_id'
+        name:
+          $ref: '#/schemas/name'
+        first_name:
+          $ref: '#/schemas/first_name'
+        last_name:
+          $ref: '#/schemas/last_name'
+        email:
+          $ref: '#/schemas/email'
+        phone_number:
+          $ref: '#/schemas/phone_number'
+        extension:
+          $ref: '#/schemas/extension'
+        location:
+          $ref: '#/schemas/location'
+        device_id:
+          $ref: '#/schemas/device_id'
+        employee_id:
+          $ref: '#/schemas/employee_id'
+        is_external:
+          $ref: '#/schemas/is_external'
+
+  chat_participant_infos:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          $ref: '#/schemas/participant_id'
+        name:
+          $ref: '#/schemas/name'
+        first_name:
+          $ref: '#/schemas/first_name'
+        last_name:
+          $ref: '#/schemas/last_name'
+        email:
+          $ref: '#/schemas/email'
+        phone_number:
+          $ref: '#/schemas/phone_number'
+        extension:
+          $ref: '#/schemas/extension'
+        location:
+          $ref: '#/schemas/location'
+        device_id:
+          $ref: '#/schemas/device_id'
+        employee_id:
+          $ref: '#/schemas/employee_id'
+
+  participant_id:
+    type: string
+    description: The unique identifier from the original platform where the content was generated
+    example: abc123
+
+  name:
+    type: string
+    description: The participant's name as a single string
+    example: John Doe
+
+  first_name:
+    type: string
+    description: The participant's first name
+    example: John
+
+  last_name:
+    type: string
+    description: The participant's last name
+    example: Doe
+
+  email:
+    type: string
+    description: The participant's email address
+    example: john.doe@email.com
+
+  phone_number:
+    type: string
+    description: The participant's phone number. This phone number can only be digits with an optional '+' prefix
+    example: '+5551234567'
+
+  extension:
+    type: string
+    description: The participant's extension
+    example: x3071
+
+  location:
+    type: string
+    description: The participant's location
+    example: France
+
+  device_id:
+    type: string
+    description: The participant's device ID
+    example: 3e:24:21:df:02
+
+  employee_id:
+    type: string
+    description: The participant's employee ID
+    example: '2232'
+
+  is_external:
+    type: boolean
+    description: Indicates if the participant is external to the customer's organization
+    default: false
+    example: true
+
+  owner_info:
+    type: object
+    properties:
+      id:
+        type: string
+        description: The unique identifier from the original platform where the content was generated
+        example: abc123
+      name:
+        type: string
+        description: The owner's name as a single string
+        example: John Doe
+      first_name:
+        type: string
+        description: The owner's first name
+        example: John
+      last_name:
+        type: string
+        description: The owner's last name
+        example: Doe
+      email:
+        type: string
+        description: The owner's email address
+        example: john.doe@email.com
+      phone_number:
+        type: string
+        description: The owner's phone number. This phone number can only be digits with an optional '+' prefix
+        example: '+5551234567'
+      extension:
+        type: string
+        description: The owner's extension
+        example: x3071
+      location:
+        type: string
+        description: The owner's location
+        example: France
+      device_id:
+        type: string
+        description: The owner's device ID
+        example: 3e:24:21:df:02
+      employee_id:
+        type: string
+        description: The owner's employee ID
+        example: '2232'
+      is_external:
+        type: boolean
+        description: Indicates if the participant is external to the customer's organization
+        default: false
+        example: true
+
+  response_content_type:
+    type: string
+    description: The uploaded data's detected [content type](https://www.iana.org/assignments/media-types/media-types.xhtml)
+    example: video/mp4
+  hash_sha256:
+    type: string
+    description: The uploaded data's SHA256 hash
+    example: 5179a08ff65e6388a466447dd1c6ee5fae0c9b080ec3a61e21cd6818ed1d8624
+  uuid:
+    type: string
+    description: The uploaded data's UUID in the Theta Lake system
+    example: 5883caa5-c428-5998-dcda-b51a457c021f
+  upload_date:
+    type: string
+    format: date-time
+    description: The uploaded data's timestamp in [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2023-06-07T13:08:43Z'
+  message_id:
+    type: string
+    description: The message ID from the chat platform
+    example: 7302e64f-2712-4e57-9dec-ada177b2d33b
+  message_participant_id:
+    type: string
+    description: The ID of the participant that sent this message. This ID can be for either an activemember or passivemember.
+    example: user1234
+  activemember_participant_id:
+    type: string
+    description: The ID of the participant that sent this message. This ID must correspond to an ID in the `meta.participants.activemember` array.
+    example: user1234
+  message_text:
+    type: string
+    description: The message's text
+    example: Do you want go to lunch?
+  message_content_type:
+    type: string
+    enum: ['text/plain', 'application/html', 'text/markdown']
+    description: The message's content type
+    example: 'text/plain'
+  message_timestamp:
+    type: string
+    format: date-time
+    description: The message's timestamp in [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2023-06-07T13:08:43Z'
+
+  platform_attributes:
+    type: object
+    description: An open set of key-value pairs that can be used to store platform attributes. API platform attributes are only searchable by exact string match.
+    additionalProperties:
+      type: string
+      description: Key-value pairs
+    example:
+      call_id: '2909b385-f84c-4935-bef0-87e6c6a3939b'
+      channel_id: '4'
+      duration: '1h02m29s'
+
+  deleted_timestamp:
+    type: string
+    format: date-time
+    description: The message's deleted timestamp in [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2023-06-08T13:08:43Z'
+  edited_message_id:
+    description: The id of the message being edited
+    type: string
+    example: '12345921'
+  reaction_to_message_id:
+    description: The id of the message being reacted to
+    type: string
+    example: '12345921'
+  reply_to_message_id:
+    description: The id of the message being replied to
+    type: string
+    example: '12345921'
+  attachment_ids:
+    type: array
+    description: The IDs of the attachments attached to this specific message
+    items:
+      type: string
+    example: ['example-attachment-id']
+
+  attachment_id:
+    type: string
+    description: A unique ID for the attachment. Used to reference attachments in the chat messages.
+    example: example-attachment-id
+  attachment_name:
+    type: string
+    description: The file name of the attachment. **Must match the file name of the actual attachment**
+    example: shared_image.png
+  attachment_size:
+    type: integer
+    description: The size in bytes of the attachment
+    example: 355435
+  attachment_content_type:
+    type: string
+    description: The content-type of the attachment. Uses standard [MIME types](https://www.iana.org/assignments/media-types/media-types.xhtml)
+    example: image/png
+  attachment_create_time:
+    type: string
+    format: date-time
+    description: The creation timestamp of the attachment in [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+    example: '2023-06-08T13:08:43Z'

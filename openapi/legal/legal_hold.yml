@@ -1,0 +1,793 @@
+paths:
+  legal_hold:
+    get:
+      tags:
+        - Legal Hold
+      summary: List all legal holds
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_hold:read`
+        **RATE LIMIT:** `medium`
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/legal_matters](/api-reference#get-/legal_matters) endpoint instead.
+      responses:
+        '200':
+          description: A list of legal holds
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLegalHoldsResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    post:
+      tags:
+        - Legal Hold
+      summary: Create a new legal hold
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_hold:create`
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/legal_matters](/api-reference#post-/legal_matters) endpoint instead.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/CreateLegalHoldRequestBody'
+      responses:
+        '200':
+          description: The created legal hold
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLegalHoldResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  legal_hold/{id}:
+    put:
+      tags:
+        - Legal Hold
+      summary: Update a legal hold
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_hold:update`
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/legal_matters/{id}](/api-reference#put-/legal_matters/-id-) endpoint instead.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the legal hold
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/CreateLegalHoldRequestBody'
+      responses:
+        '200':
+          description: The updated legal hold
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLegalHoldResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  legal_hold/{id}/logs:
+    get:
+      tags:
+        - Legal Hold
+      summary: List all logs for a legal hold
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_hold:read`
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/legal_matters/{id}/logs](/api-reference#get-/legal_matters/-id-/logs) endpoint instead.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the legal hold
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of logs for the legal hold
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLegalHoldLogsResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  legal_hold/roles:
+    get:
+      tags:
+        - Legal Hold
+      summary: List all legal hold roles
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_hold:read`
+        **RATE LIMIT:** `medium`
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/legal_matters/roles](/api-reference#get-/legal_matters/roles) endpoint instead.
+      responses:
+        '200':
+          description: A list of legal hold roles
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLegalHoldRolesResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  legal_hold/{id}/rules:
+    get:
+      tags:
+        - Legal Hold
+      summary: List all rules on a legal hold
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_hold:read`
+        **RATE LIMIT:** `medium`
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/legal_matters/{id}/custodians](/api-reference#get-/legal_matters/-id-/custodians) endpoint instead.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the legal hold
+          schema:
+            type: integer
+            example: 33
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25
+          required: false
+          schema:
+            type: integer
+            example: 25
+            minimum: 1
+            maximum: 100
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` object in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of legal hold rules
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLegalHoldIdentitiesResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    post:
+      tags:
+        - Legal Hold
+      summary: Create legal hold rule
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_hold:update`
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/legal_matters/{id}/custodians](/api-reference#post-/legal_matters/-id-/custodians) endpoint instead.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the legal hold
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/LegalHoldRequestBody'
+      responses:
+        '201':
+          description: The added legal hold rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/AddLegalHoldIdentityResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  legal_hold/{id}/rules/{rule_id}:
+    put:
+      tags:
+        - Legal Hold
+      summary: Update a legal hold rule
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_hold:update`
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/legal_matters/{id}/custodians/{custodian_id}](/api-reference#put-/legal_matters/-id-/custodians/-custodian_id-) endpoint instead.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the legal hold
+          schema:
+            type: integer
+        - name: rule_id
+          in: path
+          required: true
+          description: The ID of the legal hold rule
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/LegalHoldRequestBody'
+      responses:
+        '200':
+          description: The added legal hold rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/AddLegalHoldIdentityResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Legal Hold
+      summary: Remove identity from legal hold rule
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_hold:delete`
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/legal_matters/{id}/custodians/{custodian_id}](/api-reference#delete-/legal_matters/-id-/custodians/-custodian_id-) endpoint instead.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the legal hold
+          schema:
+            type: integer
+        - name: rule_id
+          in: path
+          required: true
+          description: The ID of the legal hold rule
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The removed legal hold rule
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_code:
+                    $ref: '../common/schemas.yml#/schemas/StatusCode200'
+                  status_string:
+                    $ref: '../common/schemas.yml#/schemas/StatusString200'
+                  request_id:
+                    $ref: '../common/schemas.yml#/schemas/RequestId'
+                  result:
+                    type: string
+                    description: The info of the removed legal hold rule
+                    example: Identity removed from legal hold rule
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetLegalHoldResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      legal_hold:
+        $ref: '#/schemas/legal_hold'
+
+  GetLegalHoldsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      legal_holds:
+        type: array
+        description: A list of legal holds
+        items:
+          $ref: '#/schemas/legal_hold'
+
+  GetLegalHoldRolesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      legal_holds:
+        type: array
+        description: A list of all the legal hold roles
+        items:
+          $ref: '#/schemas/legal_hold_role'
+
+  LegalHoldRequestBody:
+    type: object
+    required:
+      - identity_id
+      - roles
+    properties:
+      end_date:
+        type: string
+        format: date-time
+        description: The end date of the legal hold. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2021-06-16T01:37:04.262Z'
+      identity_id:
+        type: integer
+        description: The ID of the identity to add to the legal hold
+        example: 2345
+      roles:
+        type: array
+        description: The roles to add to the legal hold. Roles can be found in the [/legal_hold/roles](/api-reference#get-/legal_hold/roles) endpoint using the `value` field. At least 1 role must be specified
+        items:
+          type: string
+        example: [ALL_RECIPIENT_ROLES, recipient_bcc, activemember]
+      start_date:
+        type: string
+        format: date-time
+        description: The start date of the legal hold. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2021-06-16T01:37:04.262Z'
+
+  CreateLegalHoldRequestBody:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The name of the legal hold
+        example: My legal hold
+      description:
+        type: string
+        description: Information about the matter that comes from the Legal Hold management system (Disco, Relativity etc)
+        example: Legal hold description
+
+  GetLegalHoldIdentitiesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      rules:
+        type: object
+        properties:
+          rule_count:
+            type: integer
+            description: The number of rules associated with the legal hold
+          rules:
+            type: array
+            description: A list of rules associated with the legal hold
+            items:
+              $ref: '#/schemas/legal_hold_identity'
+
+  AddLegalHoldIdentityResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      legal_hold_rule: # does not match legal_hold_rule schema because create_date does not come back from portal. This will need to be updated in caddyshack
+        type: object
+        properties:
+          end_date:
+            type: string
+            format: date-time
+            description: The end date of the legal hold rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+            nullable: true
+          id:
+            type: integer
+            description: The ID of the legal hold rule
+            example: 1234567890
+          identity_id:
+            type: integer
+            description: The ID of the identity associated with the legal hold rule
+            example: 1234567890
+          roles:
+            type: array
+            description: A list of roles associated with the identity on the legal hold rule
+            items:
+              type: string
+          start_date:
+            type: string
+            format: date-time
+            description: The start date of the legal hold rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+            nullable: true
+
+  legal_hold_rule:
+    type: object
+    properties:
+      created_at:
+        type: string
+        format: date-time
+        description: The create date of the legal hold rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+      end_date:
+        type: string
+        format: date-time
+        description: The end date of the legal hold rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        nullable: true
+      roles:
+        type: array
+        description: A list of roles associated with the identity on the legal hold rule
+        items:
+          type: string
+      start_date:
+        type: string
+        format: date-time
+        description: The start date of the legal hold rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        nullable: true
+      updated_at:
+        type: string
+        format: date-time
+        description: The updated date of the legal hold rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+
+  legal_hold_identity:
+    type: object
+    allOf:
+      - $ref: '#/schemas/legal_hold_rule'
+    properties:
+      id:
+        type: integer
+        description: The ID of the legal hold rule
+        example: 543
+      identity:
+        type: object
+        description: The identity associated with the legal hold rule
+        properties:
+          ai_participant:
+            $ref: '../management/identities.yml#/schemas/ai_participant'
+          created_at:
+            $ref: '../common/schemas.yml#/schemas/created_at'
+          email:
+            $ref: '../management/identities.yml#/schemas/email'
+          email_end_date:
+            $ref: '../management/identities.yml#/schemas/email_end_date'
+          email_start_date:
+            $ref: '../management/identities.yml#/schemas/email_start_date'
+          external_id:
+            $ref: '../management/identities.yml#/schemas/external_id'
+          external_id_end_date:
+            $ref: '../management/identities.yml#/schemas/external_id_end_date'
+          external_id_start_date:
+            $ref: '../management/identities.yml#/schemas/external_id_start_date'
+          id:
+            $ref: '../management/identities.yml#/schemas/id'
+          is_submitter:
+            $ref: '../management/identities.yml#/schemas/is_submitter'
+          managed:
+            $ref: '../management/identities.yml#/schemas/managed'
+          name:
+            $ref: '../management/identities.yml#/schemas/name'
+          phone_number:
+            $ref: '../management/identities.yml#/schemas/phone_number'
+          phone_number_end_date:
+            $ref: '../management/identities.yml#/schemas/phone_number_end_date'
+          phone_number_start_date:
+            $ref: '../management/identities.yml#/schemas/phone_number_start_date'
+          source:
+            $ref: '../management/identities.yml#/schemas/source'
+          updated_at:
+            $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  legal_hold_role:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The name of the role
+        example: All Roles
+      value:
+        type: string
+        description: The value of the role. This value is needed when adding an identity to a legal hold
+        example: ALL_ROLES
+
+  legal_hold:
+    type: object
+    properties:
+      created_at:
+        type: string
+        format: date-time
+        description: The create date of the legal hold. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-04-28T17:38:17.276Z'
+      description:
+        type: string
+        description: Legal hold description
+        example: Legal hold description
+      id:
+        type: integer
+        description: The ID of the legal hold
+        example: 11
+      name:
+        type: string
+        description: The name of the legal hold
+        example: Legal Hold 001
+      rule_count:
+        type: integer
+        description: The number of rules associated with the legal hold
+        example: 7
+      updated_at:
+        type: string
+        format: date-time
+        description: The last update date of the legal hold. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-04-28T17:38:17.276Z'
+
+  GetLegalHoldLogsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      logs:
+        type: array
+        description: A list of legal hold log entries
+        items:
+          $ref: '#/schemas/legal_hold_log'
+
+  legal_hold_log:
+    type: object
+    properties:
+      created_at:
+        type: string
+        format: date-time
+        description: The timestamp when the log entry was created. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-07-14T22:02:48.971Z'
+      description:
+        type: string
+        description: A human-readable description of the action that was performed
+        example: 'Legal hold rule has been updated.'
+      event_type:
+        type: string
+        description: The type of event that occurred
+        enum: [Create, Update, Delete]
+        example: Update
+      extra_data:
+        description: Fields that were updated in the event. Only present for Create and Update events.
+        oneOf:
+          - $ref: '#/schemas/legal_hold_log_extra_data_create'
+          - $ref: '#/schemas/legal_hold_log_extra_data_update'
+        nullable: true
+      id:
+        type: integer
+        description: The unique identifier for this log entry
+        example: 215
+      legal_hold:
+        type: object
+        description: The legal hold associated with this log entry
+        properties:
+          description:
+            type: string
+            description: The description of the legal hold
+            example: 'Legal hold description = only'
+          id:
+            type: integer
+            description: The ID of the legal hold
+            example: 33
+          name:
+            type: string
+            description: The name of the legal hold
+            example: My legal hold
+      user:
+        type: object
+        description: The user who performed the action
+        properties:
+          email:
+            type: string
+            format: email
+            description: The email address of the user
+            example: user@thetalake.com
+          id:
+            type: integer
+            description: The ID of the user
+            example: 404
+          name:
+            type: string
+            description: The name of the user
+            example: John Doe
+
+  legal_hold_log_extra_data_create:
+    type: object
+    properties:
+      create:
+        type: object
+        description: Data for Create events, showing the new values that were set
+        properties:
+          end_date:
+            $ref: '#/schemas/legal_hold_log_field_change_data'
+          identity_id:
+            $ref: '#/schemas/legal_hold_log_field_change'
+          roles:
+            $ref: '#/schemas/legal_hold_log_field_change'
+          start_date:
+            $ref: '#/schemas/legal_hold_log_field_change_data'
+          description:
+            $ref: '#/schemas/legal_hold_log_field_change'
+          name:
+            $ref: '#/schemas/legal_hold_log_field_change'
+
+  legal_hold_log_extra_data_update:
+    type: object
+    properties:
+      update:
+        type: object
+        description: Data for Update events, showing the changes made to fields
+        properties:
+          end_date:
+            $ref: '#/schemas/legal_hold_log_field_change_data'
+          identity_id:
+            $ref: '#/schemas/legal_hold_log_field_change'
+          roles:
+            $ref: '#/schemas/legal_hold_log_field_change'
+          start_date:
+            $ref: '#/schemas/legal_hold_log_field_change_data'
+          description:
+            $ref: '#/schemas/legal_hold_log_field_change'
+          name:
+            $ref: '#/schemas/legal_hold_log_field_change'
+
+  legal_hold_log_field_change:
+    type: object
+    description: Represents a change to a field, showing old and new values
+    nullable: true
+    properties:
+      new:
+        description: The new value of the field (type varies by field)
+        example: All Email Recipient Roles
+        type: string
+      old:
+        description: The previous value of the field (type varies by field)
+        example: All Email Recipient Roles, Email Recipient BCC, Chat Participant
+        type: string
+
+  legal_hold_log_field_change_data:
+    type: object
+    description: Represents a change to a field, showing old and new values
+    nullable: true
+    properties:
+      new:
+        description: The new value of the date field. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-07-15T17:38:17.276Z'
+        type: string
+        format: date-time
+      old:
+        description: The previous value of the date field. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-07-15T17:38:17.276Z'
+        type: string
+        format: date-time

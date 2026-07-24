@@ -1,0 +1,431 @@
+paths:
+  labels:
+    get:
+      tags:
+        - Labels
+      summary: List all labels
+      description: |
+        **REQUIRED PERMISSION:** `labels:read`  
+        **RATE LIMIT:** `heavy`
+      responses:
+        '200':
+          description: Returns a list of labels
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLabelsResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    post:
+      tags:
+        - Labels
+      summary: Create a new label
+      description: |
+        **REQUIRED PERMISSION:** `labels:create`  
+        **RATE LIMIT:** `heavy`
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PostLabelRequest'
+      responses:
+        '201':
+          description: The new label
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostLabelResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  labels/{id}:
+    get:
+      tags:
+        - Labels
+      summary: Get label by ID
+      description: |
+        **REQUIRED PERMISSION:** `labels:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The label ID to retrieve
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: The retrieved label
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLabelByIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    put:
+      tags:
+        - Labels
+      summary: Update label by ID
+      description: |
+        **REQUIRED PERMISSION:** `labels:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The label ID to update
+          required: true
+          schema:
+            type: integer
+            example: 5
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PutLabelByIdRequest'
+      responses:
+        '200':
+          description: The updated label
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PutLabelByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Labels
+      summary: Delete label by ID
+      description: |
+        **REQUIRED PERMISSION:** `labels:delete`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          description: The label ID to delete
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: The deleted label
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLabelByIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  labels/{label_id}/records/{record_id}:
+    post:
+      tags:
+        - Labels
+      summary: Add a label to a record
+      description: |
+        **REQUIRED PERMISSION:** `labels:use`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: label_id
+          in: path
+          description: The label ID to add
+          required: true
+          schema:
+            type: integer
+            example: 5
+        - name: record_id
+          in: path
+          description: The record ID to add the label to
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: The label was added to the record
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/PostLabelToRecordResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Labels
+      summary: Remove a label from a record
+      description: |
+        **REQUIRED PERMISSION:** `labels:use`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: record_id
+          in: path
+          description: The record ID to remove the label from
+          required: true
+          schema:
+            type: integer
+            example: 5
+        - name: label_id
+          in: path
+          description: The label ID to remove
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        '200':
+          description: The label was removed from the record
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/DeleteLabelFromRecordResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetLabelsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      labels:
+        type: array
+        description: An array of label objects
+        items:
+          $ref: '#/schemas/Label'
+
+  PostLabelRequest:
+    type: object
+    properties:
+      background_color:
+        $ref: '#/schemas/background_color'
+      hidden:
+        $ref: '#/schemas/hidden'
+      long_name:
+        $ref: '#/schemas/long_name'
+      short_name:
+        $ref: '#/schemas/short_name'
+
+  PostLabelResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      label:
+        $ref: '#/schemas/Label'
+
+  GetLabelByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      label:
+        $ref: '#/schemas/Label'
+
+  PutLabelByIdRequest:
+    type: object
+    properties:
+      background_color:
+        $ref: '#/schemas/background_color'
+      hidden:
+        $ref: '#/schemas/hidden'
+      long_name:
+        $ref: '#/schemas/long_name'
+      short_name:
+        $ref: '#/schemas/short_name'
+
+  PutLabelByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      label:
+        $ref: '#/schemas/Label'
+
+  DeleteLabelByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: The outcome of the request
+        example: Request successfully completed
+
+  PostLabelToRecordResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: object
+        properties:
+          message:
+            type: string
+            description: The outcome of the request
+            example: Request successfully completed
+
+  DeleteLabelFromRecordResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: object
+        properties:
+          message:
+            type: string
+            description: The outcome of the request
+            example: Request successfully completed
+
+  Label:
+    type: object
+    properties:
+      background_color:
+        $ref: '#/schemas/background_color'
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      hidden:
+        $ref: '#/schemas/hidden'
+      id:
+        type: integer
+        description: The label ID
+        example: 5
+      long_name:
+        $ref: '#/schemas/long_name'
+      org_unit_id:
+        type: integer
+        description: The org unit associated with the new label
+        example: 108
+      short_name:
+        $ref: '#/schemas/short_name'
+      tagged_datums_count:
+        type: integer
+        description: The number of records with this label assigned
+        example: 7
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      user_id:
+        type: integer
+        description: The user's ID
+        example: 422
+
+  background_color:
+    type: string
+    description: RGB hex color value representing the background color of the label
+    example: '#FFC906'
+  hidden:
+    type: boolean
+    description: Indicates if the label is hidden on the UI
+    example: false
+  long_name:
+    type: string
+    description: The description of the label
+    example: This is a label for testing
+  short_name:
+    type: string
+    description: The name of the label shown on records
+    example: Test Label

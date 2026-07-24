@@ -1,0 +1,139 @@
+paths:
+  storage_accounts:
+    get:
+      tags:
+        - Storage Accounts
+      summary: List all storage accounts
+      description: |
+        **REQUIRED PERMISSION:** `storage_accounts:read`  
+        **RATE LIMIT:** `heavy`
+      responses:
+        '200':
+          description: The storage accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetStorageAccountsResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetStorageAccountsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      storage_accounts:
+        type: array
+        description: An array of storage accounts
+        items:
+          type: object
+          properties:
+            # bucket_name:
+            #     type: string
+            #     description: The name of the storage bucket
+            #     example: datums-dev1-000000001-theta-lake
+            retention_libraries:
+              type: integer
+              description: The number of retention libraries associated with the storage account
+              example: 7
+            created_at:
+              $ref: '../common/schemas.yml#/schemas/created_at'
+            global_storage:
+              type: boolean
+              description: Indicates if the storage account is global
+              example: false
+            # gsa_licenses_summary:
+            #   type: string
+            #   description: Human readable text for the global storage account license
+            #   example: You have used 3 of 4 global storage accounts
+            # gsa_total_allowed_count:
+            #   type: integer
+            #   description: The total number of licensed global storage accounts
+            #   example: 4
+            # gsa_used_count:
+            #   type: integer
+            #   description: The number of global storage account licenses that have been used
+            #   example: 3
+            # customer_managed:
+            #     type: boolean
+            #     description: Indicates if the storage account is a bring your own storage (BYOS)
+            #     example: false
+            # description:
+            #     type: string
+            #     description: A description given to the storage account at creation
+            #     example: The built in storage account
+            # encryption_algorithm:
+            #     type: string
+            #     description: The name of the storage account's encryption algorithm
+            #     example: AES-256
+            # encryption_policy_type:
+            #     type: string
+            #     description: The name of the storage account's encryption type
+            #     example: SSE-KMS
+            id:
+              type: integer
+              description: The storage account ID
+              example: 1
+            # master_key_last_rotation:
+            #     type: string
+            #     format: date-time
+            #     description: The date of the last master key rotation using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+            #     example: '2022-03-21T17:14:55.000Z'
+            #     nullable: true
+            # master_key_length:
+            #     type: integer
+            #     description: The length of the data storage encryption key
+            #     example: 256
+            # master_key_rotation_automatic:
+            #     type: boolean
+            #     description: Indicates if the master key rotation is automatic
+            #     example: true
+            # master_key_rotation_days:
+            #     type: integer
+            #     description: The number of days between encryption key rotations
+            #     example: 365
+            # master_key_rotation_enabled:
+            #     type: boolean
+            #     description: Indicates if the master key rotation is enabled
+            #     example: true
+            name:
+              type: string
+              description: The storage account name
+              example: Default
+            # org_unit_id:
+            #     type: integer
+            #     description: The org unit ID this storage account is associated with
+            #     example: 1
+            # redundancy_type:
+            #     type: string
+            #     description: The storage account redundancy type
+            #     example: Multi AZ
+            region:
+              type: string
+              description: Storage account region
+              example: us-east-2
+              nullable: true
+            region_pretty:
+              type: string
+              description: A pretty formatted version of the region field
+              example: US East (Ohio)
+              nullable: true
+            status:
+              type: string
+              description: The current status of the storage account
+              example: active
+            updated_at:
+              $ref: '../common/schemas.yml#/schemas/updated_at'

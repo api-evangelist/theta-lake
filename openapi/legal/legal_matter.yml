@@ -1,0 +1,809 @@
+paths:
+  legal_matters:
+    get:
+      tags:
+        - Legal Matter
+      summary: List all legal matters
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_matter:read`
+        **RATE LIMIT:** `medium`
+      parameters:
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25
+          required: false
+          schema:
+            type: integer
+            example: 25
+            minimum: 1
+            maximum: 100
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` object in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of legal matters
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLegalMattersResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    post:
+      tags:
+        - Legal Matter
+      summary: Create a new legal matter
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_matter:create`
+        **RATE LIMIT:** `medium`
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/CreateLegalMatterRequestBody'
+      responses:
+        '200':
+          description: The created legal matter
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLegalMatterResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  legal_matters/{id}:
+    put:
+      tags:
+        - Legal Matter
+      summary: Update a legal matter
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_matter:update`
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the legal matter
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/CreateLegalMatterRequestBody'
+      responses:
+        '200':
+          description: The updated legal matter
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLegalMatterResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  legal_matters/{id}/logs:
+    get:
+      tags:
+        - Legal Matter
+      summary: List all logs for a legal matter
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_matter:read`
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the legal matter
+          schema:
+            type: integer
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25
+          required: false
+          schema:
+            type: integer
+            example: 25
+            minimum: 1
+            maximum: 100
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` object in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of logs for the legal matter
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLegalMatterLogsResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  legal_matters/roles:
+    get:
+      tags:
+        - Legal Matter
+      summary: List all legal matter roles
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_matter:read`
+        **RATE LIMIT:** `medium`
+      responses:
+        '200':
+          description: A list of legal matter roles
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLegalMatterRolesResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  legal_matters/{id}/custodians:
+    get:
+      tags:
+        - Legal Matter
+      summary: List all custodians on a legal matter
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_matter:read`
+        **RATE LIMIT:** `medium`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the legal matter
+          schema:
+            type: integer
+            example: 33
+        - name: max
+          in: query
+          description: The max number of items in each page; default is 25
+          required: false
+          schema:
+            type: integer
+            example: 25
+            minimum: 1
+            maximum: 100
+        - name: page_token
+          in: query
+          description: The page token to query next, this comes from the `paging` object in the response. This can be either `next_page_token` or `prev_page_token`
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of legal matter custodians
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetLegalMatterIdentitiesResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    post:
+      tags:
+        - Legal Matter
+      summary: Create legal matter custodian
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_matter:update`
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the legal matter
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/LegalMatterRuleRequestBody'
+      responses:
+        '201':
+          description: The added legal matter custodian
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/AddLegalMatterIdentityResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  legal_matters/{id}/custodians/{custodian_id}:
+    put:
+      tags:
+        - Legal Matter
+      summary: Update a legal matter custodian
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_matter:update`
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the legal matter
+          schema:
+            type: integer
+        - name: custodian_id
+          in: path
+          required: true
+          description: The ID of the legal matter custodian
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/LegalMatterRuleRequestBody'
+      responses:
+        '200':
+          description: The updated legal matter custodian
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/AddLegalMatterIdentityResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    delete:
+      tags:
+        - Legal Matter
+      summary: Remove legal matter custodian
+      description: |
+        **REQUIRED PERMISSIONS:** `legal_matter:delete`
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the legal matter
+          schema:
+            type: integer
+        - name: custodian_id
+          in: path
+          required: true
+          description: The ID of the legal matter custodian
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The removed legal matter custodian
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_code:
+                    $ref: '../common/schemas.yml#/schemas/StatusCode200'
+                  status_string:
+                    $ref: '../common/schemas.yml#/schemas/StatusString200'
+                  request_id:
+                    $ref: '../common/schemas.yml#/schemas/RequestId'
+                  result:
+                    type: string
+                    description: The info of the removed legal matter custodian
+                    example: Identity removed from legal matter rule
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetLegalMatterResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      legal_matter:
+        $ref: '#/schemas/legal_matter'
+
+  GetLegalMattersResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      legal_matters:
+        type: array
+        description: A list of legal matters
+        items:
+          $ref: '#/schemas/legal_matter'
+
+  GetLegalMatterRolesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      roles:
+        type: array
+        description: A list of all the legal matter roles
+        items:
+          $ref: '#/schemas/legal_matter_role'
+
+  LegalMatterRuleRequestBody:
+    type: object
+    required:
+      - identity_id
+      - roles
+    properties:
+      end_date:
+        type: string
+        format: date-time
+        description: The end date of the legal matter rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2021-06-16T01:37:04.262Z'
+      identity_id:
+        type: integer
+        description: The ID of the identity to add to the legal matter
+        example: 2345
+      roles:
+        type: array
+        description: The roles to add to the legal matter. Roles can be found in the [/legal_matters/roles](/api-reference#get-/legal_matters/roles) endpoint using the `value` field. At least 1 role must be specified
+        items:
+          type: string
+        example: [ALL_RECIPIENT_ROLES, recipient_bcc, activemember]
+      start_date:
+        type: string
+        format: date-time
+        description: The start date of the legal matter rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2021-06-16T01:37:04.262Z'
+
+  CreateLegalMatterRequestBody:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The name of the legal matter
+        example: My legal matter
+      description:
+        type: string
+        description: Information about the matter that comes from the Legal Hold management system (Disco, Relativity etc)
+        example: Legal matter description
+
+  GetLegalMatterIdentitiesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      result:
+        type: object
+        properties:
+          custodian_count:
+            type: integer
+            description: The number of custodians associated with the legal matter
+          custodians:
+            type: array
+            description: A list of custodians associated with the legal matter
+            items:
+              $ref: '#/schemas/legal_matter_identity'
+
+  AddLegalMatterIdentityResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      legal_matter_rule:
+        type: object
+        properties:
+          end_date:
+            type: string
+            format: date-time
+            description: The end date of the legal matter rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+            nullable: true
+          id:
+            type: integer
+            description: The ID of the legal matter rule
+            example: 1234567890
+          identity_id:
+            type: integer
+            description: The ID of the identity associated with the legal matter rule
+            example: 1234567890
+          roles:
+            type: array
+            description: A list of roles associated with the identity on the legal matter rule
+            items:
+              type: string
+          start_date:
+            type: string
+            format: date-time
+            description: The start date of the legal matter rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+            nullable: true
+
+  legal_matter_rule:
+    type: object
+    properties:
+      created_at:
+        type: string
+        format: date-time
+        description: The create date of the legal matter rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+      end_date:
+        type: string
+        format: date-time
+        description: The end date of the legal matter rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        nullable: true
+      roles:
+        type: array
+        description: A list of roles associated with the identity on the legal matter rule
+        items:
+          type: string
+      start_date:
+        type: string
+        format: date-time
+        description: The start date of the legal matter rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        nullable: true
+      updated_at:
+        type: string
+        format: date-time
+        description: The updated date of the legal matter rule. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+
+  legal_matter_identity:
+    type: object
+    allOf:
+      - $ref: '#/schemas/legal_matter_rule'
+    properties:
+      id:
+        type: integer
+        description: The ID of the legal matter rule
+        example: 543
+      identity:
+        type: object
+        description: The identity associated with the legal matter rule
+        properties:
+          ai_participant:
+            $ref: '../management/identities.yml#/schemas/ai_participant'
+          created_at:
+            $ref: '../common/schemas.yml#/schemas/created_at'
+          email:
+            $ref: '../management/identities.yml#/schemas/email'
+          email_end_date:
+            $ref: '../management/identities.yml#/schemas/email_end_date'
+          email_start_date:
+            $ref: '../management/identities.yml#/schemas/email_start_date'
+          external_id:
+            $ref: '../management/identities.yml#/schemas/external_id'
+          external_id_end_date:
+            $ref: '../management/identities.yml#/schemas/external_id_end_date'
+          external_id_start_date:
+            $ref: '../management/identities.yml#/schemas/external_id_start_date'
+          id:
+            $ref: '../management/identities.yml#/schemas/id'
+          is_submitter:
+            $ref: '../management/identities.yml#/schemas/is_submitter'
+          managed:
+            $ref: '../management/identities.yml#/schemas/managed'
+          name:
+            $ref: '../management/identities.yml#/schemas/name'
+          phone_number:
+            $ref: '../management/identities.yml#/schemas/phone_number'
+          phone_number_end_date:
+            $ref: '../management/identities.yml#/schemas/phone_number_end_date'
+          phone_number_start_date:
+            $ref: '../management/identities.yml#/schemas/phone_number_start_date'
+          source:
+            $ref: '../management/identities.yml#/schemas/source'
+          updated_at:
+            $ref: '../common/schemas.yml#/schemas/updated_at'
+
+  legal_matter_role:
+    type: object
+    properties:
+      name:
+        type: string
+        description: The name of the role
+        example: All Roles
+      value:
+        type: string
+        description: The value of the role. This value is needed when adding an identity to a legal matter
+        example: ALL_ROLES
+
+  legal_matter:
+    type: object
+    properties:
+      created_at:
+        type: string
+        format: date-time
+        description: The create date of the legal matter. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-04-28T17:38:17.276Z'
+      description:
+        type: string
+        description: Legal matter description
+        example: Legal matter description
+      id:
+        type: integer
+        description: The ID of the legal matter
+        example: 11
+      name:
+        type: string
+        description: The name of the legal matter
+        example: Legal Matter 001
+      custodian_count:
+        type: integer
+        description: The number of custodians associated with the legal matter
+        example: 7
+      updated_at:
+        type: string
+        format: date-time
+        description: The last update date of the legal matter. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-04-28T17:38:17.276Z'
+
+  GetLegalMatterLogsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      paging:
+        $ref: '../common/schemas.yml#/schemas/Pagination'
+      result:
+        type: object
+        properties:
+          log_count:
+            type: integer
+            description: The total number of log entries for the legal matter
+            example: 42
+          logs:
+            type: array
+            description: A list of legal matter log entries
+            items:
+              $ref: '#/schemas/legal_matter_log'
+
+  legal_matter_log:
+    type: object
+    properties:
+      created_at:
+        type: string
+        format: date-time
+        description: The timestamp when the log entry was created. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-07-14T22:02:48.971Z'
+      description:
+        type: string
+        description: A human-readable description of the action that was performed
+        example: 'Legal matter rule has been updated.'
+      event_type:
+        type: string
+        description: The type of event that occurred
+        enum: [Create, Update, Delete]
+        example: Update
+      extra_data:
+        description: Fields that were updated in the event. Only present for Create and Update events.
+        oneOf:
+          - $ref: '#/schemas/legal_matter_log_extra_data_create'
+          - $ref: '#/schemas/legal_matter_log_extra_data_update'
+        nullable: true
+      id:
+        type: integer
+        description: The unique identifier for this log entry
+        example: 215
+      legal_matter:
+        type: object
+        description: The legal matter associated with this log entry
+        properties:
+          description:
+            type: string
+            description: The description of the legal matter
+            example: 'Legal matter description'
+          id:
+            type: integer
+            description: The ID of the legal matter
+            example: 33
+          name:
+            type: string
+            description: The name of the legal matter
+            example: My legal matter
+      user:
+        type: object
+        description: The user who performed the action
+        properties:
+          email:
+            type: string
+            format: email
+            description: The email address of the user
+            example: user@thetalake.com
+          id:
+            type: integer
+            description: The ID of the user
+            example: 404
+          name:
+            type: string
+            description: The name of the user
+            example: John Doe
+
+  legal_matter_log_extra_data_create:
+    type: object
+    properties:
+      create:
+        type: object
+        description: Data for Create events, showing the new values that were set
+        properties:
+          end_date:
+            $ref: '#/schemas/legal_matter_log_field_change_data'
+          identity_id:
+            $ref: '#/schemas/legal_matter_log_field_change'
+          roles:
+            $ref: '#/schemas/legal_matter_log_field_change'
+          start_date:
+            $ref: '#/schemas/legal_matter_log_field_change_data'
+          description:
+            $ref: '#/schemas/legal_matter_log_field_change'
+          name:
+            $ref: '#/schemas/legal_matter_log_field_change'
+  legal_matter_log_extra_data_update:
+    type: object
+    properties:
+      update:
+        type: object
+        description: Data for Update events, showing the changes made to fields
+        properties:
+          end_date:
+            $ref: '#/schemas/legal_matter_log_field_change_data'
+          identity_id:
+            $ref: '#/schemas/legal_matter_log_field_change'
+          roles:
+            $ref: '#/schemas/legal_matter_log_field_change'
+          start_date:
+            $ref: '#/schemas/legal_matter_log_field_change_data'
+          description:
+            $ref: '#/schemas/legal_matter_log_field_change'
+          name:
+            $ref: '#/schemas/legal_matter_log_field_change'
+
+  legal_matter_log_field_change:
+    type: object
+    description: Represents a change to a field, showing old and new values
+    nullable: true
+    properties:
+      new:
+        description: The new value of the field (type varies by field)
+        example: All Email Recipient Roles
+        type: string
+      old:
+        description: The previous value of the field (type varies by field)
+        example: All Email Recipient Roles, Email Recipient BCC, Chat Participant
+        type: string
+
+  legal_matter_log_field_change_data:
+    type: object
+    description: Represents a change to a field, showing old and new values
+    nullable: true
+    properties:
+      new:
+        description: The new value of the date field. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-07-15T17:38:17.276Z'
+        type: string
+        format: date-time
+      old:
+        description: The previous value of the date field. Uses the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-07-15T17:38:17.276Z'
+        type: string
+        format: date-time

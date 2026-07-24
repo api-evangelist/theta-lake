@@ -1,0 +1,467 @@
+paths:
+  org_units/current:
+    get:
+      tags:
+        - Org Units
+      summary: Get current org unit
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSION:** `org_units:read`  
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/token/context](/api-reference#get-/token/context) endpoint instead.
+      responses:
+        '200':
+          description: Returns the current org unit the user is apart of
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/CurrentOrgUnit'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  org_units:
+    get:
+      tags:
+        - Org Units
+      summary: List all org units
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSION:** `org_units:read`  
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/workspaces](/api-reference#get-/workspaces) endpoint instead.
+      responses:
+        '200':
+          description: Returns a list of org units
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/AllOrgUnitsResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    put:
+      tags:
+        - Org Units
+      summary: Update org unit
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSION:** `org_units:update`. 
+        **RATE LIMIT:** `heavy`
+
+        Updates the org unit that the API key belongs to.
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/workspaces](/api-reference#put-/workspaces) endpoint instead.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PutOrgUnitByIdRequest'
+      responses:
+        '200':
+          description: The updated org unit
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetOrgUnitByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  org_units/{id}:
+    get:
+      tags:
+        - Org Units
+      summary: Get org unit by ID
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSION:** `org_units:read`  
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on July 11, 2026. Please use the [/workspaces/{id}](/api-reference#get-/workspaces/-id-) endpoint instead.
+      parameters:
+        - name: id
+          in: path
+          description: The org unit ID to retrieve
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: The retrieved org unit
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetOrgUnitByIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  org_units/{id}/switch:
+    put:
+      tags:
+        - Org Units
+      summary: Switch the current org unit
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSION:** `none`  
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on July 11, 2026.
+      parameters:
+        - name: id
+          in: path
+          description: The org unit ID to switch to
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          $ref: '#/schemas/SwitchOrgResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '#/schemas/ForbiddenOrgChange'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  AllOrgUnitsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      org_units:
+        type: array
+        items:
+          $ref: '#/schemas/org_unit'
+
+  CurrentOrgUnit:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      current_org_unit:
+        $ref: '#/schemas/current_org_unit'
+
+  GetOrgUnitByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      org_unit:
+        $ref: '#/schemas/org_unit'
+
+  PutOrgUnitByIdRequest:
+    type: object
+    properties:
+      allow_anonymous_via_shared_links:
+        $ref: '#/schemas/allow_anonymous_via_shared_links'
+      analysis_supervision_space_ids:
+        $ref: '#/schemas/analysis_supervision_space_ids'
+      audit_log_retention_period:
+        $ref: '#/schemas/audit_log_retention_period'
+      default_org_timezone:
+        $ref: '#/schemas/default_org_timezone'
+      delete_on_expiration:
+        $ref: '#/schemas/delete_on_expiration'
+      fallback_language:
+        $ref: '#/schemas/fallback_language'
+      preferred_languages:
+        $ref: '#/schemas/preferred_languages'
+      use_name_matcher:
+        $ref: '#/schemas/use_name_matcher'
+      use_owner_only_space_matcher:
+        $ref: '#/schemas/use_owner_only_space_matcher'
+
+  SwitchOrgResponse:
+    description: Returns the status of the operation
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              $ref: '../common/schemas.yml#/schemas/StatusCode200'
+            status_string:
+              $ref: '../common/schemas.yml#/schemas/StatusString200'
+            request_id:
+              $ref: '../common/schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              example: Ok, you've been switched to the East Region Sales org unit.
+              description: Status message of the operation, will contain the name of which org is now currently selected
+
+  ForbiddenOrgChange:
+    description: Returned if the user is not apart of the org that is being switched to
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              type: integer
+              description: HTTP response status code
+              example: 403
+            status_string:
+              type: string
+              description: Text description of the HTTP response status code
+              example: Forbidden
+            request_id:
+              $ref: '../common/schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              example: User 10 is not a member of the org unit 14
+              description: Contains the message on why this request was forbidden
+
+  current_org_unit:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+        description: The id of the current org unit
+      name:
+        type: string
+        example: Theta Lake Support
+        description: The name of the current org unit
+
+  org_unit:
+    type: object
+    properties:
+      allow_anonymous_via_shared_links:
+        $ref: '#/schemas/allow_anonymous_via_shared_links'
+      analysis_supervision_spaces:
+        $ref: '#/schemas/analysis_supervision_spaces'
+      audit_log_retention_period:
+        $ref: '#/schemas/audit_log_retention_period'
+      bucket_name:
+        type: string
+        description: The assigned bucket for this org unit
+        example: datums-dev1-000000001-theta-lake
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      default_org_timezone:
+        $ref: '#/schemas/default_org_timezone'
+      delete_on_expiration:
+        $ref: '#/schemas/delete_on_expiration'
+      description:
+        type: string
+        description: A description for the org unit
+        example: Fake Bank - East Asia Regional
+      disabled:
+        type: boolean
+        description: Indicates if the org unit is disabled
+        example: false
+      disabled_at:
+        type: string
+        description: If the org is disabled, the timestamp of when it was disabled, using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6).
+        nullable: true
+        example: null
+      fallback_language:
+        $ref: '#/schemas/fallback_language'
+      id:
+        type: integer
+        description: ID of the org unit
+        example: 108
+      name:
+        type: string
+        description: Name of the Org Unit
+        example: East Region Sales
+      preferred_language_list:
+        type: array
+        description: An array of all preferred languages
+        items:
+          type: object
+          properties:
+            code:
+              type: string
+              description: The language code using ISO 639-1/3
+              example: fr
+            label:
+              type: string
+              description: The English name for the language
+              example: French
+        example:
+          [
+            { 'code': 'en', 'label': 'English' },
+            { 'code': 'es', 'label': 'Spanish' },
+            { 'code': 'nl', 'label': 'Dutch' },
+            { 'code': 'de', 'label': 'German' },
+            { 'code': 'fr', 'label': 'French' },
+            { 'code': 'it', 'label': 'Italian' },
+            { 'code': 'ja', 'label': 'Japanese' },
+            { 'code': 'cmn', 'label': 'Mandarin' },
+            { 'code': 'pt', 'label': 'Portuguese' },
+          ]
+      preferred_languages:
+        $ref: '#/schemas/preferred_languages'
+      shared_links_expiration_period:
+        nullable: true
+        allOf:
+          - $ref: '#/schemas/shared_links_expiration_period'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      use_name_matcher:
+        $ref: '#/schemas/use_name_matcher'
+      use_owner_only_space_matcher:
+        $ref: '#/schemas/use_owner_only_space_matcher'
+      users:
+        type: array
+        description: Users included to this org unit
+        items:
+          type: object
+          properties:
+            email:
+              type: string
+              example: jane.doe@example.com
+              description: The email address associated with this user
+            id:
+              type: integer
+              example: 380
+              description: The id of the user
+            name:
+              type: string
+              example: Jane Doe
+              description: The user's
+
+  allow_anonymous_via_shared_links:
+    type: boolean
+    example: false
+    description: Indicates the ability to share a link to records publicly
+
+  analysis_supervision_spaces:
+    type: array
+    description: Datums matching these spaces will be analyzed for risky behaviors
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The supervision space ID
+          example: 1
+        name:
+          type: string
+          description: The supervision space name
+          example: 'Example Supervision Space'
+
+  analysis_supervision_space_ids:
+    type: array
+    description: Records matching these supervision spaces will be analyzed for risky behaviors
+    items:
+      type: integer
+    example: [1, 2, 3]
+
+  audit_log_retention_period:
+    type: integer
+    description: The duration audit logs for this bucket will be retained
+    nullable: true
+
+  default_org_timezone:
+    type: string
+    description: The org units default timezone
+    example: Etc/UTC
+
+  delete_on_expiration:
+    type: boolean
+    example: true
+    description: Indicates if records in this org unit should be deleted when they expire from the archive
+
+  fallback_language:
+    type: string
+    description: The fallback language used if language is not in the preferred_language_list
+    example: en
+    enum: [en, es, nl, de, fr, it, ja, cmn, pt]
+
+  preferred_languages:
+    type: array
+    description: An array of selected preferred languages
+    items:
+      type: string
+      enum:
+        - en
+        - es
+        - nl
+        - de
+        - fr
+        - it
+        - ja
+        - cmn
+        - pt
+        - hi
+        - ru
+        - ko
+        - tr
+        - pl
+    example: ['en', 'nl', 'de']
+
+  shared_links_expiration_period:
+    type: integer
+    description: The duration in days that shared links for this org unit will be valid
+    example: 730
+
+  use_name_matcher:
+    type: boolean
+    description: Indicates if the org unit identity matching algorithm uses names
+    example: true
+
+  use_owner_only_space_matcher:
+    type: boolean
+    description: Indicates if the org unit identity matching algorithm should stop after owner and then fallback to default
+    example: false

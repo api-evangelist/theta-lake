@@ -1,0 +1,158 @@
+paths:
+  records/{id}/workflow_history:
+    get:
+      tags:
+        - Records
+      summary: Get workflow history
+      description: |
+        **REQUIRED PERMISSION:** `workflows:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of UUID of the record to get workflow history for
+          schema:
+            type: string
+          examples:
+            example1:
+              value: '501263'
+            example2:
+              value: ca116f96-bbd5-11ef-9468-53af98260bba
+
+      responses:
+        '200':
+          description: The workflow history for the record
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetWorkflowHistoryResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetWorkflowHistoryResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      workflow_history:
+        type: array
+        description: The workflow history for the record
+        items:
+          $ref: '#/schemas/WorkflowHistoryItem'
+
+  WorkflowHistoryItem:
+    type: object
+    properties:
+      assigned_user:
+        type: object
+        description: The user who is assigned to the workflow state
+        properties:
+          id:
+            type: integer
+            nullable: true
+            description: The ID of the user
+            example: 1
+          name:
+            type: string
+            nullable: true
+            description: The name of the user
+            example: 'Admin'
+      created_at:
+        type: string
+        format: date-time
+        description: The timestamp when this workflow history item was created using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2025-07-02T16:20:00.000Z'
+      description:
+        type: string
+        description: The description of the workflow history item
+        example: Took the action 'Needs Review' and assigned the record to Admin.
+      id:
+        type: integer
+        description: The ID of the workflow history item
+        example: 12364
+      previous_user:
+        type: object
+        description: The previous user who was assigned to the workflow state before the current user
+        properties:
+          id:
+            type: integer
+            nullable: true
+            description: The ID of the user. If the current user is the first user to be assigned to the workflow state, this will be `null`
+            example: 1
+          name:
+            type: string
+            nullable: true
+            description: The name of the user. If the current user is the first user to be assigned to the workflow state, this will be `null`
+            example: 'Admin'
+      workflow:
+        $ref: '#/schemas/Workflow'
+      workflow_action:
+        $ref: '#/schemas/WorkflowAction'
+      workflow_state:
+        $ref: '#/schemas/WorkflowState'
+
+  Workflow:
+    type: object
+    description: The workflow that the workflow history item is associated with
+    properties:
+      id:
+        type: integer
+        description: The ID of the workflow
+        example: 83
+      name:
+        type: string
+        description: The name of the workflow
+        example: My Workflow
+
+  WorkflowAction:
+    type: object
+    description: The workflow action
+    properties:
+      id:
+        type: integer
+        nullable: true
+        description: The ID of the workflow action. If set to `null`, the action take is not apart of a workflow
+        example: 372
+      name:
+        type: string
+        nullable: true
+        description: The name of the workflow action
+        example: 'Needs Review'
+      type:
+        type: string
+        description: The type of the workflow action
+        example: 'button'
+  WorkflowState:
+    type: object
+    description: The workflow state
+    properties:
+      category:
+        type: string
+        description: The category of the workflow state
+        example: 'Needs Review'
+      id:
+        type: integer
+        description: The ID of the workflow state
+        example: 1
+      name:
+        type: string
+        description: The name of the workflow state
+        example: 'Needs Review'

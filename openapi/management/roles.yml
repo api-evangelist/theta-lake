@@ -1,0 +1,382 @@
+paths:
+  roles:
+    get:
+      tags:
+        - Roles
+      summary: List all roles
+      description: |
+        **REQUIRED PERMISSION:** `roles:read`  
+        **RATE LIMIT:** `heavy`
+      responses:
+        '200':
+          description: Returns a list of roles
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetRolesResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    post:
+      tags:
+        - Roles
+      summary: Create a new role
+      description: |
+        **REQUIRED PERMISSION:** `roles:create`  
+        **RATE LIMIT:** `heavy`
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/CreateRoleRequest'
+      responses:
+        '201':
+          description: Role created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/CreateRoleResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'  
+
+  roles/{id}:
+    get:
+      tags:
+        - Roles
+      summary: Get a role by ID
+      description: |
+        **REQUIRED PERMISSION:** `roles:read`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the role to retrieve
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Returns the role with the specified ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetRoleByIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    put:
+      tags:
+        - Roles
+      summary: Update a role by ID
+      description: |
+        **REQUIRED PERMISSION:** `roles:update`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the role to update
+          schema:
+            type: integer
+          example: 369
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/UpdateRoleRequest'
+      responses:
+        '200':
+          description: Role updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/UpdateRoleResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '409':
+          $ref: '../common/errors.yml#/responses/Conflict'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+    delete:
+      tags:
+        - Roles
+      summary: Delete a role by ID
+      description: |
+        **REQUIRED PERMISSION:** `roles:delete`  
+        **RATE LIMIT:** `heavy`
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the role to delete
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Role deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/DeleteRoleResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '409':
+          $ref: '../common/errors.yml#/responses/Conflict'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  roles/permissions:
+    get:
+      tags:
+        - Roles
+      summary: List all available role permissions
+      description: |
+        **REQUIRED PERMISSION:** `roles:read`  
+        **RATE LIMIT:** `heavy`  
+        **NOTE:** The list of permissions correspond to the portal UI. For example, `interacting_with_content:can_create_shareable_link` corresponds to the "Can create shareable link" permission in the portal UI under "Interacting with content".
+      responses:
+        '200':
+          description: Returns a list of all available role permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetRolePermissionsResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  GetRolesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      roles:
+        type: array
+        description: An array of role objects
+        items:
+          $ref: '#/schemas/role'
+
+  GetRoleByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      role:
+        $ref: '#/schemas/role'
+
+  CreateRoleRequest:
+    type: object
+    required:
+      - name
+      - description
+      - permissions
+    properties: 
+      name:
+        $ref: '#/schemas/name'
+      description:
+        $ref: '#/schemas/description'
+      permissions:
+        $ref: '#/schemas/permissions'
+
+  CreateRoleResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode201'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString201'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      role:
+        $ref: '#/schemas/role'
+
+
+  UpdateRoleRequest:
+    type: object
+    properties: 
+      name:
+        $ref: '#/schemas/name'
+      description:
+        $ref: '#/schemas/description'
+      permissions:
+        $ref: '#/schemas/permissions'
+
+  UpdateRoleResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode201'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString201'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      role:
+        $ref: '#/schemas/role'
+
+  GetRolePermissionsResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      permissions:
+        type: array
+        description: An array of all available role permissions
+        items:
+          type: string
+        example: [
+          "cases:add_records",
+          "cases:can_create_private_cases",
+          "cases:create",
+          "cases:delete",
+          "cases:manage_all_cases",
+          "cases:read",
+          "cases:remove_records",
+          "cases:update"
+        ]
+
+  DeleteRoleResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      status:
+        type: string
+        description: A message confirming successful deletion of the role
+        example: Role deleted successfully
+
+  role:
+    type: object
+    properties:
+      created_at:
+        type: string
+        format: date-time
+        nullable: true
+        description: Role creation timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6). Null for built-in roles.
+        example: '2021-06-16T01:37:04.262Z'
+      default:
+        type: boolean
+        description: Indicates if this role is the default role
+        example: false
+      description:
+        $ref: '#/schemas/description'
+      id:
+        type: integer
+        description: The role ID
+        example: 1
+      is_built_in:
+        type: boolean
+        description: Indicates if the role is built in or custom
+        example: true
+      name:
+        $ref: '#/schemas/name'
+      number_of_users:
+        type: integer
+        description: The number of users currently assigned to this role
+        example: 10
+      permissions:
+        $ref: '#/schemas/permissions' 
+      updated_at:
+        type: string
+        format: date-time
+        nullable: true
+        description: Null for built-in roles. Role updated timestamp using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6)
+        example: '2022-10-12T02:29:49.146Z'
+
+  name:
+    type: string
+    description: The role's name. Must be unique.
+    example: Reviewer
+
+  description:
+    type: string
+    description: A description of the role
+    example: Permissions for a user tasked solely with reviewing content
+
+  permissions:
+    type: array
+    description: An array of permissions enabled for this role. Must be a subset of the permissions returned by the [GET /roles/permissions](/api-reference#get-/roles/permissions) endpoint.
+    items:
+      type: string
+    example: [
+      "cases:add_records",
+      "cases:can_create_private_cases",
+      "cases:create",
+      "cases:delete",
+      "cases:manage_all_cases",
+      "cases:read",
+      "cases:remove_records",
+      "cases:update"
+    ]

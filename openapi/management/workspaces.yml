@@ -1,0 +1,535 @@
+paths:
+  workspaces/current:
+    get:
+      tags:
+        - Workspaces
+      summary: Get current workspace
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSION:** `workspace:read`  
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on October 24, 2026. Please use the [/token/context](/api-reference#get-/token/context) endpoint instead.
+      responses:
+        '200':
+          description: Returns the current workspace the user is in
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/CurrentWorkspace'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  workspaces:
+    get:
+      tags:
+        - Workspaces
+      summary: List all workspaces
+      description: |
+        **REQUIRED PERMISSION:** `workspace:read`  
+        **RATE LIMIT:** `heavy`
+      responses:
+        '200':
+          description: Returns a list of workspaces
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/AllWorkspacesResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+    put:
+      tags:
+        - Workspaces
+      summary: Update workspace
+      description: |
+        **REQUIRED PERMISSION:** `workspace:update`
+        **RATE LIMIT:** `heavy`
+
+        Updates the workspace that the API key belongs to. The workspace ID is derived from the API key and does not need to be provided in the request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/schemas/PutWorkspaceByIdRequest'
+      responses:
+        '200':
+          description: The updated workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetWorkspaceByIdResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  workspaces/{id}:
+    get:
+      tags:
+        - Workspaces
+      summary: Get workspace by ID
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSION:** `workspace:read`
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on July 11, 2026.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the workspace to retrieve
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: The retrieved workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/schemas/GetWorkspaceByIdResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  workspaces/{id}/switch:
+    put:
+      tags:
+        - Workspaces
+      summary: Switch the current workspace
+      deprecated: true
+      description: |
+        **REQUIRED PERMISSION:** `none`  
+        **RATE LIMIT:** `heavy`
+
+        **NOTE:** This endpoint is deprecated and will be removed on July 11, 2026.
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the workspace to switch to
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          $ref: '#/schemas/SwitchWorkspaceResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  workspaces/users:
+    put:
+      tags:
+        - Workspaces
+      summary: Add a user to a workspace
+      description: |
+        **REQUIRED PERMISSION:** `workspace:update`  
+        **RATE LIMIT:** `heavy`
+
+        Adds a user to the workspace that the API key belongs to. The workspace ID is derived from the API key and does not need to be provided in the request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: The ID of the user to add to the workspace
+                  example: 1
+      responses:
+        '200':
+          $ref: '#/schemas/AddUserToWorkspaceResponse'
+        '400':
+          $ref: '../common/errors.yml#/responses/BadRequest'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+  workspaces/users/{user_id}:
+    delete:
+      tags:
+        - Workspaces
+      summary: Remove a user from a workspace
+      description: |
+        **REQUIRED PERMISSION:** `workspace:update`  
+        **RATE LIMIT:** `heavy`
+
+        Removes a user from the workspace that the API key belongs to. The workspace ID is derived from the API key and does not need to be provided in the request.
+      parameters:
+        - name: user_id
+          in: path
+          description: The ID of the user to remove from the workspace
+          required: true
+          schema:
+            type: integer
+            example: 380
+      responses:
+        '200':
+          $ref: '#/schemas/RemoveUserFromWorkspaceResponse'
+        '401':
+          $ref: '../common/errors.yml#/responses/Unauthorized'
+        '403':
+          $ref: '../common/errors.yml#/responses/Forbidden'
+        '404':
+          $ref: '../common/errors.yml#/responses/NotFound'
+        '429':
+          $ref: '../common/errors.yml#/responses/TooManyRequests'
+        '500':
+          $ref: '../common/errors.yml#/responses/InternalServerError'
+        '503':
+          $ref: '../common/errors.yml#/responses/ServiceUnavailable'
+
+schemas:
+  RemoveUserFromWorkspaceResponse:
+    description: Returns the status of the operation
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              $ref: '../common/schemas.yml#/schemas/StatusCode200'
+            status_string:
+              $ref: '../common/schemas.yml#/schemas/StatusString200'
+            request_id:
+              $ref: '../common/schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              example: Jim Halpert has been removed from the workspace
+              description: Status message of the operation
+
+  AllWorkspacesResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      workspaces:
+        type: array
+        items:
+          $ref: '#/schemas/workspace'
+
+  CurrentWorkspace:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      current_workspace:
+        $ref: '#/schemas/current_workspace'
+
+  GetWorkspaceByIdResponse:
+    type: object
+    properties:
+      status_code:
+        $ref: '../common/schemas.yml#/schemas/StatusCode200'
+      status_string:
+        $ref: '../common/schemas.yml#/schemas/StatusString200'
+      request_id:
+        $ref: '../common/schemas.yml#/schemas/RequestId'
+      workspace:
+        $ref: '#/schemas/workspace'
+
+  PutWorkspaceByIdRequest:
+    type: object
+    properties:
+      allow_anonymous_via_shared_links:
+        $ref: '#/schemas/allow_anonymous_via_shared_links'
+      analysis_supervision_space_ids:
+        $ref: '#/schemas/analysis_supervision_space_ids'
+      audit_log_retention_period:
+        $ref: '#/schemas/audit_log_retention_period'
+      default_workspace_timezone:
+        $ref: '#/schemas/default_workspace_timezone'
+      delete_on_expiration:
+        $ref: '#/schemas/delete_on_expiration'
+      fallback_language:
+        $ref: '#/schemas/fallback_language'
+      preferred_languages:
+        $ref: '#/schemas/preferred_languages'
+      use_name_matcher:
+        $ref: '#/schemas/use_name_matcher'
+      use_owner_only_space_matcher:
+        $ref: '#/schemas/use_owner_only_space_matcher'
+
+  AddUserToWorkspaceResponse:
+    description: Returns the status of the operation
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              $ref: '../common/schemas.yml#/schemas/StatusCode200'
+            status_string:
+              $ref: '../common/schemas.yml#/schemas/StatusString200'
+            request_id:
+              $ref: '../common/schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              example: Jim Halpert has been added to the workspace
+              description: Status message of the operation
+
+  SwitchWorkspaceResponse:
+    description: Returns the status of the operation
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status_code:
+              $ref: '../common/schemas.yml#/schemas/StatusCode200'
+            status_string:
+              $ref: '../common/schemas.yml#/schemas/StatusString200'
+            request_id:
+              $ref: '../common/schemas.yml#/schemas/RequestId'
+            message:
+              type: string
+              example: Ok, you've been switched to the East Region Sales workspace.
+              description: Status message of the operation, will contain the name of which workspace is now currently selected
+
+  current_workspace:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+        description: The ID of the current workspace
+      name:
+        type: string
+        example: Theta Lake Support
+        description: The name of the current workspace
+
+  workspace:
+    type: object
+    properties:
+      allow_anonymous_via_shared_links:
+        $ref: '#/schemas/allow_anonymous_via_shared_links'
+      analysis_supervision_spaces:
+        $ref: '#/schemas/analysis_supervision_spaces'
+      audit_log_retention_period:
+        $ref: '#/schemas/audit_log_retention_period'
+      created_at:
+        $ref: '../common/schemas.yml#/schemas/created_at'
+      default_workspace_timezone:
+        $ref: '#/schemas/default_workspace_timezone'
+      delete_on_expiration:
+        $ref: '#/schemas/delete_on_expiration'
+      description:
+        type: string
+        description: A description for the workspace
+        example: Fake Bank - East Asia Regional
+      disabled:
+        type: boolean
+        description: Indicates if the workspace is disabled
+        example: false
+      disabled_at:
+        type: string
+        description: If the workspace is disabled, the timestamp of when it was disabled, using the [RFC3339 date-time format](https://www.rfc-editor.org/rfc/rfc3339#section-5.6).
+        nullable: true
+        example: null
+      fallback_language:
+        $ref: '#/schemas/fallback_language'
+      id:
+        type: integer
+        description: ID of the workspace
+        example: 108
+      name:
+        type: string
+        description: Name of the workspace
+        example: East Region Sales
+      preferred_language_list:
+        type: array
+        description: An array of all preferred languages
+        items:
+          type: object
+          properties:
+            code:
+              type: string
+              description: The language code using ISO 639-1/3
+              example: fr
+            label:
+              type: string
+              description: The English name for the language
+              example: French
+        example:
+          [
+            { 'code': 'en', 'label': 'English' },
+            { 'code': 'es', 'label': 'Spanish' },
+            { 'code': 'nl', 'label': 'Dutch' },
+            { 'code': 'de', 'label': 'German' },
+            { 'code': 'fr', 'label': 'French' },
+            { 'code': 'it', 'label': 'Italian' },
+            { 'code': 'ja', 'label': 'Japanese' },
+            { 'code': 'cmn', 'label': 'Mandarin' },
+            { 'code': 'pt', 'label': 'Portuguese' },
+          ]
+      preferred_languages:
+        $ref: '#/schemas/preferred_languages'
+      shared_links_expiration_period:
+        $ref: '#/schemas/shared_links_expiration_period'
+      updated_at:
+        $ref: '../common/schemas.yml#/schemas/updated_at'
+      use_name_matcher:
+        $ref: '#/schemas/use_name_matcher'
+      use_owner_only_space_matcher:
+        $ref: '#/schemas/use_owner_only_space_matcher'
+      users:
+        type: array
+        description: Users included to this workspace
+        items:
+          type: object
+          properties:
+            email:
+              type: string
+              example: jane.doe@example.com
+              description: The email address associated with this user
+            id:
+              type: integer
+              example: 380
+              description: The ID of the user
+            name:
+              type: string
+              example: Jane Doe
+              description: The user's
+
+  allow_anonymous_via_shared_links:
+    type: boolean
+    example: false
+    description: Indicates the ability to share a link to records publicly
+
+  analysis_supervision_spaces:
+    type: array
+    description: Records matching these spaces will be analyzed for risky behaviors
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The supervision space ID
+          example: 1
+        name:
+          type: string
+          description: The supervision space name
+          example: 'Example Supervision Space'
+
+  analysis_supervision_space_ids:
+    type: array
+    description: Records matching these supervision spaces will be analyzed for risky behaviors
+    items:
+      type: integer
+    example: [1, 2, 3]
+
+  audit_log_retention_period:
+    type: integer
+    description: The duration audit logs will be retained
+    nullable: true
+
+  default_workspace_timezone:
+    type: string
+    description: The workspaces default timezone
+    example: Etc/UTC
+
+  delete_on_expiration:
+    type: boolean
+    example: true
+    description: Indicates if records in this workspace should be deleted when they expire from the archive
+
+  fallback_language:
+    type: string
+    description: The fallback language used if language is not in the preferred_language_list
+    example: en
+    enum: [en, es, nl, de, fr, it, ja, cmn, pt]
+
+  preferred_languages:
+    type: array
+    description: An array of selected preferred languages
+    items:
+      type: string
+      enum:
+        - en
+        - es
+        - nl
+        - de
+        - fr
+        - it
+        - ja
+        - cmn
+        - pt
+    example: ['en', 'nl', 'de']
+
+  shared_links_expiration_period:
+    type: integer
+    description: The duration in days that shared links for this workspace will be valid
+    example: 730
+
+  use_name_matcher:
+    type: boolean
+    description: Indicates if the workspace identity matching algorithm uses names
+    example: true
+
+  use_owner_only_space_matcher:
+    type: boolean
+    description: Indicates if the workspace identity matching algorithm should stop after owner and then fallback to default
+    example: false
