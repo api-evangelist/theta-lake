@@ -1,9 +1,28 @@
 aid: theta-lake
 name: Theta Lake
-description: Theta Lake is a company surfaced as a portfolio company of battery-ventures, lightspeed-venture-partners
-  and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the
-  enrichment pipeline.
+description: >-
+  Theta Lake is a cloud- and AI-native Digital Communications Governance and Archiving (DCGA)
+  platform for compliance and security across unified communications. It captures, archives,
+  supervises, and monitors electronic (eComms), audio (aComms), video (vComms), and AI (aiComms)
+  interactions across 100+ certified integrations including Zoom, Microsoft Teams, Webex,
+  RingCentral, Slack, Microsoft Copilot, and Anthropic. The Theta Lake API (v1) exposes data
+  ingestion, records, unified search, supervision spaces, legal hold and legal matters, retention
+  libraries, workflows, identities, exports, and audit logs, secured with OAuth2 client-credentials
+  and JWT bearer tokens carrying fine-grained permission scopes.
 url: https://raw.githubusercontent.com/api-evangelist/theta-lake/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://thetalake.com/wp-content/uploads/2018/05/TL_logo_transparent.png
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
@@ -13,12 +32,88 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
-- Company
-apis: []
+- Communications Governance
+- Compliance
+- Archiving
+- Security
+- Supervision
+- eDiscovery
+- Legal Hold
+- Records Management
+- Unified Communications
+- AI Governance
+- Regulatory Compliance
+apis:
+- name: Theta Lake API
+  description: >-
+    The Theta Lake API (v1) provides programmatic access to the DCGA platform: ingest AI, audio,
+    chat, document, email, and video content; manage records, comments, labels, and dispositions;
+    run unified search and exports; administer supervision spaces, identities, directory groups,
+    users, roles, and workspaces; drive workflows and analysis policies; and operate legal hold,
+    legal matters, cases, retention libraries, storage accounts, and audit logs.
+  humanURL: https://developer.thetalake.ai/
+  baseURL: https://developer.thetalake.ai/api/v1
+  properties:
+  - type: OpenAPI
+    url: openapi/theta-lake-openapi-original.yml
+  - type: Overlay
+    url: overlays/theta-lake-openapi-overlay.yaml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+common:
+- type: DomainSecurity
+  url: security/theta-lake-domain-security.yml
+- type: Website
+  url: https://thetalake.com/
+- type: DeveloperPortal
+  url: https://developer.thetalake.ai/
+- type: Documentation
+  url: https://developer.thetalake.ai/
+- type: APIReference
+  url: https://developer.thetalake.ai/
+- type: SignUp
+  url: https://developer.thetalake.ai/
+- type: Blog
+  url: https://thetalake.com/blog/
+- type: Support
+  url: https://developer.thetalake.ai/
+- type: TermsOfService
+  url: https://thetalake.com/website-terms-of-use/
+- type: PrivacyPolicy
+  url: https://thetalake.com/privacy-policy/
+- type: Compliance
+  url: https://thetalake.com/security/
+- type: TrustCenter
+  url: security/theta-lake-trust-center.yml
+- type: OAuthScopes
+  url: scopes/theta-lake-scopes.yml
+- type: Authentication
+  url: authentication/theta-lake-authentication.yml
+- type: GettingStarted
+  url: https://developer.thetalake.ai/
+- type: Conventions
+  url: conventions/theta-lake-conventions.yml
+- type: ErrorCatalog
+  url: errors/theta-lake-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/theta-lake-lifecycle.yml
+- type: Conformance
+  url: conformance/theta-lake-conformance.yml
+- type: DataModel
+  url: data-model/theta-lake-data-model.yml
+- type: MCPServer
+  url: mcp/theta-lake-mcp.yml
+- type: LLMsTxt
+  url: llms/theta-lake-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 15
+  pass: local-v1

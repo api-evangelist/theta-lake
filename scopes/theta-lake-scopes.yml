@@ -1,0 +1,88 @@
+generated: '2026-07-21'
+method: searched
+source: openapi/theta-lake-openapi-original.yml
+docs: https://developer.thetalake.ai/
+notes: >-
+  The OpenAPI oauth2 clientCredentials flow declares an empty scopes map, but every operation
+  documents a REQUIRED PERMISSION (e.g. `users:read`) in its description, and the /token/context
+  response returns the granted permissions[] for an access token. These permissions are the
+  effective OAuth2/JWT scope surface, harvested from the operation descriptions across the spec.
+schemes:
+- name: ClientCredentials
+  type: oauth2
+  source: openapi/theta-lake-openapi-original.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://developer.thetalake.ai/api/v1/token
+scope_convention: "<resource>:<action>  (action in read|create|update|delete|use|upload|export|reset|disable)"
+scopes:
+- {scope: 'audit_logs:read', description: Read audit logs}
+- {scope: 'comments:read', description: Read record comments}
+- {scope: 'comments:create', description: Create record comments}
+- {scope: 'comments:update', description: Update record comments}
+- {scope: 'comments:delete', description: Delete record comments}
+- {scope: 'cases:read', description: Read cases}
+- {scope: 'cases:create', description: Create cases}
+- {scope: 'cases:update', description: Update cases}
+- {scope: 'cases:add_records', description: Add records to a case}
+- {scope: 'cases:remove_records', description: Remove records from a case}
+- {scope: 'directory_groups:read', description: Read directory groups}
+- {scope: 'directory_groups:create', description: Create directory groups}
+- {scope: 'directory_groups:update', description: Update directory groups}
+- {scope: 'directory_groups:delete', description: Delete directory groups}
+- {scope: 'exports:read', description: Read exports}
+- {scope: 'identities:read', description: Read identities}
+- {scope: 'identities:create', description: Create identities}
+- {scope: 'identities:update', description: Update identities}
+- {scope: 'identities:delete', description: Delete identities}
+- {scope: 'ingestion:read', description: Read ingestion state and quota}
+- {scope: 'ingestion:update', description: Update ingestion state}
+- {scope: 'ingestion:upload', description: Upload content for ingestion (ai/audio/chat/document/email/video)}
+- {scope: 'integrations:read', description: Read integrations}
+- {scope: 'labels:read', description: Read labels}
+- {scope: 'labels:create', description: Create labels}
+- {scope: 'labels:update', description: Update labels}
+- {scope: 'labels:delete', description: Delete labels}
+- {scope: 'labels:use', description: Apply labels to records}
+- {scope: 'legal_hold:read', description: Read legal holds}
+- {scope: 'legal_hold:create', description: Create legal holds}
+- {scope: 'legal_hold:update', description: Update legal holds}
+- {scope: 'legal_hold:delete', description: Delete legal holds}
+- {scope: 'legal_matter:read', description: Read legal matters}
+- {scope: 'legal_matter:create', description: Create legal matters}
+- {scope: 'legal_matter:update', description: Update legal matters}
+- {scope: 'legal_matter:delete', description: Delete legal matters}
+- {scope: 'org_units:read', description: Read organizational units}
+- {scope: 'org_units:update', description: Update organizational units}
+- {scope: 'reconciliation:read', description: Read reconciliation data}
+- {scope: 'records:read', description: Read records}
+- {scope: 'retention_libraries:read', description: Read retention libraries}
+- {scope: 'retention_libraries:create', description: Create retention libraries}
+- {scope: 'retention_libraries:update', description: Update retention libraries}
+- {scope: 'retention_libraries:delete', description: Delete retention libraries}
+- {scope: 'roles:read', description: Read roles}
+- {scope: 'roles:create', description: Create roles}
+- {scope: 'roles:update', description: Update roles}
+- {scope: 'roles:delete', description: Delete roles}
+- {scope: 'search:read', description: Read/run searches}
+- {scope: 'search:create', description: Create saved searches}
+- {scope: 'search:export', description: Export search results}
+- {scope: 'search:reset', description: Reset and re-enter a saved search}
+- {scope: 'storage_accounts:read', description: Read storage accounts}
+- {scope: 'supervision_spaces:read', description: Read supervision spaces}
+- {scope: 'supervision_spaces:create', description: Create supervision spaces}
+- {scope: 'supervision_spaces:update', description: Update supervision spaces}
+- {scope: 'supervision_spaces:delete', description: Delete supervision spaces}
+- {scope: 'user_groups:read', description: Read user groups}
+- {scope: 'user_groups:create', description: Create user groups}
+- {scope: 'user_groups:update', description: Update user groups}
+- {scope: 'user_groups:delete', description: Delete user groups}
+- {scope: 'users:read', description: Read users}
+- {scope: 'users:create', description: Create users}
+- {scope: 'users:update', description: Update users}
+- {scope: 'users:delete', description: Delete users}
+- {scope: 'users:disable', description: Disable/enable users}
+- {scope: 'workflows:read', description: Read workflows}
+- {scope: 'workflows:use', description: Run/queue workflows}
+- {scope: 'workspace:read', description: Read workspace}
+- {scope: 'workspace:update', description: Update workspace}

@@ -1,0 +1,25 @@
+generated: '2026-07-21'
+method: searched
+source: https://developer.thetalake.ai/
+versioning:
+  scheme: uri-path
+  current: v1
+  release_label: 'v1.26 - July 2026'
+  base_url: https://developer.thetalake.ai/api/v1
+  notes: >-
+    The API is versioned in the URI path (/api/v1). The OpenAPI info.version carries a dated
+    release label (e.g. "v1.26 - July 2026") indicating a roughly monthly cadence of additive
+    releases within v1.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  notes: No public deprecation policy or RFC 8594 Sunset/Deprecation header support was found.
+  deprecated_operations: []
+sla:
+  url: null
+  uptime_target: null
+status_page: null
+status_page_notes: >-
+  No public status page was found (status.thetalake.com does not resolve). Availability and
+  compliance posture are shared through the customer Trust Center (https://trust.thetalake.com/).
+interactive_docs: https://developer.thetalake.ai/

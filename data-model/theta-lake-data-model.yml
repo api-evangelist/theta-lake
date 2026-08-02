@@ -1,0 +1,137 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/theta-lake-openapi-original.yml
+notes: >-
+  Entity-relationship graph derived from the Theta Lake API v1 path structure and nested resources.
+  Relationships are inferred from sub-resource paths and cross-links.
+entities:
+- name: Record
+  description: An archived communication record (eComms/aComms/vComms/aiComms).
+  relationships:
+  - type: has_many
+    target: Comment
+    via: '/records/{id}/comments'
+  - type: has_many
+    target: PolicyHit
+    via: '/records/{id}/policy_hits'
+  - type: has_many
+    target: ArchiveHandle
+    via: '/records/{id}/archive_handles'
+  - type: has_one
+    target: Content
+    via: '/records/{id}/content'
+  - type: has_one
+    target: Disposition
+    via: '/records/{id}/disposition'
+  - type: has_many
+    target: WorkflowHistory
+    via: '/records/{id}/workflow_history'
+  - type: has_many
+    target: Sentence
+    via: '/records/{id}/sentences'
+  - type: has_one
+    target: ShareableLink
+    via: '/records/{id}/shareable_link'
+  - type: has_many
+    target: Label
+    via: '/labels/{label_id}/records/{record_id}'
+- name: Identity
+  description: A monitored person/identity across communication channels.
+  relationships:
+  - type: has_many
+    target: ExtraAttribute
+    via: '/identities/{id}/extra_attributes'
+  - type: has_one
+    target: Risk
+    via: '/identities/{id}/risk'
+  - type: has_many
+    target: SupervisionSpace
+    via: '/identities/{id}/supervision_spaces'
+  - type: belongs_to
+    target: DirectoryGroup
+    via: '/directory_groups/{id}/identities'
+- name: SupervisionSpace
+  description: A supervision/review scope grouping identities and reviewers.
+  relationships:
+  - type: has_many
+    target: Identity
+    via: '/supervision_spaces/{id}/identities'
+  - type: has_many
+    target: UserGroup
+    via: '/supervision_spaces/{id}/user_groups'
+  - type: has_many
+    target: User
+    via: '/supervision_spaces/{id}/users'
+  - type: has_many
+    target: DirectoryGroup
+    via: '/supervision_spaces/{id}/directory_groups'
+  - type: has_many
+    target: Participant
+    via: '/supervision_spaces/{id}/participants'
+- name: Case
+  description: A supervision case bundling records for review.
+  relationships:
+  - type: has_many
+    target: Record
+    via: '/cases/{id}/records'
+  - type: has_many
+    target: User
+    via: '/cases/{id}/managers'
+- name: LegalMatter
+  description: An eDiscovery legal matter.
+  relationships:
+  - type: has_many
+    target: Identity
+    via: '/legal_matters/{id}/custodians'
+  - type: has_many
+    target: Log
+    via: '/legal_matters/{id}/logs'
+- name: LegalHold
+  description: A legal hold preserving in-scope content.
+  relationships:
+  - type: has_many
+    target: Rule
+    via: '/legal_hold/{id}/rules'
+  - type: has_many
+    target: Log
+    via: '/legal_hold/{id}/logs'
+- name: Integration
+  description: A connected source/integration feeding content.
+  relationships:
+  - type: has_many
+    target: User
+    via: '/integrations/{id}/installed_users'
+  - type: has_many
+    target: RunHistory
+    via: '/integrations/{id}/run_history'
+  - type: has_many
+    target: Ingestion
+    via: '/ingestion/integration/{id}'
+- name: UserGroup
+  relationships:
+  - type: has_many
+    target: User
+    via: '/user_groups/{id}/add_users'
+- name: DirectoryGroup
+  relationships:
+  - type: has_many
+    target: Identity
+    via: '/directory_groups/{id}/identities'
+- name: Workspace
+  relationships:
+  - type: has_many
+    target: User
+    via: '/workspaces/users'
+- name: Workflow
+  relationships:
+  - type: applies_to
+    target: Record
+    via: '/workflows/record/{id}'
+- name: RetentionLibrary
+- name: StorageAccount
+- name: Role
+- name: OrgUnit
+- name: Label
+- name: Export
+- name: SavedSearch
+- name: AuditLog

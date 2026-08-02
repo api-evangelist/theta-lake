@@ -1,0 +1,38 @@
+# Theta Lake
+
+> Theta Lake is a cloud- and AI-native Digital Communications Governance and Archiving (DCGA) platform for compliance and security across unified communications. It captures, archives, supervises, and monitors electronic (eComms), audio (aComms), video (vComms), and AI (aiComms) interactions across 100+ certified integrations including Zoom, Microsoft Teams, Webex, RingCentral, Slack, Microsoft Copilot, and Anthropic. The Theta Lake API (v1) is secured with OAuth2 client-credentials and JWT bearer tokens carrying fine-grained permission scopes.
+
+## APIs
+
+- [Theta Lake API v1](https://developer.thetalake.ai/): Ingestion, records, unified search, supervision spaces, legal hold and matters, retention libraries, workflows, identities, exports, and audit logs. Base URL https://developer.thetalake.ai/api/v1
+
+## Specs
+
+- [OpenAPI (harvested)](openapi/theta-lake-openapi-original.yml): Theta Lake API v1 (OpenAPI 3.0.3, 119 paths, 24 tags)
+- [OpenAPI Overlay](overlays/theta-lake-openapi-overlay.yaml): API Evangelist enhancements
+
+## Authentication & Authorization
+
+- [Authentication profile](authentication/theta-lake-authentication.yml): OAuth2 client-credentials -> JWT bearer
+- [OAuth scopes / permissions](scopes/theta-lake-scopes.yml): 70 resource:action permission scopes
+- Token endpoint: https://developer.thetalake.ai/api/v1/token
+
+## Conventions & Errors
+
+- [API conventions](conventions/theta-lake-conventions.yml): cursor pagination (page_token), request_id tracing, per-operation rate-limit tiers, JSON error envelope
+- [Error catalog](errors/theta-lake-problem-types.yml): 400/401/402/403/429/500/503 with a shared JSON envelope
+- [Lifecycle](lifecycle/theta-lake-lifecycle.yml): URI-path versioning (v1), release label v1.26 - July 2026
+- [Data model](data-model/theta-lake-data-model.yml): records, identities, supervision spaces, legal matters/holds, cases
+
+## Agent surface
+
+- [MCP server (candidate)](mcp/theta-lake-mcp.yml): candidate tool surface derived from the OpenAPI
+- [Agent skills](skills/_index.yml): packaged flows for ingest, search-and-export, and legal hold
+
+## Docs
+
+- [Developer portal](https://developer.thetalake.ai/): interactive API documentation, API keys, applications
+- [Product portfolio](https://thetalake.com/theta-lake-product-portfolio/)
+- [Integrations](https://thetalake.com/integrations/): 100+ certified integrations
+- [Security](https://thetalake.com/security/) and [Trust Center](https://trust.thetalake.com/): SOC 2 Type 2, ISO 27001, ISO 42001, PCI DSS, HIPAA, CSA STAR for AI, GDPR
+- [Blog / resources](https://thetalake.com/blog/)

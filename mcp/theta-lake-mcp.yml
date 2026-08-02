@@ -1,0 +1,68 @@
+generated: '2026-07-21'
+method: derived
+status: candidate
+source: openapi/theta-lake-openapi-original.yml
+notes: >-
+  No official hosted/remote Theta Lake MCP server was found. This is a CANDIDATE tool surface
+  derived from the Theta Lake API v1 OpenAPI operations (operations are identified by METHOD + path;
+  the spec declares no operationIds). Auth is OAuth2 client-credentials -> JWT bearer.
+server:
+  name: theta-lake
+  transport: http
+  auth: oauth2-client-credentials
+  base_url: https://developer.thetalake.ai/api/v1
+tools:
+- name: search_records
+  description: Search archived communication records
+  source_operation: 'POST /search/records'
+- name: get_record_content
+  description: Get the content of a record
+  source_operation: 'GET /records/{id}/content'
+- name: get_record_policy_hits
+  description: List policy hits on a record
+  source_operation: 'GET /records/{id}/policy_hits'
+- name: add_record_comment
+  description: Add a comment to a record
+  source_operation: 'POST /records/{id}/comments'
+- name: create_export
+  description: Create an export
+  source_operation: 'POST /exports'
+- name: export_search
+  description: Export the results of a saved search
+  source_operation: 'POST /exports/search/{search_id}'
+- name: upload_ai_interactions
+  description: Ingest AI interactions for an integration
+  source_operation: 'POST /ingestion/integration/{id}/ai_interactions'
+- name: upload_chat
+  description: Ingest chat content for an integration
+  source_operation: 'POST /ingestion/integration/{id}/chat'
+- name: get_ingestion_quota
+  description: Get ingestion quota
+  source_operation: 'GET /ingestion/quota'
+- name: list_integrations
+  description: List connected integrations
+  source_operation: 'GET /integrations'
+- name: create_legal_hold
+  description: Create a legal hold
+  source_operation: 'POST /legal_hold'
+- name: create_legal_matter
+  description: Create a legal matter
+  source_operation: 'POST /legal_matters'
+- name: add_case_records
+  description: Add records to a case
+  source_operation: 'POST /cases/{id}/records'
+- name: list_supervision_spaces
+  description: List supervision spaces
+  source_operation: 'GET /supervision_spaces'
+- name: search_identities
+  description: Search monitored identities
+  source_operation: 'POST /identities/search'
+- name: list_users
+  description: List users
+  source_operation: 'GET /users'
+- name: list_audit_logs
+  description: List audit logs
+  source_operation: 'GET /audit_logs'
+- name: run_workflow
+  description: Queue a workflow
+  source_operation: 'POST /workflows/queue'

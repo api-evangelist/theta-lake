@@ -1,0 +1,16 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/theta-lake-openapi-original.yml
+skills:
+- file: theta-lake-ingest-ai-interactions.md
+  name: Ingest AI interactions into Theta Lake
+  api: openapi/theta-lake-openapi-original.yml
+  operations: ['POST /token', 'GET /integrations', 'GET /ingestion/quota', 'POST /ingestion/integration/{id}/ai_interactions', 'GET /ingestion/integration/{id}/state']
+- file: theta-lake-search-and-export.md
+  name: Search and export Theta Lake records
+  api: openapi/theta-lake-openapi-original.yml
+  operations: ['POST /token', 'POST /search/records', 'GET /search/records/ids', 'GET /records/{id}/policy_hits', 'POST /exports/search/{search_id}', 'GET /exports']
+- file: theta-lake-legal-hold.md
+  name: Place a legal hold and open a legal matter in Theta Lake
+  api: openapi/theta-lake-openapi-original.yml
+  operations: ['POST /token', 'POST /legal_matters', 'POST /legal_matters/{id}/custodians', 'POST /legal_hold', 'GET /legal_hold/{id}/logs']

@@ -1,0 +1,14 @@
+{
+  "provider": "theta-lake",
+  "sources": [
+    "theta-lake-openapi-original.yml"
+  ],
+  "outputs": [],
+  "archived": [
+    "archived theta-lake-openapi-original.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

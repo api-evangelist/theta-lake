@@ -1,0 +1,44 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/theta-lake-openapi-original.yml (common/errors.yml)
+format: custom-json
+envelope:
+  fields: [status_code, status_string, request_id, message]
+  content_type: application/json
+  notes: >-
+    Theta Lake does not use RFC 9457 application/problem+json. Errors share one JSON envelope with
+    the HTTP status_code, a status_string label, a request_id for support correlation, and a
+    human-readable message. These standard responses are referenced by ../common/errors.yml across
+    every operation.
+problems:
+- status: 400
+  name: BadRequest
+  title: Bad Request
+  description: Missing or malformed required part of the request body or query.
+  message_example: The request is missing required information
+- status: 401
+  name: Unauthorized
+  title: Unauthorized
+  description: Access denied due to a missing or malformed JWT.
+  message_example: Missing or bad JWT
+- status: 402
+  name: PaymentRequired
+  title: Payment Required
+  description: >-
+    Missing license to access this endpoint, or downloading more bytes than the license allows.
+- status: 403
+  name: Forbidden
+  title: Forbidden
+  description: The access token lacks the REQUIRED PERMISSION scope for this operation.
+- status: 429
+  name: TooManyRequests
+  title: Too Many Requests
+  description: The operation's rate-limit tier (minimal/light/medium/heavy/daily) was exceeded.
+- status: 500
+  name: InternalServerError
+  title: Internal Server Error
+  description: An unexpected server-side error occurred.
+- status: 503
+  name: ServiceUnavailable
+  title: Service Unavailable
+  description: The service is temporarily unavailable; retry later.

@@ -1,0 +1,270 @@
+components:
+    securitySchemes:
+        BearerAuth:
+            bearerFormat: JWT
+            description: JWT based API token
+            scheme: bearer
+            type: http
+        ClientCredentials:
+            description: Client credential OAuth2.0 flow
+            flows:
+                clientCredentials:
+                    scopes: {}
+                    tokenUrl: /token
+            type: oauth2
+            x-receive-token-in: request-body
+info:
+    description: |
+        We are excited to inform you that our documentation is interactive!
+
+        If you are logged in, this means that you can not only read about the features and capabilities of our product, but also try them out directly from the documentation pages.
+        Our interactive documentation provides a hands-on experience that allows you to test the API endpoints, experiment with the input parameters,
+        and see the corresponding responses. This makes it easier to understand how the API works and how to integrate it into your own applications.
+        With interactive documentation, you can save time and avoid frustration by testing the API right from the documentation pages,
+        without having to set up a local development environment. Whether you're a seasoned developer or just starting out, our interactive documentation
+        is the perfect tool to help you learn, experiment, and succeed with our API.
+    title: Theta Lake API
+    version: v1.26 - July 2026
+openapi: 3.0.3
+paths:
+    /analysis/policies:
+        $ref: ./analysis/analysis.yml#/paths/analysis~1policies
+    /analysis/policies/{id}:
+        $ref: ./analysis/analysis.yml#/paths/analysis~1policies~1{id}
+    /analysis/policy_hits:
+        $ref: ./analysis/analysis.yml#/paths/analysis~1policy_hits
+    /audit_logs:
+        $ref: ./management/audit_logs.yml#/paths/audit_logs
+    /audit_logs/config_change:
+        $ref: ./management/audit_logs.yml#/paths/audit_logs~1config_change
+    /audit_logs/search:
+        $ref: ./management/audit_logs.yml#/paths/audit_logs~1search
+    /cases:
+        $ref: ./legal/cases.yml#/paths/cases
+    /cases/{id}:
+        $ref: ./legal/cases.yml#/paths/cases~1{id}
+    /cases/{id}/close:
+        $ref: ./legal/cases.yml#/paths/cases~1{id}~1close
+    /cases/{id}/managers:
+        $ref: ./legal/cases.yml#/paths/cases~1{id}~1managers
+    /cases/{id}/managers/{user_id}:
+        $ref: ./legal/cases.yml#/paths/cases~1{id}~1managers~1{user_id}
+    /cases/{id}/open:
+        $ref: ./legal/cases.yml#/paths/cases~1{id}~1open
+    /cases/{id}/records:
+        $ref: ./legal/cases.yml#/paths/cases~1{id}~1records
+    /directory_groups:
+        $ref: ./management/directory_groups.yml#/paths/directory_groups
+    /directory_groups/{id}:
+        $ref: ./management/directory_groups.yml#/paths/directory_groups~1{id}
+    /directory_groups/{id}/identities:
+        $ref: ./management/directory_groups.yml#/paths/directory_groups~1{id}~1identities
+    /directory_groups/{id}/identity:
+        $ref: ./management/directory_groups.yml#/paths/directory_groups~1{id}~1identity
+    /directory_groups/{id}/identity/{identity_id}:
+        $ref: ./management/directory_groups.yml#/paths/directory_groups~1{id}~1identity~1{identity_id}
+    /directory_groups/upload:
+        $ref: ./management/directory_groups.yml#/paths/directory_groups~1upload
+    /exports:
+        $ref: ./management/exports.yml#/paths/exports
+    /exports/destinations:
+        $ref: ./management/exports.yml#/paths/exports~1destinations
+    /exports/search/{search_id}:
+        $ref: ./management/exports.yml#/paths/exports~1search~1{search_id}
+    /exports/summary_columns:
+        $ref: ./management/exports.yml#/paths/exports~1summary_columns
+    /identities:
+        $ref: ./management/identities.yml#/paths/identities
+    /identities/{id}:
+        $ref: ./management/identities.yml#/paths/identities~1{id}
+    /identities/{id}/extra_attributes:
+        $ref: ./management/extra_attributes.yml#/paths/identities~1{id}~1extra_attributes
+    /identities/{id}/risk:
+        $ref: ./management/identities.yml#/paths/identities~1{id}~1risk
+    /identities/{id}/supervision_spaces:
+        $ref: ./management/identities.yml#/paths/identities~1{id}~1supervision_spaces
+    /identities/extra_attributes/{id}:
+        $ref: ./management/extra_attributes.yml#/paths/identities~1extra_attributes~1{id}
+    /identities/extra_attributes/{id}/make_primary:
+        $ref: ./management/extra_attributes.yml#/paths/identities~1extra_attributes~1{id}~1make_primary
+    /identities/merge/async:
+        $ref: ./management/identities.yml#/paths/identities~1merge~1async
+    /identities/merge/async/{uuid}:
+        $ref: ./management/identities.yml#/paths/identities~1merge~1async~1{uuid}
+    /identities/merge/async/{uuid}/report:
+        $ref: ./management/identities.yml#/paths/identities~1merge~1async~1{uuid}~1report
+    /identities/search:
+        $ref: ./management/identities.yml#/paths/identities~1search
+    /ingestion/exists:
+        $ref: ./record/ingestion.yml#/paths/ingestion~1exists
+    /ingestion/integration/{id}/ai_interactions:
+        $ref: ./record/ingestion.yml#/paths/ingestion~1integration~1{id}~1ai_interactions
+    /ingestion/integration/{id}/audio:
+        $ref: ./record/ingestion.yml#/paths/ingestion~1integration~1{id}~1audio
+    /ingestion/integration/{id}/chat:
+        $ref: ./record/ingestion.yml#/paths/ingestion~1integration~1{id}~1chat
+    /ingestion/integration/{id}/document:
+        $ref: ./record/ingestion.yml#/paths/ingestion~1integration~1{id}~1document
+    /ingestion/integration/{id}/email:
+        $ref: ./record/ingestion.yml#/paths/ingestion~1integration~1{id}~1email
+    /ingestion/integration/{id}/other:
+        $ref: ./record/ingestion.yml#/paths/ingestion~1integration~1{id}~1other
+    /ingestion/integration/{id}/state:
+        $ref: ./record/ingestion.yml#/paths/ingestion~1integration~1{id}~1state
+    /ingestion/integration/{id}/video:
+        $ref: ./record/ingestion.yml#/paths/ingestion~1integration~1{id}~1video
+    /ingestion/quota:
+        $ref: ./record/ingestion.yml#/paths/ingestion~1quota
+    /integrations:
+        $ref: ./policy/integrations.yml#/paths/integrations
+    /integrations/{id}:
+        $ref: ./policy/integrations.yml#/paths/integrations~1{id}
+    /integrations/{id}/installed_users:
+        $ref: ./policy/integrations.yml#/paths/integrations~1{id}~1installed_users
+    /integrations/{id}/run_history:
+        $ref: ./policy/integrations.yml#/paths/integrations~1{id}~1run_history
+    /integrations/user_installs:
+        $ref: ./policy/integrations.yml#/paths/integrations~1user_installs
+    /labels:
+        $ref: ./record/labels.yml#/paths/labels
+    /labels/{id}:
+        $ref: ./record/labels.yml#/paths/labels~1{id}
+    /labels/{label_id}/records/{record_id}:
+        $ref: ./record/labels.yml#/paths/labels~1{label_id}~1records~1{record_id}
+    /legal_hold:
+        $ref: ./legal/legal_hold.yml#/paths/legal_hold
+    /legal_hold/{id}:
+        $ref: ./legal/legal_hold.yml#/paths/legal_hold~1{id}
+    /legal_hold/{id}/logs:
+        $ref: ./legal/legal_hold.yml#/paths/legal_hold~1{id}~1logs
+    /legal_hold/{id}/rules:
+        $ref: ./legal/legal_hold.yml#/paths/legal_hold~1{id}~1rules
+    /legal_hold/{id}/rules/{rule_id}:
+        $ref: ./legal/legal_hold.yml#/paths/legal_hold~1{id}~1rules~1{rule_id}
+    /legal_hold/roles:
+        $ref: ./legal/legal_hold.yml#/paths/legal_hold~1roles
+    /legal_matters:
+        $ref: ./legal/legal_matter.yml#/paths/legal_matters
+    /legal_matters/{id}:
+        $ref: ./legal/legal_matter.yml#/paths/legal_matters~1{id}
+    /legal_matters/{id}/custodians:
+        $ref: ./legal/legal_matter.yml#/paths/legal_matters~1{id}~1custodians
+    /legal_matters/{id}/custodians/{custodian_id}:
+        $ref: ./legal/legal_matter.yml#/paths/legal_matters~1{id}~1custodians~1{custodian_id}
+    /legal_matters/{id}/logs:
+        $ref: ./legal/legal_matter.yml#/paths/legal_matters~1{id}~1logs
+    /legal_matters/roles:
+        $ref: ./legal/legal_matter.yml#/paths/legal_matters~1roles
+    /org_units:
+        $ref: ./management/org_units.yml#/paths/org_units
+    /org_units/{id}:
+        $ref: ./management/org_units.yml#/paths/org_units~1{id}
+    /org_units/current:
+        $ref: ./management/org_units.yml#/paths/org_units~1current
+    /reconciliation:
+        $ref: ./record/reconcile.yml#/paths/reconciliation
+    /reconciliation/count:
+        $ref: ./record/reconcile.yml#/paths/reconciliation~1count
+    /records/{id}/archive_handles:
+        $ref: ./record/archive_handles.yml#/paths/records~1{id}~1archive_handles
+    /records/{id}/comments:
+        $ref: ./record/comments.yml#/paths/records~1{id}~1comments
+    /records/{id}/comments/{comment_id}:
+        $ref: ./record/comments.yml#/paths/records~1{id}~1comments~1{comment_id}
+    /records/{id}/content:
+        $ref: ./record/content.yml#/paths/records~1{id}~1content
+    /records/{id}/disposition:
+        $ref: ./record/disposition.yml#/paths/records~1{id}~1disposition
+    /records/{id}/policy_hits:
+        $ref: ./record/policy_hits.yml#/paths/records~1{id}~1policy_hits
+    /records/{id}/sentences:
+        $ref: ./record/sentences.yml#/paths/records~1{id}~1sentences
+    /records/{id}/shareable_link:
+        $ref: ./record/shareable_link.yml#/paths/records~1{id}~1shareable_link
+    /records/{id}/workflow_history:
+        $ref: ./record/workflow_history.yml#/paths/records~1{id}~1workflow_history
+    /records/quota:
+        $ref: ./record/content.yml#/paths/records~1quota
+    /retention_libraries:
+        $ref: ./policy/retention_libraries.yml#/paths/retention_libraries
+    /retention_libraries/{id}:
+        $ref: ./policy/retention_libraries.yml#/paths/retention_libraries~1{id}
+    /reviews/escalated_comments:
+        $ref: ./record/reviews.yml#/paths/reviews~1escalated_comments
+    /roles:
+        $ref: ./management/roles.yml#/paths/roles
+    /roles/{id}:
+        $ref: ./management/roles.yml#/paths/roles~1{id}
+    /roles/permissions:
+        $ref: ./management/roles.yml#/paths/roles~1permissions
+    /search/records:
+        $ref: ./record/search.yml#/paths/search~1records
+    /search/records/ids:
+        $ref: ./record/search.yml#/paths/search~1records~1ids
+    /search/saved:
+        $ref: ./record/search.yml#/paths/search~1saved
+    /search/saved/{id}:
+        $ref: ./record/search.yml#/paths/search~1saved~1{id}
+    /search/saved/{id}/reset_and_reenter:
+        $ref: ./record/search.yml#/paths/search~1saved~1{id}~1reset_and_reenter
+    /storage_accounts:
+        $ref: ./policy/storage_accounts.yml#/paths/storage_accounts
+    /supervision_spaces:
+        $ref: ./management/supervision_spaces.yml#/paths/supervision_spaces
+    /supervision_spaces/{id}:
+        $ref: ./management/supervision_spaces.yml#/paths/supervision_spaces~1{id}
+    /supervision_spaces/{id}/directory_groups:
+        $ref: ./management/supervision_spaces.yml#/paths/supervision_spaces~1{id}~1directory_groups
+    /supervision_spaces/{id}/identities:
+        $ref: ./management/supervision_spaces.yml#/paths/supervision_spaces~1{id}~1identities
+    /supervision_spaces/{id}/participants:
+        $ref: ./management/supervision_spaces.yml#/paths/supervision_spaces~1{id}~1participants
+    /supervision_spaces/{id}/user_groups:
+        $ref: ./management/supervision_spaces.yml#/paths/supervision_spaces~1{id}~1user_groups
+    /supervision_spaces/{id}/users:
+        $ref: ./management/supervision_spaces.yml#/paths/supervision_spaces~1{id}~1users
+    /token/context:
+        $ref: ./auth/token.yml#/paths/token~1context
+    /user_groups:
+        $ref: ./management/user_groups.yml#/paths/user_groups
+    /user_groups/{id}:
+        $ref: ./management/user_groups.yml#/paths/user_groups~1{id}
+    /user_groups/{id}/add_users:
+        $ref: ./management/user_groups.yml#/paths/user_groups~1{id}~1add_users
+    /user_groups/{id}/remove_users:
+        $ref: ./management/user_groups.yml#/paths/user_groups~1{id}~1remove_users
+    /users:
+        $ref: ./management/users.yml#/paths/users
+    /users/{id}:
+        $ref: ./management/users.yml#/paths/users~1{id}
+    /users/{id}/disable:
+        $ref: ./management/users.yml#/paths/users~1{id}~1disable
+    /users/{id}/enable:
+        $ref: ./management/users.yml#/paths/users~1{id}~1enable
+    /users/me:
+        $ref: ./management/users.yml#/paths/users~1me
+    /workflows:
+        $ref: ./policy/workflow.yml#/paths/workflows
+    /workflows/{id}:
+        $ref: ./policy/workflow.yml#/paths/workflows~1{id}
+    /workflows/queue:
+        $ref: ./policy/workflow.yml#/paths/workflows~1queue
+    /workflows/record/{id}:
+        $ref: ./policy/workflow.yml#/paths/workflows~1record~1{id}
+    /workflows/swrv_rules:
+        $ref: ./policy/workflow.yml#/paths/workflows~1swrv_rules
+    /workflows/swrv_rules/{id}:
+        $ref: ./policy/workflow.yml#/paths/workflows~1swrv_rules~1{id}
+    /workspaces:
+        $ref: ./management/workspaces.yml#/paths/workspaces
+    /workspaces/{id}:
+        $ref: ./management/workspaces.yml#/paths/workspaces~1{id}
+    /workspaces/current:
+        $ref: ./management/workspaces.yml#/paths/workspaces~1current
+    /workspaces/users:
+        $ref: ./management/workspaces.yml#/paths/workspaces~1users
+    /workspaces/users/{user_id}:
+        $ref: ./management/workspaces.yml#/paths/workspaces~1users~1{user_id}
+security:
+    - BearerAuth: []
+    - ClientCredentials: []

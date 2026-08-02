@@ -1,0 +1,53 @@
+generated: '2026-07-21'
+method: searched
+source: openapi/theta-lake-openapi-original.yml
+api: Theta Lake API v1
+base_url: https://developer.thetalake.ai/api/v1
+authentication:
+  style: oauth2-client-credentials + jwt-bearer
+  header: 'Authorization: Bearer <jwt>'
+  token_endpoint: https://developer.thetalake.ai/api/v1/token
+  ref: authentication/theta-lake-authentication.yml
+authorization:
+  model: per-operation permission scopes returned in the token permissions[]
+  ref: scopes/theta-lake-scopes.yml
+idempotency:
+  supported: false
+  notes: >-
+    No idempotency-key header or parameter is documented in the Theta Lake API v1 spec. Writes are
+    not advertised as idempotent; do not assume safe retries on non-GET operations.
+pagination:
+  style: cursor
+  request_params: [page_token, page, limit]
+  notes: >-
+    List endpoints accept a `page_token` (opaque cursor) alongside `page` and `limit`; follow the
+    returned next-page token to iterate.
+request_tracing:
+  field: request_id
+  location: response body
+  notes: Every response envelope includes a `request_id`; include it when contacting support.
+rate_limiting:
+  style: per-operation tier + 429
+  tiers: [minimal, light, medium, heavy, daily]
+  notes: >-
+    Each operation documents a RATE LIMIT tier (minimal/light/medium/heavy, plus a daily bucket).
+    Exceeding a tier returns HTTP 429 TooManyRequests. No X-RateLimit-* response headers are
+    documented in the spec.
+  ref: errors/theta-lake-problem-types.yml
+error_envelope:
+  format: custom-json
+  shape:
+    status_code: integer (HTTP status)
+    status_string: string (HTTP status text)
+    request_id: string
+    message: string (human-readable)
+  problem_json: false
+  ref: errors/theta-lake-problem-types.yml
+versioning:
+  scheme: uri-path
+  current: v1
+  release_label: 'v1.26 - July 2026'
+  ref: lifecycle/theta-lake-lifecycle.yml
+content_types:
+  request: [application/json, application/x-www-form-urlencoded (token only), multipart/form-data (ingestion uploads)]
+  response: [application/json]

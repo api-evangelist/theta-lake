@@ -1,0 +1,30 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Theta Lake API
+  version: 1.0.0
+extends: openapi/theta-lake-openapi-original.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-rating: 4
+    x-api-evangelist: https://apievangelist.com/
+    x-provider: Theta Lake
+    x-category:
+    - communications-governance
+    - compliance
+    - archiving
+    - ediscovery
+    - ai-governance
+- target: $.info
+  update:
+    x-authentication: authentication/theta-lake-authentication.yml
+    x-scopes: scopes/theta-lake-scopes.yml
+    x-conventions: conventions/theta-lake-conventions.yml
+    x-errors: errors/theta-lake-problem-types.yml
+    x-lifecycle: lifecycle/theta-lake-lifecycle.yml
+    x-data-model: data-model/theta-lake-data-model.yml
+- target: $.servers
+  update:
+  - url: https://developer.thetalake.ai/api/v1
+    description: Theta Lake API v1 (production). The harvested spec declares no servers[]; this
+      server is documented by the interactive developer portal at developer.thetalake.ai.

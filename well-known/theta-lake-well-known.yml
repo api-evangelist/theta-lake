@@ -1,0 +1,18 @@
+generated: '2026-07-21'
+method: probed
+notes: >-
+  No usable /.well-known/ discovery documents were found. The corporate host thetalake.com did not
+  respond to /.well-known/ probes (connection timeouts). The developer portal developer.thetalake.ai
+  is a single-page app that returns HTTP 200 with the SPA shell for ALL unknown paths (a catch-all),
+  so a 200 there is not a real well-known document and is not indexed as one.
+hosts:
+- host: https://thetalake.com
+  documents:
+  - {path: /.well-known/security.txt, status: 000, file: null, note: connection timeout}
+  - {path: /.well-known/openid-configuration, status: 000, file: null, note: connection timeout}
+  - {path: /.well-known/oauth-authorization-server, status: 000, file: null, note: connection timeout}
+  - {path: /.well-known/api-catalog, status: 000, file: null, note: connection timeout}
+  - {path: /.well-known/ai-plugin.json, status: 000, file: null, note: connection timeout}
+- host: https://developer.thetalake.ai
+  documents:
+  - {path: /.well-known/security.txt, status: 200, file: null, note: SPA catch-all shell, not a real security.txt}

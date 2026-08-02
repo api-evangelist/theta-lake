@@ -1,0 +1,31 @@
+generated: '2026-07-21'
+method: searched
+probe: true
+source: https://trust.thetalake.com/
+url: https://trust.thetalake.com/
+certifications:
+- SOC 2 Type 2
+- ISO/IEC 27001
+- ISO/IEC 42001
+- PCI DSS
+- HIPAA
+- CSA STAR for AI (Level 2)
+- GDPR
+evidence:
+- source: https://trust.thetalake.com/
+  keywords:
+  - soc 2
+  - iso/iec 27001
+  - iso 42001
+  - pci dss
+  - trust center
+  - gdpr
+  - csa star
+- source: https://thetalake.com/security/
+  keywords:
+  - soc 2 type 2
+  - iso 27001
+  - iso/iec 42001
+  - pci dss
+  - hipaa
+  - csa star for ai level 2

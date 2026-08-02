@@ -1,0 +1,41 @@
+generated: '2026-07-21'
+method: searched
+source: openapi/theta-lake-openapi-original.yml + https://thetalake.com/security/ + https://trust.thetalake.com/
+standards:
+- id: oauth2
+  conforms: true
+  evidence: securitySchemes declares oauth2 clientCredentials flow with tokenUrl /token
+- id: rfc6749-oauth2
+  conforms: true
+  evidence: /token implements the client-credentials grant per RFC 6749 section 4.4/5.1
+- id: rfc7519-jwt
+  conforms: true
+  evidence: access tokens are JWTs (BearerAuth bearerFormat JWT)
+- id: oidc
+  conforms: false
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: errors use a custom JSON envelope (status_code/status_string/request_id/message), not application/problem+json
+- id: rfc3339-datetime
+  conforms: true
+  evidence: timestamps use RFC 3339 date-time format (e.g. expires_at, created_at)
+- id: scim2
+  conforms: false
+  evidence: identity/user management is a bespoke surface, not SCIM 2.0 paths
+- id: fapi
+  conforms: false
+- id: cursor-pagination
+  conforms: true
+  evidence: list endpoints use opaque page_token cursors with page/limit
+compliance:
+  published: true
+  program_url: https://thetalake.com/security/
+  trust_center: https://trust.thetalake.com/
+  certifications:
+  - SOC 2 Type 2
+  - ISO/IEC 27001
+  - ISO/IEC 42001
+  - PCI DSS
+  - HIPAA
+  - CSA STAR for AI (Level 2)
+  - GDPR
