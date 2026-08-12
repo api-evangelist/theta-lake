@@ -57,7 +57,7 @@ apis:
   baseURL: https://developer.thetalake.ai/api/v1
   properties:
   - type: OpenAPI
-    url: openapi/theta-lake-openapi-original.yml
+    url: openapi/_original/theta-lake-openapi-original.yml
   - type: Overlay
     url: overlays/theta-lake-openapi-overlay.yaml
 maintainers:
