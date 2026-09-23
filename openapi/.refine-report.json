@@ -1,14 +1,17 @@
 {
   "provider": "theta-lake",
   "sources": [
-    "theta-lake-openapi-original.yml"
+    "_original/theta-lake-openapi-original.yml"
   ],
   "outputs": [],
-  "archived": [
-    "archived theta-lake-openapi-original.yml"
-  ],
+  "archived": [],
   "errors": [],
-  "warnings": [],
-  "notes": [],
+  "warnings": [
+    "produced no outputs (1 source(s) have no operations) \u2014 sources left in place rather than archived"
+  ],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "theta-lake-openapi-original.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0"
+  ],
   "skipped": []
 }
