@@ -44,7 +44,7 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.23'
 created: '2026-07-17'
-modified: '2026-07-21'
+modified: '2026-10-06'
 tags:
 - Communications Governance
 - Compliance
@@ -78,6 +78,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- url: https://thetalake.com/feed/
+  type: BlogRSS
 - type: DomainSecurity
   url: security/theta-lake-domain-security.yml
 - type: Website
