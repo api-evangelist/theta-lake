@@ -15,3 +15,15 @@
   relationship: distribution-channel
   status: not-a-workflow
   arazzo: null
+- slug: theta-lake-crowdstrike-own
+  label: CrowdStrike (own)
+  partner: crowdstrike
+  partner_name: CrowdStrike (own)
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://marketplace.crowdstrike.com/listings/theta-lake-risk-and-compliance-suite/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
