@@ -90,3 +90,37 @@
     detected: '2026-10-20'
   status: not-a-workflow
   arazzo: null
+- slug: theta-lake-zoom-partner-program
+  label: Zoom Partner Program
+  partner: zoom
+  partner_name: Zoom Partner Program
+  category: Zoom technology partner
+  type: register
+  channel: standard-directory
+  evidence: https://partner.zoom.com/solutions/theta-lake/
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: Zoom Partner Solutions (partner.zoom.com/solutions; /wp-json/wp/v2/isvsolution)
+    standard: Zoom Partner Program
+    spec_file: null
+    role: zoom-technology-partner
+    registered_name: Theta Lake
+    register_id: https://partner.zoom.com/solutions/theta-lake/
+    matched_domain: thetalake.com
+    matched_by: domain
+    identity_source: a link on the partner page to the partner's own site (name-gated)
+    signal_note: 'participation only: partner type / program tier is partner_tier, never counted; no Zoom certification
+      is printed on the register, so no certified_products'
+    detected_by: sweep-zoom-app-marketplace.py
+    detected: '2026-10-21'
+    context:
+      products:
+      - App Marketplace
+      - Developer Platform
+      - Meetings
+      - Phone
+      - Team Chat
+      - Webinar
+  status: not-a-workflow
+  arazzo: null
