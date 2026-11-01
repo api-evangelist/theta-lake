@@ -64,6 +64,112 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Theta Lake is a company surfaced as a portfolio company of battery-ventures, lightspeed-venture-partners and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+Theta Lake is a cloud- and AI-native Digital Communications Governance and Archiving (DCGA) platform for compliance and security across unified communications. It captures, archives, supervises, and monitors electronic (eComms), audio (aComms), video (vComms), and AI (aiComms) interactions across 100+ certified integrations including Zoom, Microsoft Teams, Webex, RingCentral, Slack, Microsoft Copilot, and Anthropic. The Theta Lake API (v1) exposes data ingestion, records, unified search, supervision spaces, legal hold and legal matters, retention libraries, workflows, identities, exports, and audit logs, secured with OAuth2 client-credentials and JWT bearer tokens carrying fine-grained permission scopes.
 
-Backed by: battery-ventures, lightspeed-venture-partners
+**Areas:** Communications Governance · Compliance · Archiving · Security · Supervision · eDiscovery · Legal Hold · Records Management · Unified Communications · AI Governance · Regulatory Compliance
+
+## Theta Lake on APIs.io
+
+Everything profiled for Theta Lake is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/theta-lake/](https://apis.io/providers/theta-lake/)** — or go straight to one of the APIs or properties below.
+
+### APIs (1)
+
+- [Theta Lake API](https://apis.io/apis/theta-lake/theta-lake-api/) — The Theta Lake API (v1) provides programmatic access to the DCGA platform: ingest AI, audio, chat, document, email, and video content; manage records,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [theta-lake](https://apis.io/servers/theta-lake/theta-lake/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Theta Lake Openapi Overlay](https://apis.io/overlays/theta-lake/theta-lake-openapi-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Theta Lake Authentication](https://apis.io/security/theta-lake/theta-lake-authentication/)
+- [Theta Lake Domain Security](https://apis.io/security/theta-lake/theta-lake-domain-security/)
+- [Theta Lake Trust Center](https://apis.io/security/theta-lake/theta-lake-trust-center/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Theta Lake Scopes](https://apis.io/scopes/theta-lake/theta-lake-scopes/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://thetalake.com/)
+- [Documentation](https://developer.thetalake.ai/)
+- [Getting started](https://developer.thetalake.ai/)
+- [API reference](https://developer.thetalake.ai/)
+- [Sign up](https://developer.thetalake.ai/)
+- [Support](https://developer.thetalake.ai/)
+- [Blog](https://thetalake.com/blog/)
+- [Compliance](https://thetalake.com/security/)
+- [Terms of service](https://thetalake.com/website-terms-of-use/)
+- [Privacy policy](https://thetalake.com/privacy-policy/)
+
+## API Evangelist rating
+
+**Kin Score 29.4** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 22.7 |
+| Contract governance | 18.2 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 16.1 |
+| Access clarity | 36.8 |
+
+**Agent readiness 17.1** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 39.2** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/theta-lake/](https://apis.io/providers/theta-lake/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Theta Lake: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/theta-lake/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
